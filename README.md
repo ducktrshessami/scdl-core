@@ -24,8 +24,6 @@ Attempts to download a song from a url.
 
 Returns a [readable stream](https://nodejs.org/api/stream.html#stream_class_stream_readable).
 
-~Okay, technically it's a [PassThrough](https://nodejs.org/api/stream.html#stream_class_stream_passthrough), but whatever.~
-
 ## scdl.setClientID(id)
 
 Set your client_id for authentication.
