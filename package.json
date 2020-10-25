@@ -2,7 +2,7 @@
   "name": "scdl",
   "version": "1.0.0",
   "description": "Download songs from SoundCloud",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "author": "ducktrshessami",
   "dependencies": {
     "node-fetch": "^2.6.1"
