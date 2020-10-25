@@ -4,6 +4,8 @@ A lightweight SoundCloud downloading module.
 
 Should this be called scdl-core for symmetry's sake?
 
+![GitHub top language](https://img.shields.io/github/languages/top/ducktrshessami/scdl)
+
 # Usage
 
 ```js
