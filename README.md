@@ -28,7 +28,7 @@ Returns a [readable stream](https://nodejs.org/api/stream.html#stream_class_stre
 
 Set your client_id for authentication.
 
-***You must set either your client_id or your OAuth token before using this module***
+***You must set either your client_id or your OAuth token before using this module's other features***
 
 <details>
 <summary>How to get your client_id</summary>
@@ -55,7 +55,7 @@ Example: `https://api-v2.soundcloud.com/me/play-history/tracks?client_id=YOUR_CL
 
 Set your OAuth token for authentication.
 
-***You must set either your client_id or your OAuth token before using this module***
+***You must set either your client_id or your OAuth token before using this module's other features***
 
 <details>
 <summary>How to get your OAuth token</summary>
