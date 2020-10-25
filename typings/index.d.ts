@@ -1,11 +1,16 @@
 declare module "scdl" {
     import {Readable} from "stream";
 
-    export function scdl(URL: string): Readable;
-    export function setClientId(ID: string): void;
-    export function setOauthToken(token: string): void;
-    export function getInfo(URL: string): Promise<object>;
-    export function downloadFromInfo(info: object): Readable;
-    export function validateURL(URL: string): Boolean;
-    export function getPermalinkURL(URL: string): string;
+    function scdl(URL: string): Readable;
+
+    namespace scdl {
+        function setClientId(ID: string): void;
+        function setOauthToken(token: string): void;
+        function getInfo(URL: string): Promise<object>;
+        function downloadFromInfo(info: object): Readable;
+        function validateURL(URL: string): Boolean;
+        function getPermalinkURL(URL: string): string;
+    }
+
+    export = scdl;
 }
