@@ -20,9 +20,9 @@ scdl("https://soundcloud.com/ducktrshessami/unfinished")
 
 # API
 
-## scdl(url)
+## scdl(URL)
 
-Attempts to download a song from a url.
+Attempts to download a song from a URL.
 
 Returns a [readable stream](https://nodejs.org/api/stream.html#stream_class_stream_readable).
 
@@ -88,7 +88,7 @@ Example: `access_token: X-XXXXXX-XXXXXXXX-XXXXXXXXXXXXXXX`
 
 </details>
 
-## scdl.getInfo(url)
+## scdl.getInfo(URL)
 
 Returns a promise that resolves in the track's metadata.
 
@@ -249,7 +249,7 @@ Attemps to download a song from an info object obtained from scdl.getInfo.
 
 Skips a couple steps that scdl(URL) takes, since this assumes you're actually passing a track's info.
 
-## scdl.validateURL(url)
+## scdl.validateURL(URL)
 
 Returns a Boolean of whether the URL passed is a valid track URL.
 
