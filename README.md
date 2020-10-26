@@ -90,7 +90,7 @@ Example: `access_token: X-XXXXXX-XXXXXXXX-XXXXXXXXXXXXXXX`
 
 ## scdl.getInfo(url)
 
-Gets a track's metadata.
+Returns a promise that resolves in the track's metadata.
 
 I think it can technically get info for other things like users and playlists, but this is primarily used for grabbing a track's stream URL.
 
@@ -251,10 +251,10 @@ Skips a couple steps that scdl(URL) takes, since this assumes you're actually pa
 
 ## scdl.validateURL(url)
 
-Synchronously returns a Boolean of whether the URL passed is a valid track URL.
+Returns a Boolean of whether the URL passed is a valid track URL.
 
 ## scdl.getPermalinkURL(URL)
 
-Synchronously returns a standardized track URL.
+Returns a standardized track URL.
 
 Format: `https://soundcloud.com/ARTIST/SONG_TITLE`
