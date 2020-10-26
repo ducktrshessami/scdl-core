@@ -258,3 +258,11 @@ Returns a Boolean of whether the URL passed is a valid track URL.
 Returns a standardized track URL.
 
 Format: `https://soundcloud.com/ARTIST/SONG_TITLE`
+
+# Installation
+
+```
+npm install github:ducktrshessami/scdl
+```
+
+When I become more social I'll consider putting this on [npm](https://www.npmjs.com/). I'd also have to rename this seeing as scdl is [taken](https://www.npmjs.com/package/scdl).
