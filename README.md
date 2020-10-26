@@ -266,3 +266,7 @@ npm install github:ducktrshessami/scdl
 ```
 
 When I become more social I'll consider putting this on [npm](https://www.npmjs.com/). I'd also have to rename this seeing as scdl is [taken](https://www.npmjs.com/package/scdl).
+
+# To-Do
+
+- Add the ability to change what transcoding is used when downloading
