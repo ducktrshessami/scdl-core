@@ -90,8 +90,171 @@ Example: `access_token: X-XXXXXX-XXXXXXXX-XXXXXXXXXXXXXXX`
 
 ## scdl.getInfo(url)
 
+Gets a track's metadata.
+
+I think it can technically get info for other things like users and playlists, but this is primarily used for grabbing a track's stream URL.
+
+<details>
+<summary>Example output</summary>
+
+```json
+{
+    "artwork_url": "https://i1.sndcdn.com/artworks-000667318813-6hnoe2-large.jpg",
+    "caption": null,
+    "commentable": true,
+    "comment_count": 0,
+    "created_at": "2020-01-14T10:43:08Z",
+    "description": "https://soundcloud.com/xmittens/untitled\nhttps://youtu.be/1nCqRmx3Dnw\n\nI probably won't finish this",
+    "downloadable": false,
+    "download_count": 0,
+    "duration": 47020,
+    "full_duration": 47020,
+    "embeddable_by": "all",
+    "genre": "memes",
+    "has_downloads_left": true,
+    "id": 743253892,
+    "kind": "track",
+    "label_name": null,
+    "last_modified": "2020-01-14T10:43:08Z",
+    "license": "cc-by-nc-sa",
+    "likes_count": 0,
+    "permalink": "unfinished",
+    "permalink_url": "https://soundcloud.com/ducktrshessami/unfinished",
+    "playback_count": 1,
+    "public": true,
+    "publisher_metadata": {
+        "id": 743253892,
+        "urn": "soundcloud:tracks:743253892",
+        "contains_music": true
+    },
+    "purchase_title": null,
+    "purchase_url": null,
+    "release_date": null,
+    "reposts_count": 0,
+    "secret_token": null,
+    "sharing": "public",
+    "state": "finished",
+    "streamable": true,
+    "tag_list": "",
+    "title": "unfinished",
+    "uri": "https://api.soundcloud.com/tracks/743253892",
+    "urn": "soundcloud:tracks:743253892",
+    "user_id": 69845790,
+    "visuals": null,
+    "waveform_url": "https://wave.sndcdn.com/6GVCpQgAUtBo_m.json",
+    "display_date": "2020-01-14T10:43:08Z",
+    "media": {
+        "transcodings": [
+            {
+                "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:743253892/d619e67a-e532-4d7c-9ad7-71c9e1899390/stream/hls",
+                "preset": "mp3_0_1",
+                "duration": 47020,
+                "snipped": false,
+                "format": {
+                    "protocol": "hls",
+                    "mime_type": "audio/mpeg"
+                },
+                "quality": "sq"
+            },
+            {
+                "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:743253892/d619e67a-e532-4d7c-9ad7-71c9e1899390/stream/progressive",
+                "preset": "mp3_0_1",
+                "duration": 47020,
+                "snipped": false,
+                "format": {
+                    "protocol": "progressive",
+                    "mime_type": "audio/mpeg"
+                },
+                "quality": "sq"
+            },
+            {
+                "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:743253892/810bb079-0950-485c-ab36-5eadd381f623/stream/hls",
+                "preset": "opus_0_0",
+                "duration": 46980,
+                "snipped": false,
+                "format": {
+                    "protocol": "hls",
+                    "mime_type": "audio/ogg; codecs=\"opus\""
+                },
+                "quality": "sq"
+            }
+        ]
+    },
+    "monetization_model": "BLACKBOX",
+    "policy": "MONETIZE",
+    "user": {
+        "avatar_url": "https://i1.sndcdn.com/avatars-000341725228-ao2hve-large.jpg",
+        "city": null,
+        "comments_count": 0,
+        "country_code": null,
+        "created_at": "2013-12-10T03:28:48Z",
+        "creator_subscriptions": [
+            {
+                "product": {
+                    "id": "free"
+                }
+            }
+        ],
+        "creator_subscription": {
+            "product": {
+                "id": "free"
+            }
+        },
+        "description": null,
+        "followers_count": 3,
+        "followings_count": 47,
+        "first_name": "",
+        "full_name": "",
+        "groups_count": 0,
+        "id": 69845790,
+        "kind": "user",
+        "last_modified": "2019-04-02T08:57:06Z",
+        "last_name": "",
+        "likes_count": 0,
+        "playlist_likes_count": 0,
+        "permalink": "ducktrshessami",
+        "permalink_url": "https://soundcloud.com/ducktrshessami",
+        "playlist_count": 0,
+        "reposts_count": null,
+        "track_count": 7,
+        "uri": "https://api.soundcloud.com/users/69845790",
+        "urn": "soundcloud:users:69845790",
+        "username": "ducktrshessami",
+        "verified": false,
+        "visuals": {
+            "urn": "soundcloud:users:69845790",
+            "enabled": true,
+            "visuals": [
+                {
+                    "urn": "soundcloud:visuals:36754492",
+                    "entry_time": 0,
+                    "visual_url": "https://i1.sndcdn.com/visuals-000069845790-kKjQiw-original.jpg"
+                }
+            ],
+            "tracking": null
+        },
+        "badges": {
+            "pro_unlimited": false,
+            "verified": false
+        }
+    }
+}
+```
+
+</details>
+
 ## scdl.downloadFromInfo(info)
+
+Attemps to download a song from an info object obtained from scdl.getInfo.
+
+Skips a couple steps that scdl(URL) takes, since this assumes you're actually passing a track's info.
 
 ## scdl.validateURL(url)
 
+Synchronously returns a Boolean of whether the URL passed is a valid track URL.
+
 ## scdl.getPermalinkURL(URL)
+
+Synchronously returns a standardized track URL.
+
+Format: `https://soundcloud.com/ARTIST/SONG_TITLE`
