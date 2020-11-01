@@ -1,6 +1,6 @@
 # scdl
 
-A lightweight SoundCloud downloading module.
+A lightweight SoundCloud downloading module for Node.js
 
 Should this be called scdl-core for symmetry's sake?
 
