@@ -20,11 +20,56 @@ scdl("https://soundcloud.com/ducktrshessami/unfinished")
 
 # API
 
-## scdl(URL)
+## scdl(URL[, options])
 
 Attempts to download a song from a URL.
 
 Returns a [readable stream](https://nodejs.org/api/stream.html#stream_class_stream_readable).
+
+`options` is an object that can contain the following properties:
+
+- `strict` - `Boolean`
+
+    If set to true, will only stream if all other options match a transcoding's properties
+    
+    If set to false, will stream the transcoding with the most matched properties
+
+    **Defaults to false**
+
+- `preset` - `String`
+
+    Values:
+
+    - `mp3_0_1` **(default)**
+    - `opus_0_0`
+    - `mp3` (short for `mp3_0_1`)
+    - `opus` (short for `opus_0_0`)
+
+- `protocol` - `String`
+
+    Values:
+
+    - `progressive` **(default)**
+    - `hls`
+
+- `mimeType` - `String`
+
+    Values:
+
+    - `audio/mpeg` **(default)**
+    - `audio/ogg; codecs=\"opus\"`
+    - `mpeg` (short for `audio/mpeg`)
+    - `opus` (short for `audio/ogg; codecs=\"opus\"`)
+
+- `quality` - `String`
+
+    **Defaults to `sq`**
+
+    So far I've only ever seen this as `sq`, which I assume stands for "standard quality". I'm unsure whether I've only ever seen `sq` because I'm not a [SoundCloud Go+](http://soundcloud.com/go) subscriber, or if `hq` simply doesn't exist.
+
+Transcoding matching will priorities options in the following order from most important to least:
+
+`quality > protocol > preset > mimeType`
 
 ## scdl.setClientID(id)
 
@@ -243,11 +288,13 @@ I think it can technically get info for other things like users and playlists, b
 
 </details>
 
-## scdl.downloadFromInfo(info)
+## scdl.downloadFromInfo(info[, options])
 
 Attemps to download a song from an info object obtained from scdl.getInfo.
 
 Skips a couple steps that scdl(URL) takes, since this assumes you're actually passing a track's info.
+
+`options` are the same as those in `scdl(URL[, options])` above.
 
 ## scdl.validateURL(URL)
 
@@ -266,7 +313,3 @@ npm install github:ducktrshessami/scdl
 ```
 
 When I become more social I'll consider putting this on [npm](https://www.npmjs.com/). I'd also have to rename this seeing as scdl is [taken](https://www.npmjs.com/package/scdl).
-
-# To-Do
-
-- Add the ability to change what transcoding is used when downloading
