@@ -294,7 +294,7 @@ Attemps to download a song from an info object obtained from scdl.getInfo.
 
 Skips a couple steps that scdl(URL) takes, since this assumes you're actually passing a track's info.
 
-`options` are the same as those in `scdl(URL[, options])` above.
+`options` are the same as those in [scdl(URL[, options])](#scdlurl-options) above.
 
 ## scdl.validateURL(URL)
 
