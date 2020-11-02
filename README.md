@@ -67,7 +67,7 @@ Returns a [readable stream](https://nodejs.org/api/stream.html#stream_class_stre
 
     So far I've only ever seen this as `sq`, which I assume stands for "standard quality". I'm unsure whether I've only ever seen `sq` because I'm not a [SoundCloud Go+](http://soundcloud.com/go) subscriber, or if `hq` simply doesn't exist.
 
-Transcoding matching will priorities options in the following order from most important to least:
+Transcoding matching will prioritize options in the following order from most important to least:
 
 `quality > protocol > preset > mimeType`
 
