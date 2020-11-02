@@ -38,7 +38,7 @@ Returns a [readable stream](https://nodejs.org/api/stream.html#stream_class_stre
 
 - `preset` - `String`
 
-    Values:
+    Example values:
 
     - `mp3_0_1` **(default)**
     - `opus_0_0`
@@ -47,14 +47,14 @@ Returns a [readable stream](https://nodejs.org/api/stream.html#stream_class_stre
 
 - `protocol` - `String`
 
-    Values:
+    Example values:
 
     - `progressive` **(default)**
     - `hls`
 
 - `mimeType` - `String`
 
-    Values:
+    Example values:
 
     - `audio/mpeg` **(default)**
     - `audio/ogg; codecs=\"opus\"`
