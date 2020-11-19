@@ -4,7 +4,7 @@ declare module "scdl-core" {
     function scdl(URL: string, options?: object): Readable;
 
     namespace scdl {
-        function setClientId(ID: string): void;
+        function setClientID(ID: string): void;
         function setOauthToken(token: string): void;
         function getInfo(URL: string): Promise<object>;
         function downloadFromInfo(info: object, options?: object): Readable;
