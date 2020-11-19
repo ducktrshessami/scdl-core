@@ -1,6 +1,6 @@
 {
   "name": "scdl-core",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Download songs from SoundCloud",
   "main": "lib/index.js",
   "author": "ducktrshessami",
@@ -10,11 +10,11 @@
   "types": "./typings/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ducktrshessami/scdl.git"
+    "url": "git+https://github.com/ducktrshessami/scdl-core.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ducktrshessami/scdl/issues"
+    "url": "https://github.com/ducktrshessami/scdl-core/issues"
   },
-  "homepage": "https://github.com/ducktrshessami/scdl#readme"
+  "homepage": "https://github.com/ducktrshessami/scdl-core#readme"
 }
