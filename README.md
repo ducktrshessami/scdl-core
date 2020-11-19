@@ -1,16 +1,14 @@
-# scdl
+# scdl-core
 
 A lightweight SoundCloud downloading module for Node.js
 
-Should this be called scdl-core for symmetry's sake?
-
-![GitHub top language](https://img.shields.io/github/languages/top/ducktrshessami/scdl)
+![GitHub top language](https://img.shields.io/github/languages/top/ducktrshessami/scdl-core)
 
 # Usage
 
 ```js
 const fs = require("fs");
-const scdl = require("scdl");
+const scdl = require("scdl-core");
 
 scdl.setClientID("YOUR_CLIENT_ID");
 
@@ -309,7 +307,7 @@ Format: `https://soundcloud.com/ARTIST/SONG_TITLE`
 # Installation
 
 ```
-npm install github:ducktrshessami/scdl
+npm install github:ducktrshessami/scdl-core
 ```
 
-When I become more social I'll consider putting this on [npm](https://www.npmjs.com/). I'd also have to rename this seeing as scdl is [taken](https://www.npmjs.com/package/scdl).
+When I become more social I'll consider putting this on [npm](https://www.npmjs.com/).

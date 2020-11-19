@@ -1,4 +1,4 @@
-declare module "scdl" {
+declare module "scdl-core" {
     import {Readable} from "stream";
 
     function scdl(URL: string, options?: object): Readable;
