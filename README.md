@@ -6,6 +6,8 @@ A lightweight SoundCloud downloading module for Node.js
 
 # Installation
 
+After installing [Node.js](https://nodejs.org/), run the following command in your package directory:
+
 ```
 npm install github:ducktrshessami/scdl-core
 ```
