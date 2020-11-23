@@ -28,6 +28,16 @@ scdl("https://soundcloud.com/ducktrshessami/unfinished")
 
 # API
 
+## Table of Contents
+
+1. [scdl](#scdlurl-options)
+2. [scdl.setClientID](#scdlsetclientidid)
+3. [scdl.setOauthToken](#scdlsetoauthtokentoken)
+4. [scdl.getInfo](#scdlgetinfourl)
+5. [scdl.downloadFromInfo](#scdldownloadfrominfoinfo-options)
+6. [scdl.validateURL](#scdlvalidateurlurl)
+7. [scdl.getPermalinkURL](#scdlgetpermalinkurlurl)
+
 ## scdl(URL[, options])
 
 Attempts to download a song from a URL.
@@ -79,7 +89,7 @@ Transcoding matching will prioritize options in the following order from most im
 
 `quality > protocol > preset > mimeType`
 
-## scdl.setClientID(id)
+## scdl.setClientID(ID)
 
 Set your client_id for authentication.
 
