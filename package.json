@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "author": "ducktrshessami",
   "dependencies": {
+    "parse-hls": "^1.0.7",
     "phin": "^3.5.1"
   },
   "types": "./typings/index.d.ts",
