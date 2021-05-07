@@ -37,6 +37,10 @@ scdl("https://soundcloud.com/ducktrshessami/unfinished")
 5. [scdl.downloadFromInfo](#scdldownloadfrominfoinfo-options)
 6. [scdl.validateURL](#scdlvalidateurlurl)
 7. [scdl.getPermalinkURL](#scdlgetpermalinkurlurl)
+8. [scdl.playlist](#scdlplaylisturl-options)
+9. [scdl.playlist.downloadFromInfo](#scdlplaylistdownloadfrominfoinfo-options)
+10. [scdl.playlist.validateURL](#scdlplaylistvalidateurlurl)
+11. [scdl.playlist.getPermalinkURL](#scdlplaylistgetpermalinkurlurl)
 
 ## scdl(URL[, options])
 
@@ -153,9 +157,9 @@ Example: `access_token: X-XXXXXX-XXXXXXXX-XXXXXXXXXXXXXXX`
 
 ## scdl.getInfo(URL)
 
-Returns a promise that resolves in the track's metadata.
+Returns a promise that resolves in the track or playlist's metadata.
 
-I think it can technically get info for other things like users and playlists, but this is primarily used for grabbing a track's stream URL.
+I think it can technically get info for other things like users, but this is primarily used for grabbing a track's stream URL.
 
 <details>
 <summary>Example output</summary>
@@ -323,3 +327,11 @@ Returns a Boolean of whether the URL passed is a valid track URL.
 Returns a standardized track URL.
 
 Format: `https://soundcloud.com/ARTIST/SONG_TITLE`
+
+## scdl.playlist(URL[, options])
+
+## scdl.playlist.downloadFromInfo(info[, options])
+
+## scdl.playlist.validateURL(URL)
+
+## scdl.playlist.getPermalinkURL(URL)
