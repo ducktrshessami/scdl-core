@@ -1,15 +1,22 @@
 declare module "scdl-core" {
-    import {Readable} from "stream";
+    import { Readable } from "stream";
 
-    function scdl(URL: string, options?: object): Readable;
+    function scdl(url: String, options?: Object): Readable;
 
     namespace scdl {
-        function setClientID(ID: string): void;
-        function setOauthToken(token: string): void;
-        function getInfo(URL: string): Promise<object>;
-        function downloadFromInfo(info: object, options?: object): Readable;
-        function validateURL(URL: string): Boolean;
-        function getPermalinkURL(URL: string): string;
+        function setClientID(ID: String): void;
+        function setOauthToken(token: String): void;
+        function getInfo(url: String): Promise<Object>;
+        function downloadFromInfo(info: Object, options?: Object): Readable;
+        function validateURL(url: String): Boolean;
+        function getPermalinkURL(url: String): String;
+        function playlist(url: String, options?: Object): Promise<Array<Readable>>;
+    }
+
+    namespace scdl.playlist {
+        function downloadFromInfo(url: String, options?: Object): Promise<Array<Readable>>;
+        function validateURL(url: String): Boolean;
+        function getPermalinkURL(url: String): String;
     }
 
     export = scdl;
