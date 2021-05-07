@@ -312,9 +312,11 @@ I think it can technically get info for other things like users, but this is pri
 
 ## scdl.downloadFromInfo(info[, options])
 
-Attemps to download a song from an info object obtained from scdl.getInfo.
+Attemps to download a song from an info object obtained from [scdl.getInfo](#scdlgetinfourl).
 
-Skips a couple steps that scdl(URL) takes, since this assumes you're actually passing a track's info.
+This gets called internally by [scdl](#scdlurl-options).
+
+Returns a readable stream
 
 `options` are the same as those in [scdl(URL[, options])](#scdlurl-options) above.
 
@@ -330,8 +332,28 @@ Format: `https://soundcloud.com/ARTIST/SONG_TITLE`
 
 ## scdl.playlist(URL[, options])
 
+Attempts to download every song in a playlist from the playlist URL.
+
+Returns a promise that resolves in an array of readable streams.
+
+`options` are the same as those in [scdl(URL[, options])](#scdlurl-options) above.
+
 ## scdl.playlist.downloadFromInfo(info[, options])
+
+Attempts to download a playlist's songs from an info object obtained from [scdl.getInfo](#scdlgetinfourl).
+
+This gets called internally by [scdl.playlist](#scdlplaylisturl-options).
+
+Returns a promise that resolves in an array of readable streams.
+
+`options` are the same as those in [scdl(URL[, options])](#scdlurl-options) above.
 
 ## scdl.playlist.validateURL(URL)
 
+Returns a Boolean of whether the URL passed is a valid playlist URL.
+
 ## scdl.playlist.getPermalinkURL(URL)
+
+Returns a standardized playlist URL.
+
+Format: `https://soundcloud.com/USER/sets/PLAYLIST_TITLE`
