@@ -17,6 +17,7 @@ declare module "scdl-core" {
         function downloadFromInfo(url: String, options?: Object): Promise<Array<Readable>>;
         function validateURL(url: String): Boolean;
         function getPermalinkURL(url: String): String;
+        function getInfo(url: String): Promise<Object>;
     }
 
     export = scdl;
