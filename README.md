@@ -26,6 +26,8 @@ scdl("https://soundcloud.com/ducktrshessami/unfinished")
     .pipe(fs.createWriteStream("song.mp3"));
 ```
 
+See also: [soundcloud-key-fetch](https://www.npmjs.com/package/soundcloud-key-fetch) for client_id scraping
+
 # API
 
 ## Table of Contents
