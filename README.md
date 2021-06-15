@@ -123,6 +123,8 @@ Example: `https://api-v2.soundcloud.com/me/play-history/tracks?client_id=YOUR_CL
 
 </details>
 
+See also: [soundcloud-key-fetch](https://www.npmjs.com/package/soundcloud-key-fetch) for client_id scraping
+
 ## scdl.setOauthToken(token)
 
 Set your OAuth token for authentication.
