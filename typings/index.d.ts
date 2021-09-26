@@ -1,22 +1,30 @@
+import { Readable } from "stream";
+
 declare module "scdl-core" {
-    import { Readable } from "stream";
+    type StreamOptions = {
+        strict?: Boolean,
+        preset?: String,
+        protocol?: String,
+        mimeType?: String,
+        quality?: String
+    };
 
     const scdl: {
-        (url: String, options?: Object): Readable;
+        (url: String, options?: StreamOptions): Readable;
 
         clientID?: String;
         oauthToken?: String;
 
-        setClientID(ID: String): void;
+        setClientID(id: String): void;
         setOauthToken(token: String): void;
         getInfo(url: String): Promise<Object>;
-        downloadFromInfo(info: Object, options?: Object): Readable;
+        downloadFromInfo(info: Object, options?: StreamOptions): Readable;
         validateURL(url: String): Boolean;
         getPermalinkURL(url: String): String;
         playlist: {
-            (url: String, options?: Object): Promise<Array<Readable>>;
+            (url: String, options?: StreamOptions): Promise<Array<Readable>>;
 
-            downloadFromInfo(url: String, options?: Object): Promise<Array<Readable>>;
+            downloadFromInfo(info: Object, options?: StreamOptions): Promise<Array<Readable>>;
             validateURL(url: String): Boolean;
             getPermalinkURL(url: String): String;
             getInfo(url: String): Promise<Object>;
