@@ -17,8 +17,10 @@ declare module "scdl-core" {
 
         setClientID(id: String): void;
         setOauthToken(token: String): void;
+        awaitDownload(url: String, options?: StreamOptions): Promise<Readable>;
         getInfo(url: String): Promise<Object>;
         downloadFromInfo(info: Object, options?: StreamOptions): Readable;
+        awaitDownloadFromInfo(info: Object, options?: StreamOptions): Promise<Readable>;
         validateURL(url: String): Boolean;
         getPermalinkURL(url: String): String;
         playlist: {
