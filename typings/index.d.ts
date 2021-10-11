@@ -1,23 +1,36 @@
+import { Readable } from "stream";
+
 declare module "scdl-core" {
-    import { Readable } from "stream";
+    type StreamOptions = {
+        strict?: Boolean,
+        preset?: String,
+        protocol?: String,
+        mimeType?: String,
+        quality?: String
+    };
 
-    function scdl(url: String, options?: Object): Readable;
+    const scdl: {
+        (url: String, options?: StreamOptions): Readable;
 
-    namespace scdl {
-        function setClientID(ID: String): void;
-        function setOauthToken(token: String): void;
-        function getInfo(url: String): Promise<Object>;
-        function downloadFromInfo(info: Object, options?: Object): Readable;
-        function validateURL(url: String): Boolean;
-        function getPermalinkURL(url: String): String;
-        function playlist(url: String, options?: Object): Promise<Array<Readable>>;
-    }
+        clientID?: String;
+        oauthToken?: String;
 
-    namespace scdl.playlist {
-        function downloadFromInfo(url: String, options?: Object): Promise<Array<Readable>>;
-        function validateURL(url: String): Boolean;
-        function getPermalinkURL(url: String): String;
-        function getInfo(url: String): Promise<Object>;
+        setClientID(id: String): void;
+        setOauthToken(token: String): void;
+        awaitDownload(url: String, options?: StreamOptions): Promise<Readable>;
+        getInfo(url: String): Promise<Object>;
+        downloadFromInfo(info: Object, options?: StreamOptions): Readable;
+        awaitDownloadFromInfo(info: Object, options?: StreamOptions): Promise<Readable>;
+        validateURL(url: String): Boolean;
+        getPermalinkURL(url: String): String;
+        playlist: {
+            (url: String, options?: StreamOptions): Promise<Array<Readable>>;
+
+            downloadFromInfo(info: Object, options?: StreamOptions): Promise<Array<Readable>>;
+            validateURL(url: String): Boolean;
+            getPermalinkURL(url: String): String;
+            getInfo(url: String): Promise<Object>;
+        }
     }
 
     export = scdl;
