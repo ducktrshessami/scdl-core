@@ -1,12 +1,12 @@
 {
   "name": "scdl-core",
-  "version": "1.3.8",
+  "version": "1.4.0",
   "description": "Download songs from SoundCloud",
   "main": "lib/index.js",
   "author": "ducktrshessami",
   "dependencies": {
     "parse-hls": "^1.0.7",
-    "phin": "^3.6.0"
+    "phin": "^3.6.1"
   },
   "types": "./typings/index.d.ts",
   "repository": {
