@@ -14,14 +14,8 @@ const PLAYLIST_URL = "";
 describe("scdl", function () {
     const URL = process.env.SONG_URL || SONG_URL;
     if (URL) {
-        it("sets/gets authorization properly", async function () {
-            this.timeout(5000);
-            const clientID = await fetchKey();
-            const foo = Math.random().toString();
-            scdl.setClientID(clientID);
-            scdl.setOauthToken(foo);
-            assert.strictEqual(scdl.clientID, clientID);
-            assert.strictEqual(scdl.oauthToken, foo);
+        before("fetching clientID", async function () {
+            scdl.clientID = await fetchKey();
         });
         it("scdl sync readable return", function () {
             assert(scdl(URL) instanceof Readable);
