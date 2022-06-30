@@ -2,8 +2,12 @@ require("dotenv").config();
 const assert = require("assert");
 const scdl = require("../lib");
 
+/***** Set URLs here *****/
+
 const SONG_URL = "";
 const PLAYLIST_URL = "";
+
+/***** Set URLs here *****/
 
 describe("scdl", function () {
     const URL = process.env.SONG_URL || SONG_URL;
