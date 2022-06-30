@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const SONG_URL = "";
 const PLAYLIST_URL = "";
 
