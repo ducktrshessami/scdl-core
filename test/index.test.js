@@ -1,5 +1,6 @@
 require("dotenv").config();
 const assert = require("assert");
+const { fetchKey } = require("soundcloud-key-fetch");
 const scdl = require("../lib");
 
 /***** Set URLs here *****/
@@ -12,13 +13,14 @@ const PLAYLIST_URL = "";
 describe("scdl", function () {
     const URL = process.env.SONG_URL || SONG_URL;
     if (URL) {
-        it("sets/gets authorization properly", function () {
+        it("sets/gets authorization properly", async function () {
+            this.timeout(5000);
+            const clientID = await fetchKey();
             const foo = Math.random().toString();
-            const bar = Math.random().toString();
-            scdl.setClientID(foo);
-            scdl.setOauthToken(bar);
-            assert.strictEqual(scdl.clientID, foo);
-            assert.strictEqual(scdl.oauthToken, bar);
+            scdl.setClientID(clientID);
+            scdl.setOauthToken(foo);
+            assert.strictEqual(scdl.clientID, clientID);
+            assert.strictEqual(scdl.oauthToken, foo);
         });
     }
     else {
