@@ -1,6 +1,7 @@
 require("dotenv").config();
 const assert = require("assert");
 const { fetchKey } = require("soundcloud-key-fetch");
+const { Readable } = require("stream");
 const scdl = require("../lib");
 
 /***** Set URLs here *****/
@@ -21,6 +22,14 @@ describe("scdl", function () {
             scdl.setOauthToken(foo);
             assert.strictEqual(scdl.clientID, clientID);
             assert.strictEqual(scdl.oauthToken, foo);
+        });
+        it("scdl sync readable return", function () {
+            assert(scdl(URL) instanceof Readable);
+        });
+        it("scdl stream populates with data", function (done) {
+            this.timeout(5000);
+            const output = scdl(URL);
+            output.once("data", () => done());
         });
     }
     else {
