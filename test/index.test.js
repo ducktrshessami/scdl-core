@@ -25,6 +25,10 @@ describe("scdl", function () {
             const output = scdl(URL);
             output.once("data", () => done());
         });
+        it("scdl.awaitDownload resolves in readable", async function () {
+            this.timeout(5000);
+            assert(await scdl.awaitDownload(URL) instanceof Readable);
+        });
     }
     else {
         console.warn("SONG_URL not found. Skipping scdl tests.\nSet the SONG_URL env or constant in the test script to run these tests.");
