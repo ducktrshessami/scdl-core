@@ -46,6 +46,10 @@ describe("scdl", function () {
                 const output = scdl.downloadFromInfo(info);
                 output.once("data", () => done());
             });
+            it("scdl.awaitDownloadFromInfo resolves in readable", async function () {
+                this.timeout(5000);
+                assert(await scdl.awaitDownloadFromInfo(info) instanceof Readable);
+            });
         });
     }
     else {
