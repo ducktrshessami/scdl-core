@@ -17,6 +17,10 @@ describe("scdl", function () {
         before("fetching clientID", async function () {
             scdl.clientID = await fetchKey();
         });
+        it("scdl.validateURL sync checks format", function () {
+            assert.strictEqual(scdl.validateURL(URL), true);
+            assert.strictEqual(scdl.validateURL("https://soundcloud.com/"), false);
+        });
         it("scdl sync readable return", function () {
             assert(scdl(URL) instanceof Readable);
         });
