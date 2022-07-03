@@ -33,6 +33,12 @@ describe("scdl", function () {
             this.timeout(5000);
             assert(typeof await scdl.getInfo(URL) === "object");
         });
+        describe("from info", function () {
+            let info;
+            before("fetching info", async function () {
+                info = await scdl.getInfo(URL);
+            });
+        });
     }
     else {
         console.warn("SONG_URL not found. Skipping scdl tests.\nSet the SONG_URL env or constant in the test script to run these tests.");
