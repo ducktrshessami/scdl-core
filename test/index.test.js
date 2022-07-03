@@ -38,6 +38,14 @@ describe("scdl", function () {
             before("fetching info", async function () {
                 info = await scdl.getInfo(URL);
             });
+            it("scdl.downloadFromInfo sync readable return", function () {
+                assert(scdl.downloadFromInfo(info) instanceof Readable);
+            });
+            it("scdl.downloadFromInfo stream populates with data", function (done) {
+                this.timeout(5000);
+                const output = scdl.downloadFromInfo(info);
+                output.once("data", () => done());
+            });
         });
     }
     else {
