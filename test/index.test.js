@@ -21,6 +21,10 @@ describe("scdl", function () {
             assert.strictEqual(scdl.validateURL(URL), true);
             assert.strictEqual(scdl.validateURL("https://soundcloud.com/"), false);
         });
+        it("scdl.getPermialinkURL always string", function () {
+            assert.strictEqual(typeof scdl.getPermalinkURL(URL), "string");
+            assert.strictEqual(typeof scdl.getPermalinkURL("foobar"), "string");
+        });
         it("scdl sync readable return", function () {
             assert(scdl(URL) instanceof Readable);
         });
