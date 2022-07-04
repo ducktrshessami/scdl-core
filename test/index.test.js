@@ -39,7 +39,7 @@ describe("scdl", function () {
         });
         it("scdl.getInfo resolves in object", async function () {
             this.timeout(5000);
-            assert(typeof await scdl.getInfo(URL) === "object");
+            assert.strictEqual(typeof await scdl.getInfo(URL), "object");
         });
         describe("from info", function () {
             let info;
