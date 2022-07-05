@@ -88,6 +88,18 @@ describe("scdl.playlist", function () {
             this.timeout(5000);
             assert.strictEqual(typeof await scdl.playlist.getInfo(URL), "object");
         });
+        describe("from info", function () {
+            let info;
+            before("fetching info", async function () {
+                info = await scdl.playlist.getInfo(URL);
+            });
+            it("scdl.playlist.downloadFromInfo resolves in readable array", async function () {
+                this.timeout(5000);
+                const result = await scdl.playlist.downloadFromInfo(info);
+                assert.strictEqual(Array.isArray(result), true);
+                assert.strictEqual(result.every(item => item instanceof Readable), true);
+            });
+        });
     }
     else {
         console.warn("PLAYLIST_URL not found. Skipping scdl.playlist tests.\nSet the PLAYLIST_URL env or constant in the test script to run these tests.");
