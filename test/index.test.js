@@ -11,12 +11,13 @@ const PLAYLIST_URL = "";
 
 /***** Set URLs here *****/
 
+before("fetching clientID", async function () {
+    scdl.clientID = await fetchKey();
+});
+
 describe("scdl", function () {
     const URL = process.env.SONG_URL || SONG_URL;
     if (URL) {
-        before("fetching clientID", async function () {
-            scdl.clientID = await fetchKey();
-        });
         it("scdl.validateURL sync checks format", function () {
             assert.strictEqual(scdl.validateURL(URL), true);
             assert.strictEqual(scdl.validateURL("https://soundcloud.com/"), false);
