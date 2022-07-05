@@ -1,4 +1,3 @@
-require("dotenv").config();
 const assert = require("assert");
 const { fetchKey } = require("soundcloud-key-fetch");
 const { Readable } = require("stream");

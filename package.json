@@ -9,7 +9,6 @@
     "undici": "^5.5.1"
   },
   "devDependencies": {
-    "dotenv": "^16.0.1",
     "mocha": "^10.0.0",
     "soundcloud-key-fetch": "^1.0.11"
   },
