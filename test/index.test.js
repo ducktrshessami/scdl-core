@@ -70,7 +70,10 @@ describe("scdl", function () {
 describe("scdl.playlist", function () {
     const URL = process.env.PLAYLIST_URL || PLAYLIST_URL;
     if (URL) {
-
+        it("scdl.playlist.validateURL sync checks format", function () {
+            assert.strictEqual(scdl.playlist.validateURL(URL), true);
+            assert.strictEqual(scdl.validateURL("https://soundcloud.com/"), false);
+        });
     }
     else {
         console.warn("PLAYLIST_URL not found. Skipping scdl.playlist tests.\nSet the PLAYLIST_URL env or constant in the test script to run these tests.");
