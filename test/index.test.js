@@ -78,6 +78,12 @@ describe("scdl.playlist", function () {
             assert.strictEqual(typeof scdl.playlist.getPermalinkURL(URL), "string");
             assert.strictEqual(typeof scdl.playlist.getPermalinkURL("foobar"), "string");
         });
+        it("scdl.playlist resolves in readable array", async function () {
+            this.timeout(5000);
+            const result = await scdl.playlist(URL);
+            assert.strictEqual(Array.isArray(result), true);
+            assert.strictEqual(result.every(item => item instanceof Readable), true);
+        });
     }
     else {
         console.warn("PLAYLIST_URL not found. Skipping scdl.playlist tests.\nSet the PLAYLIST_URL env or constant in the test script to run these tests.");
