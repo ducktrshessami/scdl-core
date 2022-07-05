@@ -22,7 +22,7 @@ describe("scdl", function () {
             assert.strictEqual(scdl.validateURL(URL), true);
             assert.strictEqual(scdl.validateURL("https://soundcloud.com/"), false);
         });
-        it("scdl.getPermialinkURL always string", function () {
+        it("scdl.getPermalinkURL always string", function () {
             assert.strictEqual(typeof scdl.getPermalinkURL(URL), "string");
             assert.strictEqual(typeof scdl.getPermalinkURL("foobar"), "string");
         });
@@ -74,7 +74,7 @@ describe("scdl.playlist", function () {
             assert.strictEqual(scdl.playlist.validateURL(URL), true);
             assert.strictEqual(scdl.validateURL("https://soundcloud.com/"), false);
         });
-        it("scdl.playlist.getPermialinkURL always string", function () {
+        it("scdl.playlist.getPermalinkURL always string", function () {
             assert.strictEqual(typeof scdl.playlist.getPermalinkURL(URL), "string");
             assert.strictEqual(typeof scdl.playlist.getPermalinkURL("foobar"), "string");
         });
