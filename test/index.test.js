@@ -74,6 +74,10 @@ describe("scdl.playlist", function () {
             assert.strictEqual(scdl.playlist.validateURL(URL), true);
             assert.strictEqual(scdl.validateURL("https://soundcloud.com/"), false);
         });
+        it("scdl.playlist.getPermialinkURL always string", function () {
+            assert.strictEqual(typeof scdl.playlist.getPermalinkURL(URL), "string");
+            assert.strictEqual(typeof scdl.playlist.getPermalinkURL("foobar"), "string");
+        });
     }
     else {
         console.warn("PLAYLIST_URL not found. Skipping scdl.playlist tests.\nSet the PLAYLIST_URL env or constant in the test script to run these tests.");
