@@ -2,34 +2,34 @@ import { Readable } from "stream";
 
 declare module "scdl-core" {
     type StreamOptions = {
-        strict?: Boolean,
-        preset?: String,
-        protocol?: String,
-        mimeType?: String,
-        quality?: String
+        strict?: boolean,
+        preset?: string,
+        protocol?: string,
+        mimeType?: string,
+        quality?: string
     };
 
     const scdl: {
-        (url: String, options?: StreamOptions): Readable;
+        (url: string, options?: StreamOptions): Readable;
 
-        clientID?: String;
-        oauthToken?: String;
+        clientID?: string;
+        oauthToken?: string;
 
-        setClientID(id: String): void;
-        setOauthToken(token: String): void;
-        awaitDownload(url: String, options?: StreamOptions): Promise<Readable>;
-        getInfo(url: String): Promise<Object>;
-        downloadFromInfo(info: Object, options?: StreamOptions): Readable;
-        awaitDownloadFromInfo(info: Object, options?: StreamOptions): Promise<Readable>;
-        validateURL(url: String): Boolean;
-        getPermalinkURL(url: String): String;
+        setClientID(id: string): void;
+        setOauthToken(token: string): void;
+        awaitDownload(url: string, options?: StreamOptions): Promise<Readable>;
+        getInfo(url: string): Promise<object>;
+        downloadFromInfo(info: object, options?: StreamOptions): Readable;
+        awaitDownloadFromInfo(info: object, options?: StreamOptions): Promise<Readable>;
+        validateURL(url: string): boolean;
+        getPermalinkURL(url: string): string;
         playlist: {
-            (url: String, options?: StreamOptions): Promise<Array<Readable>>;
+            (url: string, options?: StreamOptions): Promise<Array<Readable>>;
 
-            downloadFromInfo(info: Object, options?: StreamOptions): Promise<Array<Readable>>;
-            validateURL(url: String): Boolean;
-            getPermalinkURL(url: String): String;
-            getInfo(url: String): Promise<Object>;
+            downloadFromInfo(info: object, options?: StreamOptions): Promise<Array<Readable>>;
+            validateURL(url: string): boolean;
+            getPermalinkURL(url: string): string;
+            getInfo(url: string): Promise<object>;
         }
     }
 
