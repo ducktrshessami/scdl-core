@@ -78,7 +78,7 @@ describe("scdl.playlist", function () {
             assert.strictEqual(typeof scdl.playlist.getPermalinkURL("foobar"), "string");
         });
         it("scdl.playlist resolves in readable? array", async function () {
-            this.timeout(5000);
+            this.timeout(10000);
             const result = await scdl.playlist(URL);
             assert.strictEqual(Array.isArray(result), true);
             assert.strictEqual(result.every(item => item === null || item instanceof Readable), true);
@@ -93,7 +93,7 @@ describe("scdl.playlist", function () {
                 info = await scdl.playlist.getInfo(URL);
             });
             it("scdl.playlist.downloadFromInfo resolves in readable? array", async function () {
-                this.timeout(5000);
+                this.timeout(10000);
                 const result = await scdl.playlist.downloadFromInfo(info);
                 assert.strictEqual(Array.isArray(result), true);
                 assert.strictEqual(result.every(item => item === null || item instanceof Readable), true);
