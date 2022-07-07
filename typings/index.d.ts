@@ -25,7 +25,7 @@ declare module "scdl-core" {
         c_line: string
         c_line_for_display: string
         publisher: string | null
-        iswc: any
+        iswc: string | null
     }
 
     interface UserInfo {
