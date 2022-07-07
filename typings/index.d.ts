@@ -1,7 +1,7 @@
 import { Readable } from "stream";
 
 declare module "scdl-core" {
-    type StreamOptions = {
+    export type StreamOptions = {
         strict?: boolean
         preset?: string
         protocol?: string
@@ -129,7 +129,7 @@ declare module "scdl-core" {
         user: UserInfo
     }
 
-    interface StreamableTrackInfo {
+    export interface StreamableTrackInfo {
 
     }
 
@@ -137,7 +137,7 @@ declare module "scdl-core" {
         tracks: Array<TrackInfo>
     }
 
-    interface StreamablePlaylistInfo {
+    export interface StreamablePlaylistInfo {
         tracks: Array<StreamableTrackInfo>
     }
 
