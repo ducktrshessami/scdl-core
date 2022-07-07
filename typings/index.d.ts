@@ -10,7 +10,22 @@ declare module "scdl-core" {
     };
 
     interface PublisherMetadata {
-
+        id: number
+        urn: string
+        contains_music: boolean
+        artist: string | null
+        isrc: string
+        explicit: boolean
+        writer_composer: string | null
+        release_title: string | null
+        album_title: string | null
+        upc_or_ean: string | null
+        p_line: string | null
+        p_line_for_display: string
+        c_line: string
+        c_line_for_display: string
+        publisher: string | null
+        iswc: any
     }
 
     interface UserInfo {
