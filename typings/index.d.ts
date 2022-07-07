@@ -28,8 +28,50 @@ declare module "scdl-core" {
         iswc: string | null
     }
 
-    interface UserInfo {
+    interface UserBadges {
 
+    }
+
+    interface CreatorSubscription {
+
+    }
+
+    interface Visuals {
+
+    }
+
+    interface UserInfo {
+        avatar_url: string
+        first_name: string | null
+        followers_count: number
+        full_name: string | null
+        id: number
+        kind: string
+        last_modified: string
+        last_name: string | null
+        permalink: string
+        uri: string
+        urn: string
+        username: string
+        verified: boolean
+        city: string | null
+        country_code: string | null
+        badges: UserBadges
+        station_urn: string
+        station_permalink: string
+        comments_count: number
+        created_at: string
+        creator_subscriptions: Array<any>
+        creator_subscription: CreatorSubscription
+        description: string | null
+        followings_count: number
+        groups_count: number
+        likes_count: number
+        playlist_likes_count: number
+        playlist_count: number
+        reposts_count: number | null
+        track_count: number
+        visuals: Visuals | null
     }
 
     interface TrackMedia {
