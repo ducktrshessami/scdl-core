@@ -76,6 +76,14 @@ declare module "scdl-core" {
 
     }
 
+    interface PlaylistInfo {
+        tracks: Array<TrackInfo>
+    }
+
+    interface StreamablePlaylistInfo {
+        tracks: Array<StreamableTrackInfo>
+    }
+
     const scdl: {
         (url: string, options?: StreamOptions): Readable;
 
@@ -93,10 +101,10 @@ declare module "scdl-core" {
         playlist: {
             (url: string, options?: StreamOptions): Promise<Array<Readable> | null>;
 
-            downloadFromInfo(info: object, options?: StreamOptions): Promise<Array<Readable> | null>;
+            downloadFromInfo(info: StreamablePlaylistInfo, options?: StreamOptions): Promise<Array<Readable> | null>;
             validateURL(url: string): boolean;
             getPermalinkURL(url: string): string;
-            getInfo(url: string): Promise<object>;
+            getInfo(url: string): Promise<PlaylistInfo>;
         }
     }
 
