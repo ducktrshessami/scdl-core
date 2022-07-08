@@ -73,18 +73,18 @@ declare module "scdl-core" {
         badges: UserBadges
         station_urn: string
         station_permalink: string
-        comments_count: number
-        created_at: string
+        comments_count?: number
+        created_at?: string
         creator_subscriptions?: Array<CreatorSubscription>
         creator_subscription?: CreatorSubscription
         description?: string
-        followings_count: number
-        groups_count: number
-        likes_count: number
-        playlist_likes_count: number
-        playlist_count: number
+        followings_count?: number
+        groups_count?: number
+        likes_count?: number
+        playlist_likes_count?: number
+        playlist_count?: number
         reposts_count?: number
-        track_count: number
+        track_count?: number
         visuals?: Visuals
     }
 
