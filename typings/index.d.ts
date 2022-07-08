@@ -13,19 +13,19 @@ declare module "scdl-core" {
         id: number
         urn: string
         contains_music: boolean
-        artist: string | null
+        artist?: string
         isrc: string
         explicit: boolean
-        writer_composer: string | null
-        release_title: string | null
-        album_title: string | null
-        upc_or_ean: string | null
-        p_line: string | null
+        writer_composer?: string
+        release_title?: string
+        album_title?: string
+        upc_or_ean?: string
+        p_line?: string
         p_line_for_display: string
         c_line: string
         c_line_for_display: string
-        publisher: string | null
-        iswc: string | null
+        publisher?: string
+        iswc?: string
     }
 
     interface UserBadges {
@@ -42,20 +42,20 @@ declare module "scdl-core" {
 
     interface UserInfo {
         avatar_url: string
-        first_name: string | null
+        first_name?: string
         followers_count: number
-        full_name: string | null
+        full_name?: string
         id: number
         kind: string
         last_modified: string
-        last_name: string | null
+        last_name?: string
         permalink: string
         uri: string
         urn: string
         username: string
         verified: boolean
-        city: string | null
-        country_code: string | null
+        city?: string
+        country_code?: string
         badges: UserBadges
         station_urn: string
         station_permalink: string
@@ -63,15 +63,15 @@ declare module "scdl-core" {
         created_at: string
         creator_subscriptions: Array<any>
         creator_subscription: CreatorSubscription
-        description: string | null
+        description?: string
         followings_count: number
         groups_count: number
         likes_count: number
         playlist_likes_count: number
         playlist_count: number
-        reposts_count: number | null
+        reposts_count?: number
         track_count: number
-        visuals: Visuals | null
+        visuals?: Visuals
     }
 
     interface Transcoding {
@@ -91,39 +91,39 @@ declare module "scdl-core" {
     }
 
     interface TrackInfo {
-        artwork_url: string | null
-        caption: string | null
+        artwork_url?: string
+        caption?: string
         commentable: boolean
-        comment_count: number | null
+        comment_count?: number
         created_at: string
-        description: string | null
+        description?: string
         downloadable: boolean
-        download_count: number | null
+        download_count?: number
         duration: number
         full_duration: number
         embeddable_by: string
-        genre: string | null
+        genre?: string
         has_downloads_left: boolean
         id: number
         kind: string
-        label_name: string | null
+        label_name?: string
         last_modified: string
         license: string
-        likes_count: number | null
+        likes_count?: number
         permalink: string
         permalink_url: string
-        playback_count: number | null
+        playback_count?: number
         public: boolean
-        publisher_metadata: PublisherMetadata | null
-        purchase_title: string | null
-        purchase_url: string | null
-        release_date: string | null
+        publisher_metadata?: PublisherMetadata
+        purchase_title?: string
+        purchase_url?: string
+        release_date?: string
         reposts_count: number
-        secret_token: string | null
+        secret_token?: string
         sharing: string
         state: string
         streamable: boolean
-        tag_list: string | null
+        tag_list?: string
         title: string
         track_format: string
         uri: string
