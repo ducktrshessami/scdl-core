@@ -51,7 +51,7 @@ declare module "scdl-core" {
         urn: string
         enabled: boolean
         visuals: Array<Visual>
-        tracking?: any
+        tracking?: any // personally never seen this not null
     }
 
     interface UserInfo {
