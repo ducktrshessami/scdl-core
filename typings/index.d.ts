@@ -12,18 +12,18 @@ declare module "scdl-core" {
     interface PublisherMetadata {
         id: number
         urn: string
-        contains_music: boolean
+        contains_music?: boolean
         artist?: string
-        isrc: string
-        explicit: boolean
+        isrc?: string
+        explicit?: boolean
         writer_composer?: string
         release_title?: string
         album_title?: string
         upc_or_ean?: string
         p_line?: string
-        p_line_for_display: string
-        c_line: string
-        c_line_for_display: string
+        p_line_for_display?: string
+        c_line?: string
+        c_line_for_display?: string
         publisher?: string
         iswc?: string
     }
