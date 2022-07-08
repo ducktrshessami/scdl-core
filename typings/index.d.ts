@@ -36,8 +36,18 @@ declare module "scdl-core" {
 
     }
 
-    interface Visuals {
+    interface Visual {
+        urn: string
+        entry_time: number
+        visual_url: string
+        link: string
+    }
 
+    interface Visuals {
+        urn: string
+        enabled: boolean
+        visuals: Array<Visual>
+        tracking?: any
     }
 
     interface UserInfo {
@@ -129,7 +139,7 @@ declare module "scdl-core" {
         uri: string
         urn: string
         user_id: number
-        visuals: any
+        visuals?: Visuals
         waveform_url: string
         display_date: string
         media: TrackMedia
