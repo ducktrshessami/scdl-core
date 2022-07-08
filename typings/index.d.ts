@@ -74,8 +74,20 @@ declare module "scdl-core" {
         visuals: Visuals | null
     }
 
-    interface TrackMedia {
+    interface Transcoding {
+        url: string
+        preset: string
+        duration: number
+        snipped: boolean
+        format: {
+            protocol: string
+            mime_type: string
+        }
+        quality: string
+    }
 
+    interface TrackMedia {
+        transcodings: Array<Transcoding>
     }
 
     interface TrackInfo {
@@ -130,7 +142,7 @@ declare module "scdl-core" {
     }
 
     export interface StreamableTrackInfo {
-
+        media: TrackMedia
     }
 
     interface PlaylistInfo {
