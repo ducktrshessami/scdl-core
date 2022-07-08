@@ -104,7 +104,11 @@ declare module "scdl-core" {
         transcodings: Array<Transcoding>
     }
 
-    interface TrackInfo {
+    export interface StreamableTrackInfo {
+        media: TrackMedia
+    }
+
+    interface TrackInfo extends StreamableTrackInfo {
         artwork_url?: string
         caption?: string
         commentable: boolean
@@ -155,11 +159,11 @@ declare module "scdl-core" {
         user: UserInfo
     }
 
-    export interface StreamableTrackInfo {
-        media: TrackMedia
+    export interface StreamablePlaylistInfo {
+        tracks: Array<StreamableTrackInfo>
     }
 
-    interface PlaylistInfo {
+    interface PlaylistInfo extends StreamablePlaylistInfo {
         artwork_url?: string
         created_at: string
         description?: string
@@ -193,10 +197,6 @@ declare module "scdl-core" {
         user: UserInfo
         tracks: Array<TrackInfo>
         track_count: number
-    }
-
-    export interface StreamablePlaylistInfo {
-        tracks: Array<StreamableTrackInfo>
     }
 
     const scdl: {
