@@ -35,7 +35,9 @@ declare module "scdl-core" {
     }
 
     interface CreatorSubscription {
-
+        product: {
+            id: string
+        }
     }
 
     interface Visual {
@@ -73,8 +75,8 @@ declare module "scdl-core" {
         station_permalink: string
         comments_count: number
         created_at: string
-        creator_subscriptions: Array<any>
-        creator_subscription: CreatorSubscription
+        creator_subscriptions?: Array<CreatorSubscription>
+        creator_subscription?: CreatorSubscription
         description?: string
         followings_count: number
         groups_count: number
