@@ -29,7 +29,9 @@ declare module "scdl-core" {
     }
 
     interface UserBadges {
-
+        pro: boolean
+        pro_unlimited: boolean
+        verified: boolean
     }
 
     interface CreatorSubscription {
