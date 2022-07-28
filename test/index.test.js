@@ -28,15 +28,15 @@ describe("scdl", function () {
         it("scdl sync readable return", function () {
             assert(scdl(URL) instanceof Readable);
         });
-        it("scdl stream populates with data", function (done) {
-            this.timeout(5000);
-            const output = scdl(URL);
-            output.once("data", () => done());
-        });
         it("scdl stream emits transcoding", function (done) {
             this.timeout(5000);
             const output = scdl(URL);
             output.once("transcoding", () => done());
+        });
+        it("scdl stream populates with data", function (done) {
+            this.timeout(5000);
+            const output = scdl(URL);
+            output.once("data", () => done());
         });
         it("scdl.awaitDownload resolves in readable", async function () {
             this.timeout(5000);
@@ -59,6 +59,11 @@ describe("scdl", function () {
             it("scdl.downloadFromInfo sync readable return", function () {
                 assert(scdl.downloadFromInfo(info) instanceof Readable);
             });
+            it("scdl.downloadFromInfo stream emits transcoding", function (done) {
+                this.timeout(5000);
+                const output = scdl.downloadFromInfo(info);
+                output.once("transcoding", () => done());
+            });
             it("scdl.downloadFromInfo stream populates with data", function (done) {
                 this.timeout(5000);
                 const output = scdl.downloadFromInfo(info);
@@ -67,6 +72,11 @@ describe("scdl", function () {
             it("scdl.awaitDownloadFromInfo resolves in readable", async function () {
                 this.timeout(5000);
                 assert(await scdl.awaitDownloadFromInfo(info) instanceof Readable);
+            });
+            it("scdl.awaitDownloadFromInfo readable has transcoding property", async function () {
+                this.timeout(5000);
+                const output = await scdl.awaitDownloadFromInfo(info);
+                assert.strictEqual(typeof output.transcoding, "object");
             });
         });
     }
@@ -93,6 +103,11 @@ describe("scdl.playlist", function () {
             assert.strictEqual(Array.isArray(result), true);
             assert.strictEqual(result.every(item => item === null || item instanceof Readable), true);
         });
+        it("scdl.playlist readables have transcoding property", async function () {
+            this.timeout(10000);
+            const result = await scdl.playlist(URL);
+            assert.strictEqual(result.every(item => item === null || typeof item.transcoding === "object"), true);
+        });
         it("scdl.playlist.getInfo resolves in object", async function () {
             this.timeout(5000);
             assert.strictEqual(typeof await scdl.playlist.getInfo(URL), "object");
@@ -107,6 +122,11 @@ describe("scdl.playlist", function () {
                 const result = await scdl.playlist.downloadFromInfo(info);
                 assert.strictEqual(Array.isArray(result), true);
                 assert.strictEqual(result.every(item => item === null || item instanceof Readable), true);
+            });
+            it("scdl.playlist.downloadFromInfo readables have transcoding property", async function () {
+                this.timeout(10000);
+                const result = await scdl.playlist.downloadFromInfo(info);
+                assert.strictEqual(result.every(item => item === null || typeof item.transcoding === "object"), true);
             });
         });
     }
