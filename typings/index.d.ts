@@ -219,24 +219,31 @@ declare module "scdl-core" {
         track_count: number
     }
 
+    export interface ReadableTrackStream extends Readable {
+        transcoding?: Transcoding
+
+        on(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
+        on(event: string, listener: Function): this;
+    }
+
     const scdl: {
-        (url: string, options?: StreamOptions): Readable;
+        (url: string, options?: StreamOptions): ReadableTrackStream;
 
         clientID?: string;
         oauthToken?: string;
 
         setClientID(id: string): void;
         setOauthToken(token: string): void;
-        awaitDownload(url: string, options?: StreamOptions): Promise<Readable>;
+        awaitDownload(url: string, options?: StreamOptions): Promise<ReadableTrackStream>;
         getInfo(url: string): Promise<TrackInfo>;
-        downloadFromInfo(info: StreamableTrackInfo, options?: StreamOptions): Readable;
-        awaitDownloadFromInfo(info: StreamableTrackInfo, options?: StreamOptions): Promise<Readable>;
+        downloadFromInfo(info: StreamableTrackInfo, options?: StreamOptions): ReadableTrackStream;
+        awaitDownloadFromInfo(info: StreamableTrackInfo, options?: StreamOptions): Promise<ReadableTrackStream>;
         validateURL(url: string): boolean;
         getPermalinkURL(url: string): string;
         playlist: {
-            (url: string, options?: StreamOptions): Promise<Array<Readable | null>>;
+            (url: string, options?: StreamOptions): Promise<Array<ReadableTrackStream | null>>;
 
-            downloadFromInfo(info: StreamablePlaylistInfo, options?: StreamOptions): Promise<Array<Readable | null>>;
+            downloadFromInfo(info: StreamablePlaylistInfo, options?: StreamOptions): Promise<Array<ReadableTrackStream | null>>;
             validateURL(url: string): boolean;
             getPermalinkURL(url: string): string;
             getInfo(url: string): Promise<PlaylistInfo>;
