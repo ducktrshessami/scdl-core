@@ -234,9 +234,9 @@ declare module "scdl-core" {
         validateURL(url: string): boolean;
         getPermalinkURL(url: string): string;
         playlist: {
-            (url: string, options?: StreamOptions): Promise<Array<Readable> | null>;
+            (url: string, options?: StreamOptions): Promise<Array<Readable | null>>;
 
-            downloadFromInfo(info: StreamablePlaylistInfo, options?: StreamOptions): Promise<Array<Readable> | null>;
+            downloadFromInfo(info: StreamablePlaylistInfo, options?: StreamOptions): Promise<Array<Readable | null>>;
             validateURL(url: string): boolean;
             getPermalinkURL(url: string): string;
             getInfo(url: string): Promise<PlaylistInfo>;
