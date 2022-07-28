@@ -33,9 +33,19 @@ describe("scdl", function () {
             const output = scdl(URL);
             output.once("data", () => done());
         });
+        it("scdl stream emits transcoding", function (done) {
+            this.timeout(5000);
+            const output = scdl(URL);
+            output.once("transcoding", () => done());
+        });
         it("scdl.awaitDownload resolves in readable", async function () {
             this.timeout(5000);
             assert(await scdl.awaitDownload(URL) instanceof Readable);
+        });
+        it("scdl.awaitDownload readable has transcoding property", async function () {
+            this.timeout(5000);
+            const output = await scdl.awaitDownload(URL);
+            assert.strictEqual(typeof output.transcoding, "object");
         });
         it("scdl.getInfo resolves in object", async function () {
             this.timeout(5000);
