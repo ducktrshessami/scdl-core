@@ -28,15 +28,15 @@ describe("scdl", function () {
         it("scdl sync readable return", function () {
             assert(scdl(URL) instanceof Readable);
         });
-        it("scdl stream populates with data", function (done) {
-            this.timeout(5000);
-            const output = scdl(URL);
-            output.once("data", () => done());
-        });
         it("scdl stream emits transcoding", function (done) {
             this.timeout(5000);
             const output = scdl(URL);
             output.once("transcoding", () => done());
+        });
+        it("scdl stream populates with data", function (done) {
+            this.timeout(5000);
+            const output = scdl(URL);
+            output.once("data", () => done());
         });
         it("scdl.awaitDownload resolves in readable", async function () {
             this.timeout(5000);
