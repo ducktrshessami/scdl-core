@@ -1,12 +1,32 @@
 import { Readable } from "stream";
 
 declare module "scdl-core" {
+    type PresetOption =
+        "mp3_0_1" |
+        "opus_0_0" |
+        "mp3" |
+        "opus";
+
+    type ProtocolOption =
+        "progressive" |
+        "hls";
+
+    type MimeOption =
+        "audio/mpeg" |
+        "audio/ogg; codecs=\"opus\"" |
+        "mpeg" |
+        "opus";
+
+    type QualityOption =
+        "sq" |
+        "hq";
+
     export type StreamOptions = {
         strict?: boolean
-        preset?: string
-        protocol?: string
-        mimeType?: string
-        quality?: string
+        preset?: PresetOption
+        protocol?: ProtocolOption
+        mimeType?: MimeOption
+        quality?: QualityOption
     };
 
     interface PublisherMetadata {
