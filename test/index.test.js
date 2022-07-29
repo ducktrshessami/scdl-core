@@ -38,6 +38,11 @@ describe("scdl", function () {
             const output = scdl(URL);
             output.once("data", () => done());
         });
+        it("scdl stream populates with data with hls protocol", function (done) {
+            this.timeout(5000);
+            const output = scdl(URL, { protocol: "hls" });
+            output.once("data", () => done());
+        });
         it("scdl.awaitDownload resolves in readable", async function () {
             this.timeout(5000);
             assert(await scdl.awaitDownload(URL) instanceof Readable);
@@ -100,6 +105,12 @@ describe("scdl.playlist", function () {
         it("scdl.playlist resolves in readable? array", async function () {
             this.timeout(10000);
             const result = await scdl.playlist(URL);
+            assert.strictEqual(Array.isArray(result), true);
+            assert.strictEqual(result.every(item => item === null || item instanceof Readable), true);
+        });
+        it("scdl.playlist resolves in readable? array with hls protocol", async function () {
+            this.timeout(10000);
+            const result = await scdl.playlist(URL, { protocol: "hls" });
             assert.strictEqual(Array.isArray(result), true);
             assert.strictEqual(result.every(item => item === null || item instanceof Readable), true);
         });
