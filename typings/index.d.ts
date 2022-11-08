@@ -1,23 +1,23 @@
 import { Readable } from "stream";
 
 declare module "scdl-core" {
-    type PresetOption =
+    export type PresetOption =
         "mp3_0_1" |
         "opus_0_0" |
         "mp3" |
         "opus";
 
-    type ProtocolOption =
+    export type ProtocolOption =
         "progressive" |
         "hls";
 
-    type MimeOption =
+    export type MimeOption =
         "audio/mpeg" |
         "audio/ogg; codecs=\"opus\"" |
         "mpeg" |
         "opus";
 
-    type QualityOption =
+    export type QualityOption =
         "sq" |
         "hq";
 
@@ -29,7 +29,7 @@ declare module "scdl-core" {
         quality?: QualityOption
     };
 
-    interface PublisherMetadata {
+    export interface PublisherMetadata {
         id: number
         urn: string
         contains_music?: boolean
@@ -48,33 +48,33 @@ declare module "scdl-core" {
         iswc?: string
     }
 
-    interface UserBadges {
+    export interface UserBadges {
         pro: boolean
         pro_unlimited: boolean
         verified: boolean
     }
 
-    interface CreatorSubscription {
+    export interface CreatorSubscription {
         product: {
             id: string
         }
     }
 
-    interface Visual {
+    export interface Visual {
         urn: string
         entry_time: number
         visual_url: string
         link: string
     }
 
-    interface Visuals {
+    export interface Visuals {
         urn: string
         enabled: boolean
         visuals: Array<Visual>
         tracking?: any // personally never seen this not null
     }
 
-    interface UserInfo {
+    export interface UserInfo {
         avatar_url: string
         first_name?: string
         followers_count: number
@@ -108,7 +108,7 @@ declare module "scdl-core" {
         visuals?: Visuals
     }
 
-    interface Transcoding {
+    export interface Transcoding {
         url: string
         preset: string
         duration: number
@@ -120,7 +120,7 @@ declare module "scdl-core" {
         quality: string
     }
 
-    interface TrackMedia {
+    export interface TrackMedia {
         transcodings: Array<Transcoding>
     }
 
@@ -128,7 +128,7 @@ declare module "scdl-core" {
         media: TrackMedia
     }
 
-    interface TrackInfo extends StreamableTrackInfo {
+    export interface TrackInfo extends StreamableTrackInfo {
         artwork_url?: string
         caption?: string
         commentable: boolean
@@ -183,7 +183,7 @@ declare module "scdl-core" {
         tracks: Array<StreamableTrackInfo>
     }
 
-    interface PlaylistInfo extends StreamablePlaylistInfo {
+    export interface PlaylistInfo extends StreamablePlaylistInfo {
         artwork_url?: string
         created_at: string
         description?: string
