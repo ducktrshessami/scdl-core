@@ -5,7 +5,7 @@ const scdl = require("../lib");
 
 /***** Set URLs here *****/
 
-const SONG_URL = "";
+const TRACK_URL = "";
 const PLAYLIST_URL = "";
 
 /***** Set URLs here *****/
@@ -15,7 +15,7 @@ before("fetching clientID", async function () {
 });
 
 describe("scdl", function () {
-    const URL = process.env.SONG_URL || SONG_URL;
+    const URL = process.env.TRACK_URL || TRACK_URL;
     if (URL) {
         it("scdl.validateURL sync checks format", function () {
             assert.strictEqual(scdl.validateURL(URL), true);
@@ -86,7 +86,7 @@ describe("scdl", function () {
         });
     }
     else {
-        console.warn("SONG_URL not found. Skipping scdl tests.\nSet the SONG_URL env or constant in the test script to run these tests.");
+        console.warn("TRACK_URL not found. Skipping scdl tests.\nSet the TRACK_URL env or constant in the test script to run these tests.");
         return;
     }
 });
