@@ -1,9 +1,9 @@
 /**
  * A regular expression that matches SoundCloud track URLs
  * 
- * Includes the `user` and `title` groups
+ * Includes the `user`, `title`, and `secret` groups
  */
-export const TrackURLPattern = /^(?:https?:\/\/)?(?:www.)?soundcloud\.com\/(?<user>[\w-]+)\/(?<title>[\w-]+)\/?(?=[?#]|$)/i;
+export const TrackURLPattern = /^(?:https?:\/\/)?(?:www.)?soundcloud\.com\/(?<user>[\w-]+)\/(?<title>[\w-]+)\/?(?<secret>(?<=\/)[\w-]+)?(?:(?<!\/)\/?)(?=[?#]|$)/i;
 
 /**
  * Checks if a string matches the SoundCloud track URL format
