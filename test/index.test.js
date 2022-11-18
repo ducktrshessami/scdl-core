@@ -50,6 +50,10 @@ describe("track", function () {
             before("fetching info", async function () {
                 info = await scdl.getInfo(URL);
             });
+            it("info contains title and user", function () {
+                assert(info.title);
+                assert(info.user?.username);
+            });
             it("streamFromInfo readable has transcoding property", async function () {
                 this.timeout(5000);
                 const output = await scdl.streamFromInfo(info);
