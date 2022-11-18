@@ -1,5 +1,5 @@
-export let clientID: string | null = null;
-export let oauthToken: string | null = null;
+let clientID: string | null = null;
+let oauthToken: string | null = null;
 
 /**
  * Set the client_id to access the API with
@@ -15,4 +15,18 @@ export function setClientID(id: string | null): void {
  */
 export function setOauthToken(token: string | null): void {
     oauthToken = token;
+}
+
+/**
+ * Get the currently set client_id
+ */
+export function getClientID(): string | null {
+    return clientID;
+}
+
+/**
+ * Get the currently set oauth_token
+ */
+export function getOauthToken(): string | null {
+    return oauthToken;
 }
