@@ -1,24 +1,13 @@
-import { requestWithAuth } from "./dispatch";
+import { rawResolve } from "./api";
 import { ScdlError } from "./error";
 import { validateURL } from "./utils/validate";
-
-const RESOLVE_ENDPOINT = "https://api-v2.soundcloud.com/resolve";
-
-/**
- * Resolve info from a URL
- */
-async function resolveAPI(url: string): Promise<any> {
-    const endpoint = new URL(RESOLVE_ENDPOINT);
-    endpoint.searchParams.set("url", url);
-    return requestWithAuth(endpoint);
-}
 
 /**
  * Get a track's info
  */
 export async function getInfo(url: string): Promise<TrackInfo> {
     if (validateURL(url)) {
-        return resolveAPI(url);
+        return rawResolve(url);
     }
     else {
         throw new ScdlError("Invalid track URL");
@@ -30,7 +19,7 @@ export async function getInfo(url: string): Promise<TrackInfo> {
  */
 export async function getPlaylistInfo(url: string): Promise<PlaylistInfo> {
     if (validateURL(url)) {
-        return resolveAPI(url);
+        return rawResolve(url);
     }
     else {
         throw new ScdlError("Invalid playlist URL");
