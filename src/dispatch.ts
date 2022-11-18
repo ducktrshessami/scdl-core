@@ -1,6 +1,7 @@
 import { Dispatcher, getGlobalDispatcher } from "undici";
 import { ResponseData } from "undici/types/dispatcher";
-import { RequestError } from "./error";
+import { getClientID, getOauthToken } from "./auth";
+import { RequestError, ScdlError } from "./error";
 
 let dispatcher = getGlobalDispatcher();
 
@@ -21,11 +22,10 @@ export function getAgent(): Dispatcher {
 /**
  * Create GET request options from a URL
  */
-function createRequestOptions(url: string): Dispatcher.RequestOptions {
-    const parsedUrl = new URL(url);
+function createRequestOptions(url: URL): Dispatcher.RequestOptions {
     return {
-        origin: parsedUrl.origin,
-        path: parsedUrl.pathname + parsedUrl.search,
+        origin: url.origin,
+        path: url.pathname + url.search,
         method: "GET"
     };
 }
@@ -33,7 +33,7 @@ function createRequestOptions(url: string): Dispatcher.RequestOptions {
 /**
  * Perform a GET request
  */
-export async function request(url: string): Promise<ResponseData> {
+export async function request(url: URL): Promise<ResponseData> {
     const res = await dispatcher.request(createRequestOptions(url));
     if (res.statusCode < 400) {
         return res;
@@ -41,4 +41,24 @@ export async function request(url: string): Promise<ResponseData> {
     else {
         throw new RequestError(res.statusCode);
     }
+}
+
+/**
+ * Perform a GET request with authentication and parse as JSON
+ */
+export async function requestWithAuth(url: string): Promise<any> {
+    const parsedUrl = new URL(url);
+    switch (true) {
+        case !!getOauthToken():
+            parsedUrl.searchParams.set("oauth_token", getOauthToken()!);
+            break;
+        case !!getClientID():
+            parsedUrl.searchParams.set("client_id", getClientID()!);
+            break;
+        default:
+            throw new ScdlError("Authentication not set");
+    }
+    parsedUrl.hash = "";
+    const { body } = await request(parsedUrl);
+    return body.json();
 }
