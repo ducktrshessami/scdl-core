@@ -1,5 +1,5 @@
 import { rawResolve } from "./api";
-import { ScdlError } from "./error";
+import { ScdlError } from "./utils/error";
 import { Transcoding } from "./utils/transcoding";
 import { validateURL } from "./utils/validate";
 
