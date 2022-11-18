@@ -25,6 +25,18 @@ export async function getInfo(url: string): Promise<TrackInfo> {
     }
 }
 
+/**
+ * Get a playlist's info
+ */
+export async function getPlaylistInfo(url: string): Promise<PlaylistInfo> {
+    if (validateURL(url)) {
+        return resolveAPI(url);
+    }
+    else {
+        throw new ScdlError("Invalid playlist URL");
+    }
+}
+
 export type Transcoding = {
     url: string
     preset: string
