@@ -1,5 +1,6 @@
 import { rawResolve } from "./api";
 import { ScdlError } from "./error";
+import { Transcoding } from "./utils/transcoding";
 import { validateURL } from "./utils/validate";
 
 /**
@@ -25,18 +26,6 @@ export async function getPlaylistInfo(url: string): Promise<PlaylistInfo> {
         throw new ScdlError("Invalid playlist URL");
     }
 }
-
-export type Transcoding = {
-    url: string
-    preset: string
-    duration: number
-    snipped: boolean
-    format: {
-        protocol: string
-        mime_type: string
-    }
-    quality: string
-};
 
 export type TrackMedia = {
     transcodings: Array<Transcoding>
