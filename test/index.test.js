@@ -11,7 +11,7 @@ const PLAYLIST_URL = "";
 /***** Set URLs here *****/
 
 before("fetching clientID", async function () {
-    scdl.clientID = await fetchKey();
+    scdl.setClientID(await fetchKey());
 });
 
 describe("scdl", function () {
