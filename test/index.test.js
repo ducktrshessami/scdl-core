@@ -14,74 +14,56 @@ before("fetching clientID", async function () {
     scdl.setClientID(await fetchKey());
 });
 
-describe("scdl", function () {
+describe("track", function () {
     const URL = process.env.TRACK_URL || TRACK_URL;
     if (URL) {
-        it("scdl.validateURL sync checks format", function () {
+        it("validateURL sync checks format", function () {
             assert.strictEqual(scdl.validateURL(URL), true);
             assert.strictEqual(scdl.validateURL("https://soundcloud.com/"), false);
         });
-        it("scdl.getPermalinkURL always string", function () {
+        it("getPermalinkURL always string", function () {
             assert.strictEqual(typeof scdl.getPermalinkURL(URL), "string");
             assert.strictEqual(typeof scdl.getPermalinkURL("foobar"), "string");
         });
-        it("scdl sync readable return", function () {
-            assert(scdl(URL) instanceof Readable);
-        });
-        it("scdl stream emits transcoding", function (done) {
+        it("stream readable has transcoding property", async function () {
             this.timeout(5000);
-            const output = scdl(URL);
-            output.once("transcoding", () => done());
-        });
-        it("scdl stream populates with data", function (done) {
-            this.timeout(5000);
-            const output = scdl(URL);
-            output.once("data", () => done());
-        });
-        it("scdl stream populates with data with hls protocol", function (done) {
-            this.timeout(5000);
-            const output = scdl(URL, { protocol: "hls" });
-            output.once("data", () => done());
-        });
-        it("scdl.awaitDownload resolves in readable", async function () {
-            this.timeout(5000);
-            assert(await scdl.awaitDownload(URL) instanceof Readable);
-        });
-        it("scdl.awaitDownload readable has transcoding property", async function () {
-            this.timeout(5000);
-            const output = await scdl.awaitDownload(URL);
+            const output = await scdl.stream(URL);
             assert.strictEqual(typeof output.transcoding, "object");
         });
-        it("scdl.getInfo resolves in object", async function () {
+        it("streamSync emits transcoding", function (done) {
             this.timeout(5000);
-            assert.strictEqual(typeof await scdl.getInfo(URL), "object");
+            const output = scdl.streamSync(URL);
+            output.once("transcoding", () => done());
+        });
+        it("streamSync populates with data", function (done) {
+            this.timeout(5000);
+            const output = scdl.streamSync(URL);
+            output.once("data", () => done());
+        });
+        it("streamSync populates with data with hls protocol", function (done) {
+            this.timeout(5000);
+            const output = scdl.streamSync(URL, { protocol: "hls" });
+            output.once("data", () => done());
         });
         describe("from info", function () {
             let info;
             before("fetching info", async function () {
                 info = await scdl.getInfo(URL);
             });
-            it("scdl.downloadFromInfo sync readable return", function () {
-                assert(scdl.downloadFromInfo(info) instanceof Readable);
-            });
-            it("scdl.downloadFromInfo stream emits transcoding", function (done) {
+            it("streamFromInfo readable has transcoding property", async function () {
                 this.timeout(5000);
-                const output = scdl.downloadFromInfo(info);
+                const output = await scdl.streamFromInfo(info);
+                assert.strictEqual(typeof output.transcoding, "object");
+            });
+            it("streamFromInfoSync stream emits transcoding", function (done) {
+                this.timeout(5000);
+                const output = scdl.streamFromInfoSync(info);
                 output.once("transcoding", () => done());
             });
-            it("scdl.downloadFromInfo stream populates with data", function (done) {
+            it("streamFromInfoSync stream populates with data", function (done) {
                 this.timeout(5000);
-                const output = scdl.downloadFromInfo(info);
+                const output = scdl.streamFromInfoSync(info);
                 output.once("data", () => done());
-            });
-            it("scdl.awaitDownloadFromInfo resolves in readable", async function () {
-                this.timeout(5000);
-                assert(await scdl.awaitDownloadFromInfo(info) instanceof Readable);
-            });
-            it("scdl.awaitDownloadFromInfo readable has transcoding property", async function () {
-                this.timeout(5000);
-                const output = await scdl.awaitDownloadFromInfo(info);
-                assert.strictEqual(typeof output.transcoding, "object");
             });
         });
     }
