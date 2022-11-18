@@ -46,7 +46,7 @@ export async function request(url: URL): Promise<ResponseData> {
 /**
  * Perform a GET request with authentication and parse as JSON
  */
-export async function requestWithAuth(url: string): Promise<any> {
+export async function requestWithAuth(url: string | URL): Promise<any> {
     const parsedUrl = new URL(url);
     switch (true) {
         case !!getOauthToken():
