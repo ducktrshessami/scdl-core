@@ -1,3 +1,4 @@
+import { PassThrough } from "stream";
 import { Dispatcher, getGlobalDispatcher } from "undici";
 import { ResponseData } from "undici/types/dispatcher";
 import { getClientID, getOauthToken } from "./auth";
@@ -61,4 +62,12 @@ export async function requestWithAuth(url: string | URL): Promise<any> {
     parsedUrl.hash = "";
     const { body } = await request(parsedUrl);
     return body.json();
+}
+
+export async function streamThrough(
+    url: URL,
+    output: PassThrough,
+    end: boolean = true
+): Promise<PassThrough> {
+
 }

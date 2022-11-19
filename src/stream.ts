@@ -1,4 +1,5 @@
 import { PassThrough, Readable } from "stream";
+import { requestWithAuth, streamThrough } from "./dispatch";
 import { getInfo, StreamableTrackInfo } from "./info";
 import { ScdlError } from "./utils/error";
 import {
@@ -24,8 +25,28 @@ const OPTION_WEIGHT = {
     quality: 1.3
 };
 
-async function streamTranscoding(transcoding: Transcoding, output?: PassThrough): Promise<Readable> {
+async function streamHls(url: URL, output: PassThrough): Promise<Readable> {
 
+}
+
+/**
+ * Create a stream from a transcoding object
+ * @param transcoding The transcoding to stream
+ * @param output Existing output stream from {@link streamSync}
+ * @returns The output stream, previously existing or not
+ */
+async function streamTranscoding(transcoding: Transcoding, output?: PassThrough): Promise<Readable> {
+    const { url: streamUrl }: TranscodingStreamResponse = await requestWithAuth(transcoding.url);
+    const url = new URL(streamUrl);
+    const outStream = output ?? new PassThrough();
+    const streaming = transcoding.format.protocol === Protocol.HLS ? streamHls(url, outStream) : streamThrough(url, outStream);
+    if (output) {
+        streaming.catch(err => outStream.emit("error", err));
+    }
+    else {
+        await streaming;
+    }
+    return outStream;
 }
 
 /**
@@ -149,4 +170,8 @@ export type StreamOptions = {
 type ScoredTranscoding = {
     transcoding: Transcoding | null,
     score: number
+};
+
+type TranscodingStreamResponse = {
+    url: string
 };
