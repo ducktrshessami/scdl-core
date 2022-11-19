@@ -1,4 +1,4 @@
-import { StreamableTrackInfo } from "./info";
+import { getInfo, StreamableTrackInfo } from "./info";
 import {
     MimeType,
     Preset,
@@ -15,10 +15,24 @@ const DEFAULT_OPTIONS: StreamOptions = {
 };
 
 /**
- * Stream a track from its info object
+ * * Stream a track from its info object
+ * 
+ * Used internally by `stream`
+ * @param info Info obtained from {@link getInfo}
+ * @param options Transcoding search options
  */
 export async function streamFromInfo(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS) {
 
+}
+
+/**
+ * Stream a track from its URL
+ * @param url A track url
+ * @param options Transcoding search options
+ */
+export async function stream(url: string, options: StreamOptions = DEFAULT_OPTIONS) {
+    const info = await getInfo(url);
+    return streamFromInfo(info, options);
 }
 
 export type StreamOptions = {
