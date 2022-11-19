@@ -1,4 +1,4 @@
-import { PassThrough } from "stream";
+import { PassThrough, Readable } from "stream";
 import { Dispatcher, getGlobalDispatcher } from "undici";
 import { ResponseData } from "undici/types/dispatcher";
 import { getClientID, getOauthToken } from "./auth";
@@ -78,7 +78,7 @@ export async function streamThrough(
     url: URL,
     output: PassThrough,
     end: boolean = true
-): Promise<PassThrough> {
+): Promise<Readable> {
     return new Promise((resolve, reject) =>
         dispatcher.dispatch(createRequestOptions(url), {
             onConnect: () => output.emit("connect"),
@@ -91,7 +91,10 @@ export async function streamThrough(
                     return false;
                 }
             },
-            onData: output.write,
+            onData: chunk => {
+                output.write(chunk);
+                return true;
+            },
             onComplete: () => {
                 if (end) {
                     output.end();
