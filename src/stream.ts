@@ -24,6 +24,8 @@ const OPTION_WEIGHT = {
 
 /**
  * Find a transcoding that matches the given options
+ * @param transcodings Transcodings obtained from a track's info
+ * @param options Transcoding search options
  */
 function findTranscoding(transcodings: Array<Transcoding>, options: StreamOptions): Transcoding | null {
     if (!transcodings.length) {
