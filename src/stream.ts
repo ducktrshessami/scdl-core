@@ -93,7 +93,7 @@ export async function streamFromInfo(info: StreamableTrackInfo, options: StreamO
 
 /**
  * Stream a track from its URL
- * @param url A track url
+ * @param url A track URL
  * @param options Transcoding search options
  */
 export async function stream(url: string, options: StreamOptions = DEFAULT_OPTIONS) {
