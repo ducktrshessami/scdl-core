@@ -64,10 +64,41 @@ export async function requestWithAuth(url: string | URL): Promise<any> {
     return body.json();
 }
 
+/**
+ * Perform a GET request and output to an existing PassThrough
+ * 
+ * Similar to `undici.stream`, but resolves on completion rather than
+ * stream consumption
+ * @param url The URL perform a request to
+ * @param output The stream to write to
+ * @param end Whether to end the writer on completion
+ * @returns The output stream
+ */
 export async function streamThrough(
     url: URL,
     output: PassThrough,
     end: boolean = true
 ): Promise<PassThrough> {
-
+    return new Promise((resolve, reject) =>
+        dispatcher.dispatch(createRequestOptions(url), {
+            onConnect: () => output.emit("connect"),
+            onHeaders: statusCode => {
+                if (statusCode < 400) {
+                    return true;
+                }
+                else {
+                    reject(new RequestError(statusCode));
+                    return false;
+                }
+            },
+            onData: output.write,
+            onComplete: () => {
+                if (end) {
+                    output.end();
+                }
+                resolve(output)
+            },
+            onError: reject
+        })
+    );
 }
