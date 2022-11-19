@@ -104,7 +104,7 @@ async function streamEngine(
  * @param info Info obtained from {@link getInfo}
  * @param options Transcoding search options
  */
-export async function streamFromInfo(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS) {
+export async function streamFromInfo(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<Readable> {
 
 }
 
@@ -113,7 +113,7 @@ export async function streamFromInfo(info: StreamableTrackInfo, options: StreamO
  * @param url A track URL
  * @param options Transcoding search options
  */
-export async function stream(url: string, options: StreamOptions = DEFAULT_OPTIONS) {
+export async function stream(url: string, options: StreamOptions = DEFAULT_OPTIONS): Promise<Readable> {
     const info = await getInfo(url);
     return streamFromInfo(info, options);
 }
