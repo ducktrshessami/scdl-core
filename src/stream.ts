@@ -75,7 +75,7 @@ function findTranscoding(transcodings: Array<Transcoding>, options: StreamOption
 /**
  * Underlying transcoding resolution and stream dispatch
  * 
- * Not to be confused with a steam engine
+ * Not exportable
  * @param info Info obtained from {@link getInfo}
  * @param options Transcoding search options
  * @param output Existing output stream from {@link streamSync}
