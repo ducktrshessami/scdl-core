@@ -24,7 +24,7 @@ const OPTION_WEIGHT = {
     quality: 1.3
 };
 
-async function streamTranscoding(transcoding: Transcoding, output?: PassThrough): Promise<ReadableStream> {
+async function streamTranscoding(transcoding: Transcoding, output?: PassThrough): Promise<Readable> {
 
 }
 
@@ -84,7 +84,7 @@ async function streamEngine(
     info: StreamableTrackInfo,
     options: StreamOptions,
     output?: PassThrough
-): Promise<ReadableStream> {
+): Promise<Readable> {
     if (info.streamable === false) {
         throw new ScdlError("Track not streamable");
     }
@@ -105,7 +105,7 @@ async function streamEngine(
  * @param options Transcoding search options
  */
 export async function streamFromInfo(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<Readable> {
-
+    return streamEngine(info, options);
 }
 
 /**
