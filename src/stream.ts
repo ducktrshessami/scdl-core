@@ -15,11 +15,21 @@ const DEFAULT_OPTIONS: StreamOptions = {
     quality: Quality.SQ
 };
 
+const OPTION_WEIGHT = {
+    mimeType: 1,
+    preset: 1.1,
+    protocol: 1.2,
+    quality: 1.3
+};
+
 /**
  * Find a transcoding that matches the given options
  */
 function findTranscoding(transcodings: Array<Transcoding>, options: StreamOptions): Transcoding | null {
-    if (options.strict) {
+    if (!transcodings.length) {
+        return null;
+    }
+    else if (options.strict) {
         return transcodings.find(transcoding =>
             (!options.preset || transcoding.preset === options.preset) &&
             (!options.protocol || transcoding.format.protocol === options.protocol) &&
@@ -28,7 +38,29 @@ function findTranscoding(transcodings: Array<Transcoding>, options: StreamOption
         ) ?? null;
     }
     else {
-
+        const { transcoding: best } = transcodings.reduce((currentBest: ScoredTranscoding, transcoding) => {
+            const current: ScoredTranscoding = {
+                transcoding,
+                score: 0
+            };
+            if (transcoding.preset === options.preset) {
+                current.score += OPTION_WEIGHT.preset;
+            }
+            if (transcoding.format.protocol === options.protocol) {
+                current.score += OPTION_WEIGHT.protocol;
+            }
+            if (transcoding.format.mime_type === options.mimeType) {
+                current.score += OPTION_WEIGHT.mimeType;
+            }
+            if (transcoding.quality === options.quality) {
+                current.score += OPTION_WEIGHT.quality;
+            }
+            return current.score > currentBest.score ? current : currentBest;
+        }, {
+            transcoding: null,
+            score: 0
+        });
+        return best ?? transcodings[0];
     }
 }
 
@@ -66,4 +98,9 @@ export type StreamOptions = {
     protocol?: Protocol,
     mimeType?: MimeType,
     quality?: Quality
+};
+
+type ScoredTranscoding = {
+    transcoding: Transcoding | null,
+    score: number
 };
