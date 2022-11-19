@@ -1,3 +1,4 @@
+import { PassThrough, Readable } from "stream";
 import { getInfo, StreamableTrackInfo } from "./info";
 import {
     MimeType,
@@ -67,6 +68,19 @@ function findTranscoding(transcodings: Array<Transcoding>, options: StreamOption
 }
 
 /**
+ * Underlying stream dispatch
+ * 
+ * Not to be confused with a steam engine
+ */
+async function streamEngine(
+    info: StreamableTrackInfo,
+    options: StreamOptions,
+    output?: PassThrough
+) {
+
+}
+
+/**
  * * Stream a track from its info object
  * 
  * Used internally by `stream`
@@ -85,6 +99,19 @@ export async function streamFromInfo(info: StreamableTrackInfo, options: StreamO
 export async function stream(url: string, options: StreamOptions = DEFAULT_OPTIONS) {
     const info = await getInfo(url);
     return streamFromInfo(info, options);
+}
+
+/**
+ * Synchronously stream a track from its URL
+ * @param url A track URL
+ * @param options Transcoding search options
+ */
+export function streamSync(url: string, options: StreamOptions = DEFAULT_OPTIONS): Readable {
+    const output = new PassThrough();
+    getInfo(url)
+        .then(info => streamEngine(info, options, output))
+        .catch(err => output.emit("error", err));
+    return output;
 }
 
 export type StreamOptions = {
