@@ -45,11 +45,15 @@ async function streamHls(url: URL, output: PassThrough): Promise<Readable> {
  * @param output Existing output stream from {@link streamSync}
  * @returns The output stream, previously existing or not
  */
-async function streamTranscoding(transcoding: Transcoding, output?: PassThrough): Promise<Readable> {
+async function streamTranscoding(transcoding: Transcoding, output?: PassThrough): Promise<TrackStream> {
     const { url: streamUrl }: TranscodingStreamResponse = await requestWithAuth(transcoding.url);
     const url = new URL(streamUrl);
-    const outStream = output ?? new PassThrough();
-    const streaming = transcoding.format.protocol === Protocol.HLS ? streamHls(url, outStream) : streamThrough(url, outStream);
+    const outStream: TrackStream = output ?? new PassThrough();
+    outStream.transcoding = transcoding;
+    outStream.emit("transcoding", transcoding);
+    const streaming = transcoding.format.protocol === Protocol.HLS ?
+        streamHls(url, outStream as PassThrough) :
+        streamThrough(url, outStream as PassThrough);
     if (output) {
         streaming.catch(err => outStream.emit("error", err));
     }
@@ -115,7 +119,7 @@ async function streamEngine(
     info: StreamableTrackInfo,
     options: StreamOptions,
     output?: PassThrough
-): Promise<Readable> {
+): Promise<TrackStream> {
     if (info.streamable === false) {
         throw new ScdlError("Track not streamable");
     }
@@ -135,7 +139,7 @@ async function streamEngine(
  * @param info Info obtained from {@link getInfo}
  * @param options Transcoding search options
  */
-export async function streamFromInfo(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<Readable> {
+export async function streamFromInfo(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<TrackStream> {
     return streamEngine(info, options);
 }
 
@@ -144,7 +148,7 @@ export async function streamFromInfo(info: StreamableTrackInfo, options: StreamO
  * @param url A track URL
  * @param options Transcoding search options
  */
-export async function stream(url: string, options: StreamOptions = DEFAULT_OPTIONS): Promise<Readable> {
+export async function stream(url: string, options: StreamOptions = DEFAULT_OPTIONS): Promise<TrackStream> {
     const info = await getInfo(url);
     return streamFromInfo(info, options);
 }
@@ -154,7 +158,7 @@ export async function stream(url: string, options: StreamOptions = DEFAULT_OPTIO
  * @param url A track URL
  * @param options Transcoding search options
  */
-export function streamSync(url: string, options: StreamOptions = DEFAULT_OPTIONS): Readable {
+export function streamSync(url: string, options: StreamOptions = DEFAULT_OPTIONS): TrackStream {
     const output = new PassThrough();
     getInfo(url)
         .then(info => streamEngine(info, options, output))
@@ -185,3 +189,11 @@ type ScoredTranscoding = {
 type TranscodingStreamResponse = {
     url: string
 };
+
+interface StreamingTranscoding {
+    transcoding?: Transcoding;
+    on(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
+    on(event: "connect", listener: () => void): this;
+}
+
+export type TrackStream = Readable & StreamingTranscoding;
