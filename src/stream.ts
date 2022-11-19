@@ -166,6 +166,18 @@ export function streamSync(url: string, options: StreamOptions = DEFAULT_OPTIONS
     return output;
 }
 
+/**
+ * Synchronously stream a track from its info object
+ * @param info Info obtained from {@link getInfo}
+ * @param options Transcoding search options
+ */
+export function streamFromInfoSync(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS): TrackStream {
+    const output = new PassThrough();
+    streamEngine(info, options, output)
+        .catch(err => output.emit("error", err));
+    return output;
+}
+
 export type StreamOptions = {
     /**
      * If `true`, will only stream if all specified options match a transcoding
