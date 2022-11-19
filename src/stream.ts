@@ -3,7 +3,8 @@ import {
     MimeType,
     Preset,
     Protocol,
-    Quality
+    Quality,
+    Transcoding
 } from "./utils/transcoding";
 
 const DEFAULT_OPTIONS: StreamOptions = {
@@ -13,6 +14,23 @@ const DEFAULT_OPTIONS: StreamOptions = {
     mimeType: MimeType.MPEG,
     quality: Quality.SQ
 };
+
+/**
+ * Find a transcoding that matches the given options
+ */
+function findTranscoding(transcodings: Array<Transcoding>, options: StreamOptions): Transcoding | null {
+    if (options.strict) {
+        return transcodings.find(transcoding =>
+            (!options.preset || transcoding.preset === options.preset) &&
+            (!options.protocol || transcoding.format.protocol === options.protocol) &&
+            (!options.mimeType || transcoding.format.mime_type === options.mimeType) &&
+            (!options.quality || transcoding.quality === options.quality)
+        ) ?? null;
+    }
+    else {
+
+    }
+}
 
 /**
  * * Stream a track from its info object
