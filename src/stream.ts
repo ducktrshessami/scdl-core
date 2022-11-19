@@ -1,5 +1,6 @@
 import { PassThrough, Readable } from "stream";
 import { getInfo, StreamableTrackInfo } from "./info";
+import { ScdlError } from "./utils/error";
 import {
     MimeType,
     Preset,
@@ -22,6 +23,10 @@ const OPTION_WEIGHT = {
     protocol: 1.2,
     quality: 1.3
 };
+
+async function streamTranscoding(transcoding: Transcoding, output?: PassThrough): Promise<ReadableStream> {
+
+}
 
 /**
  * Find a transcoding that matches the given options
@@ -68,16 +73,28 @@ function findTranscoding(transcodings: Array<Transcoding>, options: StreamOption
 }
 
 /**
- * Underlying stream dispatch
+ * Underlying transcoding resolution and stream dispatch
  * 
  * Not to be confused with a steam engine
+ * @param info Info obtained from {@link getInfo}
+ * @param options Transcoding search options
+ * @param output Existing output stream from {@link streamSync}
  */
 async function streamEngine(
     info: StreamableTrackInfo,
     options: StreamOptions,
     output?: PassThrough
-) {
-
+): Promise<ReadableStream> {
+    if (info.streamable === false) {
+        throw new ScdlError("Track not streamable");
+    }
+    const transcoding = findTranscoding(info.media.transcodings, options);
+    if (transcoding) {
+        return streamTranscoding(transcoding, output);
+    }
+    else {
+        throw new ScdlError("Failed to obtain transcoding");
+    }
 }
 
 /**
