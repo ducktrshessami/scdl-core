@@ -1,5 +1,10 @@
+import HLS from "parse-hls";
 import { PassThrough, Readable } from "stream";
-import { requestWithAuth, streamThrough } from "./dispatch";
+import {
+    request,
+    requestWithAuth,
+    streamThrough
+} from "./dispatch";
 import { getInfo, StreamableTrackInfo } from "./info";
 import { ScdlError } from "./utils/error";
 import {
@@ -26,7 +31,12 @@ const OPTION_WEIGHT = {
 };
 
 async function streamHls(url: URL, output: PassThrough): Promise<Readable> {
-
+    const hlsRes = await request(url);
+    const { segments } = HLS.parse(await hlsRes.body.text());
+    for (const segment of segments) {
+        await streamThrough(new URL(segment.uri), output, false);
+    }
+    return output.end();
 }
 
 /**
