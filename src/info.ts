@@ -32,6 +32,7 @@ export type TrackMedia = {
 };
 
 export type StreamableTrackInfo = {
+    streamable?: boolean,
     media: TrackMedia
 };
 
