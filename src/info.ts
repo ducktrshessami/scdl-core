@@ -1,7 +1,7 @@
 import { rawResolve } from "./api";
 import { ScdlError } from "./utils/error";
 import { Transcoding } from "./utils/transcoding";
-import { validateURL } from "./utils/validate";
+import { validatePlaylistURL, validateURL } from "./utils/validate";
 
 /**
  * Get a track's info
@@ -19,7 +19,7 @@ export async function getInfo(url: string): Promise<TrackInfo> {
  * Get a playlist's info
  */
 export async function getPlaylistInfo(url: string): Promise<PlaylistInfo> {
-    if (validateURL(url)) {
+    if (validatePlaylistURL(url)) {
         return rawResolve(url);
     }
     else {
