@@ -2,11 +2,19 @@ export * from "./api";
 export * from "./auth";
 export {
     getAgent,
+    getRequestQueueLimit,
     getRequestTimeout,
     setAgent,
+    setRequestQueueLimit,
     setRequestTimeout
 } from "./dispatch";
 export * from "./info";
 export * from "./stream";
 export * from "./utils/permalink";
+export type {
+    PlaylistInfo,
+    PlaylistInfoData,
+    StreamablePlaylistInfo
+} from "./utils/playlist";
+export * from "./utils/transcoding";
 export * from "./utils/validate";
