@@ -4,7 +4,10 @@ import { ResponseData } from "undici/types/dispatcher";
 import { getClientID, getOauthToken } from "./auth";
 import { RequestError, ScdlError } from "./utils/error";
 
+const DEFAULT_TIMEOUT = 30000;
+
 let dispatcher = getGlobalDispatcher();
+let requestTimeout: number | null = null;
 
 /**
  * Set the agent to use for requests
@@ -21,14 +24,33 @@ export function getAgent(): Dispatcher {
 }
 
 /**
+ * Set the timeout for requests in milliseconds
+ */
+export function setRequestTimeout(timeout: number): void {
+    requestTimeout = timeout;
+}
+
+/**
+ * Get the timeout for requests in milliseconds
+ */
+export function getRequestTimeout(): number {
+    return requestTimeout ?? DEFAULT_TIMEOUT;
+}
+
+/**
  * Create GET request options from a URL
  */
 function createRequestOptions(url: URL): Dispatcher.RequestOptions {
-    return {
+    const options: Dispatcher.RequestOptions = {
         origin: url.origin,
         path: url.pathname + url.search,
         method: "GET"
     };
+    if (requestTimeout !== null) {
+        options.headersTimeout = requestTimeout;
+        options.bodyTimeout = requestTimeout;
+    }
+    return options;
 }
 
 /**
