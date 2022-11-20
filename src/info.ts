@@ -118,6 +118,13 @@ export type UserInfo = {
     visuals?: Visuals
 };
 
+export type PartialTrackInfo = {
+    id: number,
+    kind: string,
+    monetization_model: string,
+    policy: string
+};
+
 export type TrackInfo = {
     artwork_url?: string
     caption?: string
@@ -205,6 +212,6 @@ export type PlaylistInfo = {
     published_at?: string
     display_date: string
     user: UserInfo
-    tracks: Array<TrackInfo>
+    tracks: Array<TrackInfo | PartialTrackInfo>
     track_count: number
 };
