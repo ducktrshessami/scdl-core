@@ -1,4 +1,4 @@
-import { nanoid } from "nanoid";
+import { randomUUID } from "crypto";
 import { PassThrough, Readable } from "stream";
 import { Dispatcher, getGlobalDispatcher } from "undici";
 import { ResponseData } from "undici/types/dispatcher";
@@ -62,7 +62,9 @@ function createRequestOptions(url: URL): Dispatcher.RequestOptions {
  */
 function enqueueRequest(): string {
     while (queue.size >= QUEUE_MAX);
-    return nanoid();
+    const id = randomUUID();
+    queue.add(id);
+    return id;
 }
 
 /**
