@@ -177,7 +177,3 @@ export type TrackInfo = {
     policy: string
     user: UserInfo
 };
-
-export type StreamablePlaylistInfo = {
-    tracks: Array<StreamableTrackInfo>
-};

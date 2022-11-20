@@ -1,6 +1,7 @@
 import { rawResolve } from "../api";
 import {
     PartialTrackInfo,
+    StreamableTrackInfo,
     TrackInfo,
     UserInfo
 } from "../info";
@@ -76,4 +77,8 @@ export type PlaylistInfoData<fetched extends boolean = boolean> = {
     user: UserInfo
     tracks: fetched extends true ? Array<TrackInfo> : Array<TrackInfo | PartialTrackInfo>
     track_count: number
+};
+
+export type StreamablePlaylistInfo = {
+    tracks: Array<StreamableTrackInfo>
 };
