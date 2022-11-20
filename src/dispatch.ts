@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { PassThrough, Readable } from "stream";
+import { setTimeout } from "timers/promises";
 import { Dispatcher, getGlobalDispatcher } from "undici";
 import { ResponseData } from "undici/types/dispatcher";
 import { getClientID, getOauthToken } from "./auth";
@@ -60,8 +61,10 @@ function createRequestOptions(url: URL): Dispatcher.RequestOptions {
  * Wait for the request queue to not be full
  * @returns The queue ID for this request
  */
-function enqueueRequest(): string {
-    while (queue.size >= QUEUE_MAX);
+async function enqueueRequest(): Promise<string> {
+    while (queue.size >= QUEUE_MAX) {
+        await setTimeout(1);
+    };
     const id = randomUUID();
     queue.add(id);
     return id;
@@ -71,15 +74,19 @@ function enqueueRequest(): string {
  * Perform a GET request
  */
 export async function request(url: URL): Promise<ResponseData> {
-    const id = enqueueRequest();
-    const res = await getAgent()
-        .request(createRequestOptions(url));
-    queue.delete(id);
-    if (res.statusCode < 400) {
-        return res;
+    const id = await enqueueRequest();
+    try {
+        const res = await getAgent()
+            .request(createRequestOptions(url));
+        if (res.statusCode < 400) {
+            return res;
+        }
+        else {
+            throw new RequestError(res.statusCode);
+        }
     }
-    else {
-        throw new RequestError(res.statusCode);
+    finally {
+        queue.delete(id);
     }
 }
 
@@ -118,8 +125,8 @@ export async function streamThrough(
     output: PassThrough,
     end: boolean = true
 ): Promise<Readable> {
-    return new Promise((resolve, reject) => {
-        const id = enqueueRequest();
+    return new Promise(async (resolve, reject) => {
+        const id = await enqueueRequest();
         getAgent()
             .dispatch(createRequestOptions(url), {
                 onConnect: () => output.emit("connect"),
@@ -128,6 +135,7 @@ export async function streamThrough(
                         return true;
                     }
                     else {
+                        queue.delete(id);
                         reject(new RequestError(statusCode));
                         return false;
                     }
