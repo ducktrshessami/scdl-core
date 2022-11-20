@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/ducktrshessami/scdl-core#readme",
   "dependencies": {
-    "nanoid": "^4.0.0",
     "parse-hls": "^1.0.7",
     "undici": "^5.12.0"
   },
