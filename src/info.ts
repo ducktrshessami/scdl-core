@@ -1,5 +1,6 @@
 import { rawResolve } from "./api";
 import { ScdlError } from "./utils/error";
+import { PlaylistInfo, PlaylistInfoData } from "./utils/playlist";
 import { Transcoding } from "./utils/transcoding";
 import { validatePlaylistURL, validateURL } from "./utils/validate";
 
@@ -20,7 +21,8 @@ export async function getInfo(url: string): Promise<TrackInfo> {
  */
 export async function getPlaylistInfo(url: string): Promise<PlaylistInfo> {
     if (validatePlaylistURL(url)) {
-        return rawResolve(url);
+        const data: PlaylistInfoData = await rawResolve(url);
+        return new PlaylistInfo(data);
     }
     else {
         throw new ScdlError("Invalid playlist URL");
@@ -178,40 +180,4 @@ export type TrackInfo = {
 
 export type StreamablePlaylistInfo = {
     tracks: Array<StreamableTrackInfo>
-};
-
-export type PlaylistInfo = {
-    artwork_url?: string
-    created_at: string
-    description?: string
-    duration: number
-    embeddable_by: string
-    genre?: string
-    id: number
-    kind: string
-    label_name?: string
-    last_modified: string
-    license: string
-    likes_count: number
-    managed_by_feeds: boolean
-    permalink: string
-    permalink_url: string
-    public: boolean
-    purchase_title?: string
-    purchase_url?: string
-    release_date?: string
-    reposts_count: number
-    secret_token?: string
-    sharing: string
-    tag_list?: string
-    title: string
-    uri: string
-    user_id: number
-    set_type?: string
-    is_album: boolean
-    published_at?: string
-    display_date: string
-    user: UserInfo
-    tracks: Array<TrackInfo | PartialTrackInfo>
-    track_count: number
 };
