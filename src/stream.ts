@@ -5,7 +5,11 @@ import {
     requestWithAuth,
     streamThrough
 } from "./dispatch";
-import { getInfo, StreamableTrackInfo } from "./info";
+import {
+    getInfo,
+    StreamableTrackInfo,
+    StreamableTrackInfoData
+} from "./info";
 import { ScdlError } from "./utils/error";
 import { StreamablePlaylistInfo } from "./utils/playlist";
 import {
@@ -117,7 +121,7 @@ function findTranscoding(transcodings: Array<Transcoding>, options: StreamOption
  * @param output Existing output stream from `streamSync`
  */
 async function streamEngine(
-    info: StreamableTrackInfo,
+    info: StreamableTrackInfoData,
     options: StreamOptions,
     output?: PassThrough
 ): Promise<TrackStream> {
@@ -141,7 +145,7 @@ async function streamEngine(
  * @param options Transcoding search options
  */
 export async function streamFromInfo(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<TrackStream> {
-    return streamEngine(info, options);
+    return streamEngine(info.data, options);
 }
 
 /**
@@ -162,7 +166,7 @@ export async function stream(url: string, options: StreamOptions = DEFAULT_OPTIO
 export function streamSync(url: string, options: StreamOptions = DEFAULT_OPTIONS): TrackStream {
     const output = new PassThrough();
     getInfo(url)
-        .then(info => streamEngine(info, options, output))
+        .then(info => streamEngine(info.data, options, output))
         .catch(err => output.emit("error", err));
     return output;
 }
@@ -174,7 +178,7 @@ export function streamSync(url: string, options: StreamOptions = DEFAULT_OPTIONS
  */
 export function streamFromInfoSync(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS): TrackStream {
     const output = new PassThrough();
-    streamEngine(info, options, output)
+    streamEngine(info.data, options, output)
         .catch(err => output.emit("error", err));
     return output;
 }
