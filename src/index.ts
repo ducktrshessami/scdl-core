@@ -8,7 +8,22 @@ export {
     setRequestQueueLimit,
     setRequestTimeout
 } from "./dispatch";
-export * from "./info";
+export {
+    CreatorSubscription,
+    getInfo,
+    getPlaylistInfo,
+    PartialTrackInfo,
+    PublisherMetadata,
+    StreamableTrackInfo,
+    StreamableTrackInfoData,
+    TrackInfo,
+    TrackInfoData,
+    TrackMedia,
+    UserBadges,
+    UserInfo,
+    Visual,
+    Visuals
+} from "./info";
 export * from "./stream";
 export * from "./utils/permalink";
 export type {
