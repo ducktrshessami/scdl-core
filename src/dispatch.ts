@@ -6,7 +6,7 @@ import { RequestError, ScdlError } from "./utils/error";
 
 const DEFAULT_TIMEOUT = 30000;
 
-let dispatcher = getGlobalDispatcher();
+let dispatcher: Dispatcher | null = null;
 let requestTimeout: number | null = null;
 
 /**
@@ -20,7 +20,7 @@ export function setAgent(agent: Dispatcher): void {
  * Get the currently set agent
  */
 export function getAgent(): Dispatcher {
-    return dispatcher;
+    return dispatcher ?? getGlobalDispatcher();
 }
 
 /**
@@ -57,7 +57,8 @@ function createRequestOptions(url: URL): Dispatcher.RequestOptions {
  * Perform a GET request
  */
 export async function request(url: URL): Promise<ResponseData> {
-    const res = await dispatcher.request(createRequestOptions(url));
+    const res = await getAgent()
+        .request(createRequestOptions(url));
     if (res.statusCode < 400) {
         return res;
     }
@@ -102,28 +103,29 @@ export async function streamThrough(
     end: boolean = true
 ): Promise<Readable> {
     return new Promise((resolve, reject) =>
-        dispatcher.dispatch(createRequestOptions(url), {
-            onConnect: () => output.emit("connect"),
-            onHeaders: statusCode => {
-                if (statusCode < 400) {
+        getAgent()
+            .dispatch(createRequestOptions(url), {
+                onConnect: () => output.emit("connect"),
+                onHeaders: statusCode => {
+                    if (statusCode < 400) {
+                        return true;
+                    }
+                    else {
+                        reject(new RequestError(statusCode));
+                        return false;
+                    }
+                },
+                onData: chunk => {
+                    output.write(chunk);
                     return true;
-                }
-                else {
-                    reject(new RequestError(statusCode));
-                    return false;
-                }
-            },
-            onData: chunk => {
-                output.write(chunk);
-                return true;
-            },
-            onComplete: () => {
-                if (end) {
-                    output.end();
-                }
-                resolve(output)
-            },
-            onError: reject
-        })
+                },
+                onComplete: () => {
+                    if (end) {
+                        output.end();
+                    }
+                    resolve(output)
+                },
+                onError: reject
+            })
     );
 }
