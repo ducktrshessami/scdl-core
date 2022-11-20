@@ -6,7 +6,7 @@ import { ResponseData } from "undici/types/dispatcher";
 import { getClientID, getOauthToken } from "./auth";
 import { RequestError, ScdlError } from "./utils/error";
 
-const DEFAULT_MAX = 100;
+const DEFAULT_MAX = 50;
 const DEFAULT_TIMEOUT = 30000;
 
 const queue = new Set<string>();
