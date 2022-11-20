@@ -7,6 +7,7 @@ import {
 } from "./dispatch";
 import { getInfo, StreamableTrackInfo } from "./info";
 import { ScdlError } from "./utils/error";
+import { StreamablePlaylistInfo } from "./utils/playlist";
 import {
     MimeType,
     Preset,
@@ -176,6 +177,17 @@ export function streamFromInfoSync(info: StreamableTrackInfo, options: StreamOpt
     streamEngine(info, options, output)
         .catch(err => output.emit("error", err));
     return output;
+}
+
+/**
+ * Stream tracks from a playlist's info object
+ * 
+ * Used internally by `streamPlaylist`
+ * @param info Info obtained from `getPlaylistInfo`
+ * @param options Transcoding search options
+ */
+export async function streamPlaylistFromInfo(info: StreamablePlaylistInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<Array<TrackStream | null>> {
+
 }
 
 export type StreamOptions = {
