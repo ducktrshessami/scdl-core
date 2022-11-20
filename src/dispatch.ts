@@ -6,12 +6,13 @@ import { ResponseData } from "undici/types/dispatcher";
 import { getClientID, getOauthToken } from "./auth";
 import { RequestError, ScdlError } from "./utils/error";
 
-const QUEUE_MAX = 50;
+const DEFAULT_MAX = 100;
 const DEFAULT_TIMEOUT = 30000;
 
 const queue = new Set<string>();
 let dispatcher: Dispatcher | null = null;
 let requestTimeout: number | null = null;
+let queueMax: number | null = null;
 
 /**
  * Set the agent to use for requests
@@ -41,6 +42,14 @@ export function getRequestTimeout(): number {
     return requestTimeout ?? DEFAULT_TIMEOUT;
 }
 
+export function setRequestQueueLimit(limit: number): void {
+    queueMax = limit;
+}
+
+export function getRequestQueueLimit(): number {
+    return queueMax ?? DEFAULT_MAX;
+}
+
 /**
  * Create GET request options from a URL
  */
@@ -62,7 +71,7 @@ function createRequestOptions(url: URL): Dispatcher.RequestOptions {
  * @returns The queue ID for this request
  */
 async function enqueueRequest(): Promise<string> {
-    while (queue.size >= QUEUE_MAX) {
+    while (queue.size >= getRequestQueueLimit()) {
         await setTimeout(1);
     };
     const id = randomUUID();
