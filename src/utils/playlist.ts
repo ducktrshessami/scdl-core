@@ -4,11 +4,18 @@ import {
     UserInfo
 } from "../info";
 
-export class PlaylistInfo {
+export class PlaylistInfo<fetched extends boolean = boolean> {
     constructor(public readonly data: PlaylistInfoData) { }
 
-    async fetchPartialTracks(): Promise<Array<TrackInfo>> {
+    /**
+     * Checks if all track data has been fetched
+     */
+    isFetched(): this is PlaylistInfo<true> {
+        return this.data.tracks.every((track: any) => track.media);
+    }
 
+    async fetchPartialTracks(): Promise<PlaylistInfo<true>> {
+        return this;
     }
 }
 
