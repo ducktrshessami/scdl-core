@@ -1,11 +1,14 @@
+import { nanoid } from "nanoid";
 import { PassThrough, Readable } from "stream";
 import { Dispatcher, getGlobalDispatcher } from "undici";
 import { ResponseData } from "undici/types/dispatcher";
 import { getClientID, getOauthToken } from "./auth";
 import { RequestError, ScdlError } from "./utils/error";
 
+const QUEUE_MAX = 50;
 const DEFAULT_TIMEOUT = 30000;
 
+const queue = new Set<string>();
 let dispatcher: Dispatcher | null = null;
 let requestTimeout: number | null = null;
 
@@ -54,11 +57,22 @@ function createRequestOptions(url: URL): Dispatcher.RequestOptions {
 }
 
 /**
+ * Wait for the request queue to not be full
+ * @returns The queue ID for this request
+ */
+function enqueueRequest(): string {
+    while (queue.size >= QUEUE_MAX);
+    return nanoid();
+}
+
+/**
  * Perform a GET request
  */
 export async function request(url: URL): Promise<ResponseData> {
+    const id = enqueueRequest();
     const res = await getAgent()
         .request(createRequestOptions(url));
+    queue.delete(id);
     if (res.statusCode < 400) {
         return res;
     }
@@ -102,7 +116,8 @@ export async function streamThrough(
     output: PassThrough,
     end: boolean = true
 ): Promise<Readable> {
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve, reject) => {
+        const id = enqueueRequest();
         getAgent()
             .dispatch(createRequestOptions(url), {
                 onConnect: () => output.emit("connect"),
@@ -120,12 +135,16 @@ export async function streamThrough(
                     return true;
                 },
                 onComplete: () => {
+                    queue.delete(id);
                     if (end) {
                         output.end();
                     }
-                    resolve(output)
+                    resolve(output);
                 },
-                onError: reject
-            })
-    );
+                onError: err => {
+                    queue.delete(id);
+                    reject(err);
+                }
+            });
+    });
 }
