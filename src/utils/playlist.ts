@@ -1,8 +1,17 @@
+import { rawResolve } from "../api";
 import {
     PartialTrackInfo,
     TrackInfo,
     UserInfo
 } from "../info";
+
+/**
+ * Creates a track URI from a track's id
+ * @param id The track's id
+ */
+function trackURI(id: number): string {
+    return `https://api.soundcloud.com/tracks/${id}`;
+}
 
 export class PlaylistInfo<fetched extends boolean = boolean> {
     constructor(public readonly data: PlaylistInfoData<fetched>) { }
@@ -14,7 +23,21 @@ export class PlaylistInfo<fetched extends boolean = boolean> {
         return this.data.tracks.every((track: any) => track.media);
     }
 
+    /**
+     * Fetches any partial track data in this playlist
+     */
     async fetchPartialTracks(): Promise<PlaylistInfo<true>> {
+        this.data.tracks = await Promise.all(
+            this.data.tracks.map(async (track: any): Promise<TrackInfo> => {
+                if (track.media) {
+                    return track;
+                }
+                else {
+                    const info: TrackInfo = await rawResolve(trackURI(track.id));
+                    return info;
+                }
+            })
+        );
         return this as PlaylistInfo<true>;
     }
 }
