@@ -43,7 +43,7 @@ async function streamHls(url: URL, output: PassThrough): Promise<Readable> {
 /**
  * Create a stream from a transcoding object
  * @param transcoding The transcoding to stream
- * @param output Existing output stream from {@link streamSync}
+ * @param output Existing output stream from `streamSync`
  * @returns The output stream, previously existing or not
  */
 async function streamTranscoding(transcoding: Transcoding, output?: PassThrough): Promise<TrackStream> {
@@ -112,9 +112,9 @@ function findTranscoding(transcodings: Array<Transcoding>, options: StreamOption
  * Underlying transcoding resolution and stream dispatch
  * 
  * Not exportable
- * @param info Info obtained from {@link getInfo}
+ * @param info Info obtained from `getInfo`
  * @param options Transcoding search options
- * @param output Existing output stream from {@link streamSync}
+ * @param output Existing output stream from `streamSync`
  */
 async function streamEngine(
     info: StreamableTrackInfo,
@@ -137,7 +137,7 @@ async function streamEngine(
  * * Stream a track from its info object
  * 
  * Used internally by `stream`
- * @param info Info obtained from {@link getInfo}
+ * @param info Info obtained from `getInfo`
  * @param options Transcoding search options
  */
 export async function streamFromInfo(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<TrackStream> {
@@ -169,7 +169,7 @@ export function streamSync(url: string, options: StreamOptions = DEFAULT_OPTIONS
 
 /**
  * Synchronously stream a track from its info object
- * @param info Info obtained from {@link getInfo}
+ * @param info Info obtained from `getInfo`
  * @param options Transcoding search options
  */
 export function streamFromInfoSync(info: StreamableTrackInfo, options: StreamOptions = DEFAULT_OPTIONS): TrackStream {
