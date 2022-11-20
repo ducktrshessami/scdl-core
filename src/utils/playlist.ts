@@ -5,7 +5,7 @@ import {
 } from "../info";
 
 export class PlaylistInfo<fetched extends boolean = boolean> {
-    constructor(public readonly data: PlaylistInfoData) { }
+    constructor(public readonly data: PlaylistInfoData<fetched>) { }
 
     /**
      * Checks if all track data has been fetched
@@ -15,11 +15,11 @@ export class PlaylistInfo<fetched extends boolean = boolean> {
     }
 
     async fetchPartialTracks(): Promise<PlaylistInfo<true>> {
-        return this;
+        return this as PlaylistInfo<true>;
     }
 }
 
-export type PlaylistInfoData = {
+export type PlaylistInfoData<fetched extends boolean = boolean> = {
     artwork_url?: string
     created_at: string
     description?: string
@@ -51,6 +51,6 @@ export type PlaylistInfoData = {
     published_at?: string
     display_date: string
     user: UserInfo
-    tracks: Array<TrackInfo | PartialTrackInfo>
+    tracks: fetched extends true ? Array<TrackInfo> : Array<TrackInfo | PartialTrackInfo>
     track_count: number
 };
