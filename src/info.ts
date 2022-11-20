@@ -9,7 +9,8 @@ import { validatePlaylistURL, validateURL } from "./utils/validate";
  */
 export async function getInfo(url: string): Promise<TrackInfo> {
     if (validateURL(url)) {
-        return rawResolve(url);
+        const data: TrackInfoData = await rawResolve(url);
+        return { data };
     }
     else {
         throw new ScdlError("Invalid track URL");
@@ -33,10 +34,16 @@ export type TrackMedia = {
     transcodings: Array<Transcoding>
 };
 
-export type StreamableTrackInfo = {
+export type DataWrapped<T> = {
+    data: T
+};
+
+export type StreamableTrackInfoData = {
     streamable?: boolean,
     media: TrackMedia
 };
+
+export type StreamableTrackInfo = DataWrapped<StreamableTrackInfoData>;
 
 export type PublisherMetadata = {
     id: number
@@ -127,7 +134,7 @@ export type PartialTrackInfo = {
     policy: string
 };
 
-export type TrackInfo = {
+export type TrackInfoData = {
     artwork_url?: string
     caption?: string
     commentable: boolean
@@ -177,3 +184,5 @@ export type TrackInfo = {
     policy: string
     user: UserInfo
 };
+
+export type TrackInfo = DataWrapped<TrackInfoData>;
