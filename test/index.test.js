@@ -1,6 +1,5 @@
 const assert = require("assert");
 const { fetchKey } = require("soundcloud-key-fetch");
-const { Readable } = require("stream");
 const scdl = require("../dist");
 
 /***** Set URLs here *****/
