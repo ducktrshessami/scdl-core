@@ -32,7 +32,6 @@ export class PlaylistInfo<fetched extends boolean = boolean> {
      * Fetches partial track data first
      */
     async stream(): Promise<Array<TrackStream | null>> {
-        await this.fetchPartialTracks();
         return streamPlaylistFromInfo(this as PlaylistInfo<true>);
     }
 }
