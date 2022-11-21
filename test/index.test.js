@@ -97,6 +97,12 @@ describe("playlist", function () {
             before("fetching info", async function () {
                 info = await scdl.getPlaylistInfo(URL);
             });
+            it("fetchPartialPlaylist works as intended", async function () {
+                if (!scdl.isPlaylistFetched(info)) {
+                    await scdl.fetchPartialPlaylist(info);
+                }
+                assert.strictEqual(scdl.isPlaylistFetched(info), true);
+            });
             it("streamPlaylistFromInfo readables have transcoding property", async function () {
                 this.timeout(30000);
                 const result = await scdl.streamPlaylistFromInfo(info);
