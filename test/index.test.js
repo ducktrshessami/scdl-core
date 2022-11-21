@@ -97,17 +97,11 @@ describe("playlist", function () {
             before("fetching info", async function () {
                 info = await scdl.getPlaylistInfo(URL);
             });
-            // it("scdl.playlist.downloadFromInfo resolves in readable? array", async function () {
-            //     this.timeout(10000);
-            //     const result = await scdl.playlist.downloadFromInfo(info);
-            //     assert.strictEqual(Array.isArray(result), true);
-            //     assert.strictEqual(result.every(item => item === null || item instanceof Readable), true);
-            // });
-            // it("scdl.playlist.downloadFromInfo readables have transcoding property", async function () {
-            //     this.timeout(10000);
-            //     const result = await scdl.playlist.downloadFromInfo(info);
-            //     assert.strictEqual(result.every(item => item === null || typeof item.transcoding === "object"), true);
-            // });
+            it("streamPlaylistFromInfo readables have transcoding property", async function () {
+                this.timeout(30000);
+                const result = await scdl.streamPlaylistFromInfo(info);
+                assert.strictEqual(result.every(item => item === null || typeof item.transcoding === "object"), true);
+            });
         });
     }
     else {
