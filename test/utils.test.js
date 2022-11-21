@@ -8,6 +8,12 @@ describe("track", function () {
         console.warn("TRACK_URL not found. Skipping track tests.");
         return;
     }
+    it("TrackURLPattern matches groups properly", function () {
+        const result = URL.match(scdl.TrackURLPattern);
+        assert(result);
+        assert.strictEqual(typeof result.groups?.user, "string");
+        assert.strictEqual(typeof result.groups?.title, "string");
+    });
     it("validateURL sync checks format", function () {
         assert.strictEqual(scdl.validateURL(URL), true);
         assert.strictEqual(scdl.validateURL("https://soundcloud.com/"), false);
@@ -24,6 +30,12 @@ describe("playlist", function () {
         console.warn("PLAYLIST_URL not found. Skipping playlist tests.");
         return;
     }
+    it("PlaylistURLPattern matches groups properly", function () {
+        const result = URL.match(scdl.PlaylistURLPattern);
+        assert(result);
+        assert.strictEqual(typeof result.groups?.user, "string");
+        assert.strictEqual(typeof result.groups?.title, "string");
+    });
     it("validatePlaylistURL sync checks format", function () {
         assert.strictEqual(scdl.validatePlaylistURL(URL), true);
         assert.strictEqual(scdl.validatePlaylistURL("https://soundcloud.com/"), false);
