@@ -23,6 +23,8 @@ let requestTimeout = null;
 let queueMax = null;
 /**
  * Set the agent to use for requests
+ *
+ * Defaults to the global dispatcher
  */
 function setAgent(agent) {
     dispatcher = agent;
@@ -37,6 +39,8 @@ function getAgent() {
 exports.getAgent = getAgent;
 /**
  * Set the timeout for requests in milliseconds
+ *
+ * Defaults to 30000 ms
  */
 function setRequestTimeout(timeout) {
     requestTimeout = timeout;
@@ -49,10 +53,18 @@ function getRequestTimeout() {
     return requestTimeout !== null && requestTimeout !== void 0 ? requestTimeout : DEFAULT_TIMEOUT;
 }
 exports.getRequestTimeout = getRequestTimeout;
+/**
+ * Set the limit for concurrent requests
+ *
+ * Defaults to 50
+ */
 function setRequestQueueLimit(limit) {
     queueMax = limit;
 }
 exports.setRequestQueueLimit = setRequestQueueLimit;
+/**
+ * Get the limit for concurrent requests
+ */
 function getRequestQueueLimit() {
     return queueMax !== null && queueMax !== void 0 ? queueMax : DEFAULT_MAX;
 }
