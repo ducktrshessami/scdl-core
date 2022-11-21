@@ -189,11 +189,10 @@ export function streamFromInfoSync(info: StreamableTrackInfo, options: StreamOpt
  * 
  * Fetches partial track data before streaming
  * 
- * Erroring streams will resolve as `null`
- * 
  * Used internally by `streamPlaylist` and `PlaylistInfo.stream`
  * @param info Info obtained from `getPlaylistInfo`
  * @param options Transcoding search options
+ * @returns A promise that resolves in either a readable stream or `null` if streaming errored
  */
 export async function streamPlaylistFromInfo(info: StreamablePlaylistInfo | FetchablePlaylistInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<Array<TrackStream | null>> {
     info = await fetchPartialPlaylist(info as FetchablePlaylistInfo);
