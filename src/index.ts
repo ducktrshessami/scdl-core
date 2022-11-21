@@ -25,6 +25,7 @@ export {
     Visuals
 } from "./info";
 export * from "./stream";
+export * from "./utils/partial";
 export * from "./utils/permalink";
 export type {
     PlaylistInfo,
