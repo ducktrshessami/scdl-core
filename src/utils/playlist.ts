@@ -6,6 +6,7 @@ import {
     TrackInfo,
     UserInfo
 } from "../info";
+import { streamPlaylistFromInfo, TrackStream } from "../stream";
 
 /**
  * Creates a track URI from a track's id
@@ -41,6 +42,16 @@ export class PlaylistInfo<fetched extends boolean = boolean> {
             })
         );
         return this as PlaylistInfo<true>;
+    }
+
+    /**
+     * Stream tracks from this playlist
+     * 
+     * Fetches partial track data first
+     */
+    async stream(): Promise<Array<TrackStream | null>> {
+        await this.fetchPartialTracks();
+        return streamPlaylistFromInfo(this as PlaylistInfo<true>);
     }
 }
 

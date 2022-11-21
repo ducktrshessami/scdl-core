@@ -186,7 +186,7 @@ export function streamFromInfoSync(info: StreamableTrackInfo, options: StreamOpt
 /**
  * Stream tracks from a playlist's info object
  * 
- * Used internally by `streamPlaylist`
+ * Used internally by `streamPlaylist` and `PlaylistInfo.stream`
  * @param info Info obtained from `getPlaylistInfo`
  * @param options Transcoding search options
  */
