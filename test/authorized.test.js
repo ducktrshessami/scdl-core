@@ -10,7 +10,7 @@ before("fetching clientID", async function () {
 describe("track", function () {
     const URL = process.env.TRACK_URL || TRACK_URL;
     if (!URL) {
-        console.warn("TRACK_URL not found. Skipping scdl tests.");
+        console.warn("TRACK_URL not found. Skipping track tests.");
         return;
     }
     it("stream readable has transcoding property", async function () {
