@@ -102,6 +102,28 @@ describe("playlist", function () {
                 const result = await scdl.streamPlaylistFromInfo(info);
                 assert.strictEqual(result.every(item => item === null || typeof item.transcoding === "object"), true);
             });
+            it("streamPlaylistFromInfoSync streams emit transcoding", async function () {
+                this.timeout(30000);
+                const output = scdl.streamPlaylistFromInfoSync(info);
+                await Promise.all(
+                    output.map(stream =>
+                        new Promise(resolve => {
+                            stream.once("transcoding", () => resolve());
+                        })
+                    )
+                );
+            });
+            it("streamPlaylistFromInfoSync streams populate with data", async function () {
+                this.timeout(30000);
+                const output = scdl.streamPlaylistFromInfoSync(info);
+                await Promise.all(
+                    output.map(stream =>
+                        new Promise(resolve => {
+                            stream.once("data", () => resolve());
+                        })
+                    )
+                );
+            });
         });
     }
     else {
