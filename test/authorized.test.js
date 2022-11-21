@@ -71,6 +71,7 @@ describe("playlist", function () {
     describe("from info", function () {
         let info;
         before("fetching info", async function () {
+            this.timeout(5000);
             info = await scdl.getPlaylistInfo(URL);
         });
         it("fetchPartialPlaylist works as intended", async function () {
