@@ -1,19 +1,16 @@
-export enum Preset {
+export declare enum Preset {
     MP3 = "mp3_0_1",
     OPUS = "opus_0_0"
 }
-
-export enum Protocol {
+export declare enum Protocol {
     PROGRESSIVE = "progressive",
     HLS = "hls"
 }
-
-export enum MimeType {
+export declare enum MimeType {
     MPEG = "audio/mpeg",
     OPUS = "audio/ogg; codecs=\"opus\""
 }
-
-export enum Quality {
+export declare enum Quality {
     SQ = "sq",
     /**
      * I've only seen `sq`, but I'm assuming something like this exists
@@ -21,15 +18,14 @@ export enum Quality {
      */
     HQ = "hq"
 }
-
-export type Transcoding = {
-    url: string
-    preset: Preset
-    duration: number
-    snipped: boolean
+export declare type Transcoding = {
+    url: string;
+    preset: Preset;
+    duration: number;
+    snipped: boolean;
     format: {
-        protocol: Protocol
-        mime_type: MimeType
-    }
-    quality: Quality
+        protocol: Protocol;
+        mime_type: MimeType;
+    };
+    quality: Quality;
 };
