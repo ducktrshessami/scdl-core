@@ -16,6 +16,8 @@ let queueMax: number | null = null;
 
 /**
  * Set the agent to use for requests
+ * 
+ * Defaults to the global dispatcher
  */
 export function setAgent(agent: Dispatcher): void {
     dispatcher = agent;
@@ -30,6 +32,8 @@ export function getAgent(): Dispatcher {
 
 /**
  * Set the timeout for requests in milliseconds
+ * 
+ * Defaults to 30000 ms
  */
 export function setRequestTimeout(timeout: number): void {
     requestTimeout = timeout;
