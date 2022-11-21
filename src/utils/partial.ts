@@ -3,6 +3,13 @@ import { DataWrapped, TrackInfoData } from "../info";
 import { StreamablePlaylistInfo } from "./playlist";
 
 /**
+ * Checks if all track data in a playlist has been fetched
+ */
+export function isPlaylistFetched(info: FetchablePlaylistInfo): info is StreamablePlaylistInfo & FetchablePlaylistInfo {
+    return info.data.tracks.every((track: any) => track.media);
+}
+
+/**
  * Creates a track URI from a track's id
  * @param id The track's id
  */

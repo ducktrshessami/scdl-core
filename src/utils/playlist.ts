@@ -6,7 +6,7 @@ import {
     UserInfo
 } from "../info";
 import { streamPlaylistFromInfo, TrackStream } from "../stream";
-import { fetchPartialPlaylist } from "./partial";
+import { fetchPartialPlaylist, isPlaylistFetched } from "./partial";
 
 export class PlaylistInfo<fetched extends boolean = boolean> {
     constructor(public readonly data: PlaylistInfoData<fetched>) { }
@@ -15,7 +15,7 @@ export class PlaylistInfo<fetched extends boolean = boolean> {
      * Checks if all track data has been fetched
      */
     isFetched(): this is PlaylistInfo<true> {
-        return this.data.tracks.every((track: any) => track.media);
+        return isPlaylistFetched(this);
     }
 
     /**
