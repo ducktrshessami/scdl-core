@@ -22,7 +22,7 @@ const scdl = require("scdl-core");
 
 scdl.setClientID("YOUR_CLIENT_ID");
 
-scdl("https://soundcloud.com/ducktrshessami/unfinished")
+scdl.streamSync("https://soundcloud.com/ducktrshessami/unfinished")
     .pipe(fs.createWriteStream("song.mp3"));
 ```
 
