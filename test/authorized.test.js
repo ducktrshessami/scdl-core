@@ -4,6 +4,7 @@ const scdl = require("../dist");
 const { TRACK_URL, PLAYLIST_URL } = require("./urls");
 
 before("fetching clientID", async function () {
+    this.timeout(5000);
     scdl.setClientID(await fetchKey());
 });
 
@@ -31,6 +32,7 @@ describe("track", function () {
     describe("from info", function () {
         let info;
         before("fetching info", async function () {
+            this.timeout(5000);
             info = await scdl.getInfo(URL);
         });
         it("info is wrapped in data object for symmetry", function () {
