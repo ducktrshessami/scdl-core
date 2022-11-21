@@ -196,11 +196,11 @@ export function streamFromInfoSync(info: StreamableTrackInfo, options: StreamOpt
  * @returns A promise that resolves in an array. Each item will be either a readable stream or `null` if streaming errored
  */
 export async function streamPlaylistFromInfo(info: StreamablePlaylistInfo | FetchablePlaylistInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<Array<TrackStream | null>> {
-    info = await fetchPartialPlaylist(info as FetchablePlaylistInfo);
+    await fetchPartialPlaylist(info as FetchablePlaylistInfo);
     return Promise.all(
         info.data.tracks.map(async track => {
             try {
-                return await streamEngine(track, options);
+                return await streamEngine(track as StreamableTrackInfoData, options);
             }
             catch {
                 return null;
