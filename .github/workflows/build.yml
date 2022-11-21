@@ -22,9 +22,8 @@ jobs:
       run: yarn --immutable
     - name: build
       run: yarn build
-    - name: commit
-      run: |
-          git add -f dist/ LICENSE package.json README.md yarn.lock
-          git checkout cjs
-          git commit -m "Build ${{ github.sha }}"
-          git push origin cjs
+    - uses: EndBug/add-and-commit@v9
+      with:
+        add: "-f dist/ LICENSE package.json README.md yarn.lock"
+        message: "Build ${{ github.sha }}"
+        new_branch: cjs
