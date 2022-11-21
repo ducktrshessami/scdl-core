@@ -11,6 +11,7 @@ import {
     StreamableTrackInfoData
 } from "./info";
 import { ScdlError } from "./utils/error";
+import { FetchablePlaylistInfo, fetchPartialPlaylist } from "./utils/partial";
 import { StreamablePlaylistInfo } from "./utils/playlist";
 import {
     MimeType,
@@ -186,12 +187,26 @@ export function streamFromInfoSync(info: StreamableTrackInfo, options: StreamOpt
 /**
  * Stream tracks from a playlist's info object
  * 
+ * Fetches partial track data before streaming
+ * 
+ * Erroring streams will resolve as `null`
+ * 
  * Used internally by `streamPlaylist` and `PlaylistInfo.stream`
  * @param info Info obtained from `getPlaylistInfo`
  * @param options Transcoding search options
  */
-export async function streamPlaylistFromInfo(info: StreamablePlaylistInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<Array<TrackStream | null>> {
-
+export async function streamPlaylistFromInfo(info: StreamablePlaylistInfo | FetchablePlaylistInfo, options: StreamOptions = DEFAULT_OPTIONS): Promise<Array<TrackStream | null>> {
+    info = await fetchPartialPlaylist(info as FetchablePlaylistInfo);
+    return Promise.all(
+        info.data.tracks.map(async track => {
+            try {
+                return await streamEngine(track, options);
+            }
+            catch {
+                return null;
+            }
+        })
+    );
 }
 
 export type StreamOptions = {

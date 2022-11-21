@@ -1,5 +1,5 @@
 import { rawResolve } from "../api";
-import { DataWrapped, PartialTrackInfo, TrackInfoData } from "../info";
+import { DataWrapped, TrackInfoData } from "../info";
 import { StreamablePlaylistInfo } from "./playlist";
 
 /**
@@ -32,8 +32,12 @@ export async function fetchPartialPlaylist(info: FetchablePlaylistInfo): Promise
     return info as StreamablePlaylistInfo;
 }
 
+export type MinimalTrackInfo = {
+    id: number
+};
+
 export type FetchablePlaylistInfoData = {
-    tracks: Array<TrackInfoData | PartialTrackInfo>
+    tracks: Array<TrackInfoData | MinimalTrackInfo>
 };
 
 export type FetchablePlaylistInfo = DataWrapped<FetchablePlaylistInfoData>;
