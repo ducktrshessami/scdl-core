@@ -7,6 +7,7 @@ import {
 } from "./dispatch";
 import {
     getInfo,
+    getPlaylistInfo,
     StreamableTrackInfo,
     StreamableTrackInfoData
 } from "./info";
@@ -206,6 +207,17 @@ export async function streamPlaylistFromInfo(info: StreamablePlaylistInfo | Fetc
             }
         })
     );
+}
+
+/**
+ * Stream tracks from a playlist's URL
+ * @param url A playlist URL
+ * @param options Transcoding search options
+ * @returns A promise that resolves in an array. Each item will be either a readable stream or `null` if streaming errored
+ */
+export async function streamPlaylist(url: string, options: StreamOptions = DEFAULT_OPTIONS): Promise<Array<TrackStream | null>> {
+    const info = await getPlaylistInfo(url);
+    return streamPlaylistFromInfo(info, options);
 }
 
 /**
