@@ -42,10 +42,18 @@ export function getRequestTimeout(): number {
     return requestTimeout ?? DEFAULT_TIMEOUT;
 }
 
+/**
+ * Set the limit for concurrent requests
+ * 
+ * Defaults to 50
+ */
 export function setRequestQueueLimit(limit: number): void {
     queueMax = limit;
 }
 
+/**
+ * Get the limit for concurrent requests
+ */
 export function getRequestQueueLimit(): number {
     return queueMax ?? DEFAULT_MAX;
 }
