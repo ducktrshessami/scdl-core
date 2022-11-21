@@ -8,18 +8,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        ref: cjs
+    - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
         node-version: lts/*
+    - name: configure git
+      run: |
+          git config user.name "${{ github.triggering_actor }}"
+          git config user.email "<>"
     - name: install
       run: yarn --immutable
     - name: build
       run: yarn build
-    - name: add
-      run: git add dist/ .npmignore LICENSE package.json README.md yarn.lock
-    - name: checkout cjs
-      uses: actions/checkout@v3
-      with:
-        ref: cjs
     - name: commit
-      run: git commit -m "Build ${{ github.sha }}"
+      run: |
+          git add -f dist/ LICENSE package.json README.md yarn.lock
+          git checkout cjs
+          git commit -m "Build ${{ github.sha }}"
+          git push origin cjs
