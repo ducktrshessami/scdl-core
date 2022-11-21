@@ -209,6 +209,20 @@ export async function streamPlaylistFromInfo(info: StreamablePlaylistInfo | Fetc
     );
 }
 
+/**
+ * Synchronously stream tracks from a playlist's info object
+ * @param info Info obtained from `getPlaylistInfo`
+ * @param options Transcoding search options
+ */
+export function streamPlaylistFromInfoSync(info: StreamablePlaylistInfo, options: StreamOptions = DEFAULT_OPTIONS): Array<TrackStream> {
+    return info.data.tracks.map(track => {
+        const output = new PassThrough();
+        streamEngine(track, options, output)
+            .catch(err => output.emit("error", err));
+        return output;
+    });
+}
+
 export type StreamOptions = {
     /**
      * If `true`, will only stream if all specified options match a transcoding
