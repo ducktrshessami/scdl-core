@@ -1,20 +1,12 @@
-import { rawResolve } from "../api";
 import {
     DataWrapped,
     PartialTrackInfo,
-    StreamableTrackInfo,
-    TrackInfo,
+    StreamableTrackInfoData,
+    TrackInfoData,
     UserInfo
 } from "../info";
 import { streamPlaylistFromInfo, TrackStream } from "../stream";
-
-/**
- * Creates a track URI from a track's id
- * @param id The track's id
- */
-function trackURI(id: number): string {
-    return `https://api.soundcloud.com/tracks/${id}`;
-}
+import { fetchPartialPlaylist } from "./partial";
 
 export class PlaylistInfo<fetched extends boolean = boolean> {
     constructor(public readonly data: PlaylistInfoData<fetched>) { }
@@ -30,17 +22,7 @@ export class PlaylistInfo<fetched extends boolean = boolean> {
      * Fetches any partial track data in this playlist
      */
     async fetchPartialTracks(): Promise<PlaylistInfo<true>> {
-        this.data.tracks = await Promise.all(
-            this.data.tracks.map(async (track: any): Promise<TrackInfo> => {
-                if (track.media) {
-                    return track;
-                }
-                else {
-                    const info: TrackInfo = await rawResolve(trackURI(track.id));
-                    return info;
-                }
-            })
-        );
+        await fetchPartialPlaylist(this);
         return this as PlaylistInfo<true>;
     }
 
@@ -87,12 +69,12 @@ export type PlaylistInfoData<fetched extends boolean = boolean> = {
     published_at?: string
     display_date: string
     user: UserInfo
-    tracks: fetched extends true ? Array<TrackInfo> : Array<TrackInfo | PartialTrackInfo>
+    tracks: fetched extends true ? Array<TrackInfoData> : Array<TrackInfoData | PartialTrackInfo>
     track_count: number
 };
 
 export type StreamablePlaylistInfoData = {
-    tracks: Array<StreamableTrackInfo>
+    tracks: Array<StreamableTrackInfoData>
 };
 
 export type StreamablePlaylistInfo = DataWrapped<StreamablePlaylistInfoData>;
