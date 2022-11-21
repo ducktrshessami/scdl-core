@@ -87,11 +87,11 @@ describe("playlist", function () {
             assert.strictEqual(typeof scdl.getPlaylistPermalinkURL(URL), "string");
             assert.strictEqual(typeof scdl.getPlaylistPermalinkURL("foobar"), "string");
         });
-        // it("scdl.playlist readables have transcoding property", async function () {
-        //     this.timeout(10000);
-        //     const result = await scdl.playlist(URL);
-        //     assert.strictEqual(result.every(item => item === null || typeof item.transcoding === "object"), true);
-        // });
+        it("streamPlaylist readables have transcoding property", async function () {
+            this.timeout(30000);
+            const result = await scdl.streamPlaylist(URL);
+            assert.strictEqual(result.every(item => item === null || typeof item.transcoding === "object"), true);
+        });
         describe("from info", function () {
             let info;
             before("fetching info", async function () {
