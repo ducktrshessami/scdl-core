@@ -15,7 +15,7 @@ const promises_1 = require("timers/promises");
 const undici_1 = require("undici");
 const auth_1 = require("./auth");
 const error_1 = require("./utils/error");
-const DEFAULT_MAX = 50;
+const DEFAULT_MAX = 20;
 const DEFAULT_TIMEOUT = 30000;
 const queue = new Set();
 let dispatcher = null;
@@ -56,7 +56,7 @@ exports.getRequestTimeout = getRequestTimeout;
 /**
  * Set the limit for concurrent requests
  *
- * Defaults to 50
+ * Defaults to 20
  */
 function setRequestQueueLimit(limit) {
     queueMax = limit;
@@ -156,6 +156,12 @@ exports.requestWithAuth = requestWithAuth;
 function streamThrough(url, output, end = true) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            function cleanup() {
+                queue.delete(id);
+                if (end) {
+                    output.end();
+                }
+            }
             const id = yield enqueueRequest();
             getAgent()
                 .dispatch(createRequestOptions(url), {
@@ -165,7 +171,7 @@ function streamThrough(url, output, end = true) {
                         return true;
                     }
                     else {
-                        queue.delete(id);
+                        cleanup();
                         reject(new error_1.RequestError(statusCode));
                         return false;
                     }
@@ -175,14 +181,11 @@ function streamThrough(url, output, end = true) {
                     return true;
                 },
                 onComplete: () => {
-                    queue.delete(id);
-                    if (end) {
-                        output.end();
-                    }
+                    cleanup();
                     resolve(output);
                 },
                 onError: err => {
-                    queue.delete(id);
+                    cleanup();
                     reject(err);
                 }
             });
