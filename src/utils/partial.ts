@@ -6,7 +6,7 @@ import { StreamablePlaylistInfo } from "./playlist";
  * Checks if all track data in a playlist has been fetched
  */
 export function isPlaylistFetched(info: FetchablePlaylistInfo): info is StreamablePlaylistInfo & FetchablePlaylistInfo {
-    return info.data.tracks.every((track: any) => track.media);
+    return info.data.tracks.every(track => "media" in track);
 }
 
 /**
@@ -26,8 +26,8 @@ function trackURI(id: number): string {
  */
 export async function fetchPartialPlaylist(info: FetchablePlaylistInfo): Promise<StreamablePlaylistInfo> {
     info.data.tracks = await Promise.all(
-        info.data.tracks.map(async (track: any): Promise<TrackInfoData> => {
-            if (track.media) {
+        info.data.tracks.map(async track => {
+            if ("media" in track) {
                 return track;
             }
             else {
