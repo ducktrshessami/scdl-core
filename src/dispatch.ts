@@ -147,6 +147,13 @@ export async function streamThrough(
     end: boolean = true
 ): Promise<Readable> {
     return new Promise(async (resolve, reject) => {
+        function cleanup(): void {
+            queue.delete(id);
+            if (end) {
+                output.end();
+            }
+        }
+
         const id = await enqueueRequest();
         getAgent()
             .dispatch(createRequestOptions(url), {
@@ -156,7 +163,7 @@ export async function streamThrough(
                         return true;
                     }
                     else {
-                        queue.delete(id);
+                        cleanup();
                         reject(new RequestError(statusCode));
                         return false;
                     }
@@ -166,14 +173,11 @@ export async function streamThrough(
                     return true;
                 },
                 onComplete: () => {
-                    queue.delete(id);
-                    if (end) {
-                        output.end();
-                    }
+                    cleanup();
                     resolve(output);
                 },
                 onError: err => {
-                    queue.delete(id);
+                    cleanup();
                     reject(err);
                 }
             });
