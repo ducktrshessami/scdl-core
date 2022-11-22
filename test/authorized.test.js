@@ -3,6 +3,20 @@ const { fetchKey } = require("soundcloud-key-fetch");
 const scdl = require("../dist");
 const { TRACK_URL, PLAYLIST_URL } = require("./urls");
 
+function playlistTrackEmitRace(emitter, event) {
+    return new Promise(resolve => {
+        const callback = () => {
+            emitter
+                .off("error", callback)
+                .off(event, callback);
+            resolve();
+        };
+        emitter
+            .once("error", callback)
+            .once(event, callback);
+    });
+}
+
 before("fetching clientID", async function () {
     this.timeout(5000);
     scdl.setClientID(await fetchKey());
@@ -92,22 +106,14 @@ describe("playlist", function () {
             this.timeout(60000);
             const output = scdl.streamPlaylistFromInfoSync(info);
             await Promise.all(
-                output.map(stream =>
-                    new Promise(resolve => {
-                        stream.once("transcoding", () => resolve());
-                    })
-                )
+                output.map(stream => playlistTrackEmitRace(stream, "transcoding"))
             );
         });
         it("streamPlaylistFromInfoSync streams populate with data", async function () {
             this.timeout(60000);
             const output = scdl.streamPlaylistFromInfoSync(info);
             await Promise.all(
-                output.map(stream =>
-                    new Promise(resolve => {
-                        stream.once("data", () => resolve());
-                    })
-                )
+                output.map(stream => playlistTrackEmitRace(stream, "data"))
             );
         });
     });
