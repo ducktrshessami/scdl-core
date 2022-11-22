@@ -49,7 +49,7 @@ export declare function getRequestTimeout(): number;
 /**
  * Set the limit for concurrent requests
  *
- * Defaults to 50
+ * Defaults to 20
  */
 export declare function setRequestQueueLimit(limit: number): void;
 /**

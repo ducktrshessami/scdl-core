@@ -6,7 +6,7 @@ import { ResponseData } from "undici/types/dispatcher";
 import { getClientID, getOauthToken } from "./auth";
 import { RequestError, ScdlError } from "./utils/error";
 
-const DEFAULT_MAX = 50;
+const DEFAULT_MAX = 20;
 const DEFAULT_TIMEOUT = 30000;
 
 const queue = new Set<string>();
@@ -49,7 +49,7 @@ export function getRequestTimeout(): number {
 /**
  * Set the limit for concurrent requests
  * 
- * Defaults to 50
+ * Defaults to 20
  */
 export function setRequestQueueLimit(limit: number): void {
     queueMax = limit;
