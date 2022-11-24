@@ -15,7 +15,7 @@ const api_1 = require("../api");
  * Checks if all track data in a playlist has been fetched
  */
 function isPlaylistFetched(info) {
-    return info.data.tracks.every((track) => track.media);
+    return info.data.tracks.every(track => "media" in track);
 }
 exports.isPlaylistFetched = isPlaylistFetched;
 /**
@@ -35,7 +35,7 @@ function trackURI(id) {
 function fetchPartialPlaylist(info) {
     return __awaiter(this, void 0, void 0, function* () {
         info.data.tracks = yield Promise.all(info.data.tracks.map((track) => __awaiter(this, void 0, void 0, function* () {
-            if (track.media) {
+            if ("media" in track) {
                 return track;
             }
             else {
