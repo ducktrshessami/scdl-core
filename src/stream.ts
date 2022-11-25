@@ -262,6 +262,14 @@ interface StreamingTranscoding {
     transcoding?: Transcoding;
     on(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
     on(event: "connect", listener: () => void): this;
+    once(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
+    once(event: "connect", listener: () => void): this;
+    addListener(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
+    addListener(event: "connect", listener: () => void): this;
+    prependListener(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
+    prependListener(event: "connect", listener: () => void): this;
+    prependOnceListener(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
+    prependOnceListener(event: "connect", listener: () => void): this;
 }
 
 export type TrackStream = Readable & StreamingTranscoding;
