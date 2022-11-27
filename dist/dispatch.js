@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.streamThrough = exports.requestWithAuth = exports.request = exports.getRequestQueueLimit = exports.setRequestQueueLimit = exports.getRequestTimeout = exports.setRequestTimeout = exports.getAgent = exports.setAgent = void 0;
 const crypto_1 = require("crypto");
@@ -34,7 +25,7 @@ exports.setAgent = setAgent;
  * Get the currently set agent
  */
 function getAgent() {
-    return dispatcher !== null && dispatcher !== void 0 ? dispatcher : (0, undici_1.getGlobalDispatcher)();
+    return dispatcher ?? (0, undici_1.getGlobalDispatcher)();
 }
 exports.getAgent = getAgent;
 /**
@@ -50,7 +41,7 @@ exports.setRequestTimeout = setRequestTimeout;
  * Get the timeout for requests in milliseconds
  */
 function getRequestTimeout() {
-    return requestTimeout !== null && requestTimeout !== void 0 ? requestTimeout : DEFAULT_TIMEOUT;
+    return requestTimeout ?? DEFAULT_TIMEOUT;
 }
 exports.getRequestTimeout = getRequestTimeout;
 /**
@@ -66,7 +57,7 @@ exports.setRequestQueueLimit = setRequestQueueLimit;
  * Get the limit for concurrent requests
  */
 function getRequestQueueLimit() {
-    return queueMax !== null && queueMax !== void 0 ? queueMax : DEFAULT_MAX;
+    return queueMax ?? DEFAULT_MAX;
 }
 exports.getRequestQueueLimit = getRequestQueueLimit;
 /**
@@ -88,59 +79,53 @@ function createRequestOptions(url) {
  * Wait for the request queue to not be full
  * @returns The queue ID for this request
  */
-function enqueueRequest() {
-    return __awaiter(this, void 0, void 0, function* () {
-        while (queue.size >= getRequestQueueLimit()) {
-            yield (0, promises_1.setTimeout)(1);
-        }
-        ;
-        const id = (0, crypto_1.randomUUID)();
-        queue.add(id);
-        return id;
-    });
+async function enqueueRequest() {
+    while (queue.size >= getRequestQueueLimit()) {
+        await (0, promises_1.setTimeout)(1);
+    }
+    ;
+    const id = (0, crypto_1.randomUUID)();
+    queue.add(id);
+    return id;
 }
 /**
  * Perform a GET request
  */
-function request(url) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const id = yield enqueueRequest();
-        try {
-            const res = yield getAgent()
-                .request(createRequestOptions(url));
-            if (res.statusCode < 400) {
-                return res;
-            }
-            else {
-                throw new error_1.RequestError(res.statusCode);
-            }
+async function request(url) {
+    const id = await enqueueRequest();
+    try {
+        const res = await getAgent()
+            .request(createRequestOptions(url));
+        if (res.statusCode < 400) {
+            return res;
         }
-        finally {
-            queue.delete(id);
+        else {
+            throw new error_1.RequestError(res.statusCode);
         }
-    });
+    }
+    finally {
+        queue.delete(id);
+    }
 }
 exports.request = request;
 /**
  * Perform a GET request with authentication and parse as JSON
  */
-function requestWithAuth(url) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const parsedUrl = new URL(url);
-        switch (true) {
-            case !!(0, auth_1.getOauthToken)():
-                parsedUrl.searchParams.set("oauth_token", (0, auth_1.getOauthToken)());
-                break;
-            case !!(0, auth_1.getClientID)():
-                parsedUrl.searchParams.set("client_id", (0, auth_1.getClientID)());
-                break;
-            default:
-                throw new error_1.ScdlError("Authentication not set");
-        }
-        parsedUrl.hash = "";
-        const { body } = yield request(parsedUrl);
-        return body.json();
-    });
+async function requestWithAuth(url) {
+    const parsedUrl = new URL(url);
+    switch (true) {
+        case !!(0, auth_1.getOauthToken)():
+            parsedUrl.searchParams.set("oauth_token", (0, auth_1.getOauthToken)());
+            break;
+        case !!(0, auth_1.getClientID)():
+            parsedUrl.searchParams.set("client_id", (0, auth_1.getClientID)());
+            break;
+        default:
+            throw new error_1.ScdlError("Authentication not set");
+    }
+    parsedUrl.hash = "";
+    const { body } = await request(parsedUrl);
+    return body.json();
 }
 exports.requestWithAuth = requestWithAuth;
 /**
@@ -153,43 +138,41 @@ exports.requestWithAuth = requestWithAuth;
  * @param end Whether to end the writer on completion
  * @returns The output stream
  */
-function streamThrough(url, output, end = true) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            function cleanup() {
-                queue.delete(id);
-                if (end) {
-                    output.end();
-                }
+async function streamThrough(url, output, end = true) {
+    return new Promise(async (resolve, reject) => {
+        function cleanup() {
+            queue.delete(id);
+            if (end) {
+                output.end();
             }
-            const id = yield enqueueRequest();
-            getAgent()
-                .dispatch(createRequestOptions(url), {
-                onConnect: () => output.emit("connect"),
-                onHeaders: statusCode => {
-                    if (statusCode < 400) {
-                        return true;
-                    }
-                    else {
-                        cleanup();
-                        reject(new error_1.RequestError(statusCode));
-                        return false;
-                    }
-                },
-                onData: chunk => {
-                    output.write(chunk);
+        }
+        const id = await enqueueRequest();
+        getAgent()
+            .dispatch(createRequestOptions(url), {
+            onConnect: () => output.emit("connect"),
+            onHeaders: statusCode => {
+                if (statusCode < 400) {
                     return true;
-                },
-                onComplete: () => {
-                    cleanup();
-                    resolve(output);
-                },
-                onError: err => {
-                    cleanup();
-                    reject(err);
                 }
-            });
-        }));
+                else {
+                    cleanup();
+                    reject(new error_1.RequestError(statusCode));
+                    return false;
+                }
+            },
+            onData: chunk => {
+                output.write(chunk);
+                return true;
+            },
+            onComplete: () => {
+                cleanup();
+                resolve(output);
+            },
+            onError: err => {
+                cleanup();
+                reject(err);
+            }
+        });
     });
 }
 exports.streamThrough = streamThrough;

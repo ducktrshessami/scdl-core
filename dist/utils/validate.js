@@ -6,13 +6,13 @@ exports.validatePlaylistURL = exports.validateURL = exports.PlaylistURLPattern =
  *
  * Includes the `user`, `title`, and `secret` groups
  */
-exports.TrackURLPattern = /^(?:https?:\/\/)?(?:www\.)?soundcloud\.com\/(?<user>[\w-]+)\/(?<title>[\w-]+)\/?(?<secret>(?<=\/)[\w-]+)?(?:(?<!\/)\/?)(?=[?#]|$)/i;
+exports.TrackURLPattern = /^(?:https?:\/\/)?(?:www\.)?soundcloud\.com\/(?<user>[\w-]+)\/(?!sets(?:$|[\/?#]))(?<title>[\w-]+)\/?(?<secret>(?<=\/)s-[A-Z0-9]+)?(?:(?<!\/)\/?)(?=[?#]|$)/i;
 /**
  * A regular expression that matches SoundCloud playlist URLs
  *
  * Includes the `user`, `title`, and `secret` groups
  */
-exports.PlaylistURLPattern = /^(?:https?:\/\/)?(?:www\.)?soundcloud\.com\/(?<user>[\w-]+)\/sets\/(?<title>[\w-]+)\/?(?<secret>(?<=\/)[\w-]+)?(?:(?<!\/)\/?)(?=[?#]|$)/i;
+exports.PlaylistURLPattern = /^(?:https?:\/\/)?(?:www\.)?soundcloud\.com\/(?<user>[\w-]+)\/sets\/(?<title>[\w-]+)\/?(?<secret>(?<=\/)s-[A-Z0-9]+)?(?:(?<!\/)\/?)(?=[?#]|$)/i;
 /**
  * Checks if a string matches the SoundCloud track URL format
  */

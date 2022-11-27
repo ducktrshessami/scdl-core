@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -33,15 +24,13 @@ const OPTION_WEIGHT = {
     protocol: 1.2,
     quality: 1.3
 };
-function streamHls(url, output) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const hlsRes = yield (0, dispatch_1.request)(url);
-        const { segments } = parse_hls_1.default.parse(yield hlsRes.body.text());
-        for (const segment of segments) {
-            yield (0, dispatch_1.streamThrough)(new URL(segment.uri), output, false);
-        }
-        return output.end();
-    });
+async function streamHls(url, output) {
+    const hlsRes = await (0, dispatch_1.request)(url);
+    const { segments } = parse_hls_1.default.parse(await hlsRes.body.text());
+    for (const segment of segments) {
+        await (0, dispatch_1.streamThrough)(new URL(segment.uri), output, false);
+    }
+    return output.end();
 }
 /**
  * Create a stream from a transcoding object
@@ -49,24 +38,22 @@ function streamHls(url, output) {
  * @param output Existing output stream from `streamSync`
  * @returns The output stream, previously existing or not
  */
-function streamTranscoding(transcoding, output) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { url: streamUrl } = yield (0, dispatch_1.requestWithAuth)(transcoding.url);
-        const url = new URL(streamUrl);
-        const outStream = output !== null && output !== void 0 ? output : new stream_1.PassThrough();
-        outStream.transcoding = transcoding;
-        outStream.emit("transcoding", transcoding);
-        const streaming = transcoding.format.protocol === transcoding_1.Protocol.HLS ?
-            streamHls(url, outStream) :
-            (0, dispatch_1.streamThrough)(url, outStream);
-        if (output) {
-            streaming.catch(err => outStream.emit("error", err));
-        }
-        else {
-            yield streaming;
-        }
-        return outStream;
-    });
+async function streamTranscoding(transcoding, output) {
+    const { url: streamUrl } = await (0, dispatch_1.requestWithAuth)(transcoding.url);
+    const url = new URL(streamUrl);
+    const outStream = output ?? new stream_1.PassThrough();
+    outStream.transcoding = transcoding;
+    outStream.emit("transcoding", transcoding);
+    const streaming = transcoding.format.protocol === transcoding_1.Protocol.HLS ?
+        streamHls(url, outStream) :
+        (0, dispatch_1.streamThrough)(url, outStream);
+    if (output) {
+        streaming.catch(err => outStream.emit("error", err));
+    }
+    else {
+        await streaming;
+    }
+    return outStream;
 }
 /**
  * Find a transcoding that matches the given options
@@ -74,15 +61,14 @@ function streamTranscoding(transcoding, output) {
  * @param options Transcoding search options
  */
 function findTranscoding(transcodings, options) {
-    var _a;
     if (!transcodings.length) {
         return null;
     }
     else if (options.strict) {
-        return (_a = transcodings.find(transcoding => (!options.preset || transcoding.preset === options.preset) &&
+        return transcodings.find(transcoding => (!options.preset || transcoding.preset === options.preset) &&
             (!options.protocol || transcoding.format.protocol === options.protocol) &&
             (!options.mimeType || transcoding.format.mime_type === options.mimeType) &&
-            (!options.quality || transcoding.quality === options.quality))) !== null && _a !== void 0 ? _a : null;
+            (!options.quality || transcoding.quality === options.quality)) ?? null;
     }
     else {
         const { transcoding: best } = transcodings.reduce((currentBest, transcoding) => {
@@ -107,7 +93,7 @@ function findTranscoding(transcodings, options) {
             transcoding: null,
             score: 0
         });
-        return best !== null && best !== void 0 ? best : transcodings[0];
+        return best ?? transcodings[0];
     }
 }
 /**
@@ -118,19 +104,17 @@ function findTranscoding(transcodings, options) {
  * @param options Transcoding search options
  * @param output Existing output stream from `streamSync`
  */
-function streamEngine(info, options, output) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (info.streamable === false) {
-            throw new error_1.ScdlError("Track not streamable");
-        }
-        const transcoding = findTranscoding(info.media.transcodings, options);
-        if (transcoding) {
-            return streamTranscoding(transcoding, output);
-        }
-        else {
-            throw new error_1.ScdlError("Failed to obtain transcoding");
-        }
-    });
+async function streamEngine(info, options, output) {
+    if (info.streamable === false) {
+        throw new error_1.ScdlError("Track not streamable");
+    }
+    const transcoding = findTranscoding(info.media.transcodings, options);
+    if (transcoding) {
+        return streamTranscoding(transcoding, output);
+    }
+    else {
+        throw new error_1.ScdlError("Failed to obtain transcoding");
+    }
 }
 /**
  * * Stream a track from its info object
@@ -139,10 +123,8 @@ function streamEngine(info, options, output) {
  * @param info Info obtained from `getInfo`
  * @param options Transcoding search options
  */
-function streamFromInfo(info, options = DEFAULT_OPTIONS) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return streamEngine(info.data, options);
-    });
+async function streamFromInfo(info, options = DEFAULT_OPTIONS) {
+    return streamEngine(info.data, options);
 }
 exports.streamFromInfo = streamFromInfo;
 /**
@@ -150,11 +132,9 @@ exports.streamFromInfo = streamFromInfo;
  * @param url A track URL
  * @param options Transcoding search options
  */
-function stream(url, options = DEFAULT_OPTIONS) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const info = yield (0, info_1.getInfo)(url);
-        return streamFromInfo(info, options);
-    });
+async function stream(url, options = DEFAULT_OPTIONS) {
+    const info = await (0, info_1.getInfo)(url);
+    return streamFromInfo(info, options);
 }
 exports.stream = stream;
 /**
@@ -192,18 +172,16 @@ exports.streamFromInfoSync = streamFromInfoSync;
  * @param options Transcoding search options
  * @returns A promise that resolves in an array. Each item will be either a readable stream or `null` if streaming errored
  */
-function streamPlaylistFromInfo(info, options = DEFAULT_OPTIONS) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield (0, partial_1.fetchPartialPlaylist)(info);
-        return Promise.all(info.data.tracks.map((track) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield streamEngine(track, options);
-            }
-            catch (_a) {
-                return null;
-            }
-        })));
-    });
+async function streamPlaylistFromInfo(info, options = DEFAULT_OPTIONS) {
+    await (0, partial_1.fetchPartialPlaylist)(info);
+    return Promise.all(info.data.tracks.map(async (track) => {
+        try {
+            return await streamEngine(track, options);
+        }
+        catch {
+            return null;
+        }
+    }));
 }
 exports.streamPlaylistFromInfo = streamPlaylistFromInfo;
 /**
@@ -212,11 +190,9 @@ exports.streamPlaylistFromInfo = streamPlaylistFromInfo;
  * @param options Transcoding search options
  * @returns A promise that resolves in an array. Each item will be either a readable stream or `null` if streaming errored
  */
-function streamPlaylist(url, options = DEFAULT_OPTIONS) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const info = yield (0, info_1.getPlaylistInfo)(url);
-        return streamPlaylistFromInfo(info, options);
-    });
+async function streamPlaylist(url, options = DEFAULT_OPTIONS) {
+    const info = await (0, info_1.getPlaylistInfo)(url);
+    return streamPlaylistFromInfo(info, options);
 }
 exports.streamPlaylist = streamPlaylist;
 /**
