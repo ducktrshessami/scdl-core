@@ -2,7 +2,6 @@ import { randomUUID } from "crypto";
 import { PassThrough, Readable } from "stream";
 import { setTimeout } from "timers/promises";
 import { Dispatcher, getGlobalDispatcher } from "undici";
-import { ResponseData } from "undici/types/dispatcher";
 import { getClientID, getOauthToken } from "./auth";
 import { RequestError, ScdlError } from "./utils/error";
 
@@ -94,7 +93,7 @@ async function enqueueRequest(): Promise<string> {
 /**
  * Perform a GET request
  */
-export async function request(url: URL): Promise<ResponseData> {
+export async function request(url: URL): Promise<Dispatcher.ResponseData> {
     const id = await enqueueRequest();
     try {
         const res = await getAgent()
