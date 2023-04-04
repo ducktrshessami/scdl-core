@@ -5,8 +5,7 @@
   "main": "dist/index.js",
   "types": "typings/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "declare": "tsc -d --emitDeclarationOnly",
+    "build": "tsup",
     "pretest": "yarn build",
     "test": "mocha"
   },
