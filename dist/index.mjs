@@ -1,74 +1,7 @@
-"use strict";
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-// src/index.ts
-var src_exports = {};
-__export(src_exports, {
-  MimeType: () => MimeType,
-  PlaylistURLPattern: () => PlaylistURLPattern,
-  Preset: () => Preset,
-  Protocol: () => Protocol,
-  Quality: () => Quality,
-  TrackURLPattern: () => TrackURLPattern,
-  fetchPartialPlaylist: () => fetchPartialPlaylist,
-  getAgent: () => getAgent,
-  getClientID: () => getClientID,
-  getInfo: () => getInfo,
-  getOauthToken: () => getOauthToken,
-  getPermalinkURL: () => getPermalinkURL,
-  getPlaylistInfo: () => getPlaylistInfo,
-  getPlaylistPermalinkURL: () => getPlaylistPermalinkURL,
-  getRequestQueueLimit: () => getRequestQueueLimit,
-  getRequestTimeout: () => getRequestTimeout,
-  isPlaylistFetched: () => isPlaylistFetched,
-  rawResolve: () => rawResolve,
-  setAgent: () => setAgent,
-  setClientID: () => setClientID,
-  setOauthToken: () => setOauthToken,
-  setRequestQueueLimit: () => setRequestQueueLimit,
-  setRequestTimeout: () => setRequestTimeout,
-  stream: () => stream,
-  streamFromInfo: () => streamFromInfo,
-  streamFromInfoSync: () => streamFromInfoSync,
-  streamPlaylist: () => streamPlaylist,
-  streamPlaylistFromInfo: () => streamPlaylistFromInfo,
-  streamPlaylistFromInfoSync: () => streamPlaylistFromInfoSync,
-  streamSync: () => streamSync,
-  validatePlaylistURL: () => validatePlaylistURL,
-  validateURL: () => validateURL
-});
-module.exports = __toCommonJS(src_exports);
-
 // src/dispatch.ts
-var import_crypto = require("crypto");
-var import_promises = require("timers/promises");
-var import_undici = require("undici");
+import { randomUUID } from "crypto";
+import { setTimeout } from "timers/promises";
+import { getGlobalDispatcher } from "undici";
 
 // src/auth.ts
 var clientID = null;
@@ -87,7 +20,7 @@ function getOauthToken() {
 }
 
 // src/utils/error.ts
-var import_http = require("http");
+import { STATUS_CODES } from "http";
 var CustomError = class extends Error {
   constructor(message) {
     super(message);
@@ -98,7 +31,7 @@ var ScdlError = class extends CustomError {
 };
 var RequestError = class extends CustomError {
   constructor(statusCode) {
-    super(`${statusCode} ${import_http.STATUS_CODES[statusCode]}`);
+    super(`${statusCode} ${STATUS_CODES[statusCode]}`);
   }
 };
 
@@ -113,7 +46,7 @@ function setAgent(agent) {
   dispatcher = agent;
 }
 function getAgent() {
-  return dispatcher ?? (0, import_undici.getGlobalDispatcher)();
+  return dispatcher ?? getGlobalDispatcher();
 }
 function setRequestTimeout(timeout) {
   requestTimeout = timeout;
@@ -141,10 +74,10 @@ function createRequestOptions(url) {
 }
 async function enqueueRequest() {
   while (queue.size >= getRequestQueueLimit()) {
-    await (0, import_promises.setTimeout)(1);
+    await setTimeout(1);
   }
   ;
-  const id = (0, import_crypto.randomUUID)();
+  const id = randomUUID();
   queue.add(id);
   return id;
 }
@@ -222,8 +155,8 @@ async function rawResolve(url) {
 }
 
 // src/stream.ts
-var import_parse_hls = __toESM(require("parse-hls"));
-var import_stream = require("stream");
+import HLS from "parse-hls";
+import { PassThrough } from "stream";
 
 // src/utils/partial.ts
 function isPlaylistFetched(info) {
@@ -284,7 +217,7 @@ var OPTION_WEIGHT = {
 };
 async function streamHls(url, output) {
   const hlsRes = await request(url);
-  const { segments } = import_parse_hls.default.parse(await hlsRes.body.text());
+  const { segments } = HLS.parse(await hlsRes.body.text());
   for (const segment of segments) {
     await streamThrough(new URL(segment.uri), output, false);
   }
@@ -293,7 +226,7 @@ async function streamHls(url, output) {
 async function streamTranscoding(transcoding, output) {
   const { url: streamUrl } = await requestWithAuth(transcoding.url);
   const url = new URL(streamUrl);
-  const outStream = output ?? new import_stream.PassThrough();
+  const outStream = output ?? new PassThrough();
   outStream.transcoding = transcoding;
   outStream.emit("transcoding", transcoding);
   const streaming = transcoding.format.protocol === "hls" /* HLS */ ? streamHls(url, outStream) : streamThrough(url, outStream);
@@ -356,12 +289,12 @@ async function stream(url, options = DEFAULT_OPTIONS) {
   return streamFromInfo(info, options);
 }
 function streamSync(url, options = DEFAULT_OPTIONS) {
-  const output = new import_stream.PassThrough();
+  const output = new PassThrough();
   getInfo(url).then((info) => streamEngine(info.data, options, output)).catch((err) => output.emit("error", err));
   return output;
 }
 function streamFromInfoSync(info, options = DEFAULT_OPTIONS) {
-  const output = new import_stream.PassThrough();
+  const output = new PassThrough();
   streamEngine(info.data, options, output).catch((err) => output.emit("error", err));
   return output;
 }
@@ -383,7 +316,7 @@ async function streamPlaylist(url, options = DEFAULT_OPTIONS) {
 }
 function streamPlaylistFromInfoSync(info, options = DEFAULT_OPTIONS) {
   return info.data.tracks.map((track) => {
-    const output = new import_stream.PassThrough();
+    const output = new PassThrough();
     streamEngine(track, options, output).catch((err) => output.emit("error", err));
     return output;
   });
@@ -464,8 +397,7 @@ function getPlaylistPermalinkURL(url) {
     return "";
   }
 }
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
+export {
   MimeType,
   PlaylistURLPattern,
   Preset,
@@ -498,4 +430,4 @@ function getPlaylistPermalinkURL(url) {
   streamSync,
   validatePlaylistURL,
   validateURL
-});
+};

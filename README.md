@@ -1,6 +1,6 @@
 # scdl-core
 
-A lightweight SoundCloud downloading module for Node.js
+A lightweight SoundCloud streaming module
 
 # Usage
 

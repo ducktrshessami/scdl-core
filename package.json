@@ -1,32 +1,32 @@
 {
   "name": "scdl-core",
-  "version": "2.0.5",
-  "description": "Stream songs from SoundCloud",
+  "version": "2.1.0",
+  "description": "A lightweight SoundCloud streaming module",
   "main": "dist/index.js",
-  "types": "typings/index.d.ts",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "repository": "git@github.com:ducktrshessami/scdl-core.git",
+  "author": "ducktrshessami",
+  "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "declare": "tsc -d --emitDeclarationOnly",
+    "build": "tsup",
     "pretest": "yarn build",
     "test": "mocha"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ducktrshessami/scdl-core.git"
+  "exports": {
+    "require": "./dist/index.js",
+    "import": "./dist/index.mjs",
+    "types": "./dist/index.d.ts"
   },
-  "author": "ducktrshessami",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ducktrshessami/scdl-core/issues"
-  },
-  "homepage": "https://github.com/ducktrshessami/scdl-core#readme",
   "dependencies": {
     "parse-hls": "^1.0.7",
-    "undici": "^5.19.1"
+    "undici": "^5.21.0"
   },
   "devDependencies": {
-    "@types/node": "^18.13.0",
+    "@types/node": "^18.15.11",
     "mocha": "^10.2.0",
-    "soundcloud-key-fetch": "^1.0.13"
+    "soundcloud-key-fetch": "^1.0.13",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.3"
   }
 }
