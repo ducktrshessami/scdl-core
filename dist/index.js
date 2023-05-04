@@ -499,3 +499,4 @@ function getPlaylistPermalinkURL(url) {
   validatePlaylistURL,
   validateURL
 });
+//# sourceMappingURL=index.js.map
