@@ -49,6 +49,13 @@ describe("track", function () {
             this.timeout(5000);
             info = await scdl.getInfo(URL);
         });
+        it("can stream both progressive and hls", async function () {
+            this.timeout(5000);
+            await Promise.all([
+                scdl.streamFromInfo(info, { protocol: scdl.Protocol.PROGRESSIVE }),
+                scdl.streamFromInfo(info, { protocol: scdl.Protocol.HLS })
+            ]);
+        });
         it("info is wrapped in data object for symmetry", function () {
             assert(info.data);
             assert(info.data.id);
