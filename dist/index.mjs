@@ -155,7 +155,7 @@ async function rawResolve(url) {
 }
 
 // src/stream.ts
-import HLS from "parse-hls";
+import { M3uParser } from "m3u-parser-generator";
 import { PassThrough } from "stream";
 
 // src/utils/partial.ts
@@ -217,9 +217,9 @@ var OPTION_WEIGHT = {
 };
 async function streamHls(url, output) {
   const hlsRes = await request(url);
-  const { segments } = HLS.parse(await hlsRes.body.text());
-  for (const segment of segments) {
-    await streamThrough(new URL(segment.uri), output, false);
+  const { medias } = M3uParser.parse(await hlsRes.body.text());
+  for (const media of medias) {
+    await streamThrough(new URL(media.location), output, false);
   }
   return output.end();
 }

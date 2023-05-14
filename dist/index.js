@@ -1,9 +1,7 @@
 "use strict";
-var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -17,14 +15,6 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/index.ts
@@ -222,7 +212,7 @@ async function rawResolve(url) {
 }
 
 // src/stream.ts
-var import_parse_hls = __toESM(require("parse-hls"));
+var import_m3u_parser_generator = require("m3u-parser-generator");
 var import_stream = require("stream");
 
 // src/utils/partial.ts
@@ -284,9 +274,9 @@ var OPTION_WEIGHT = {
 };
 async function streamHls(url, output) {
   const hlsRes = await request(url);
-  const { segments } = import_parse_hls.default.parse(await hlsRes.body.text());
-  for (const segment of segments) {
-    await streamThrough(new URL(segment.uri), output, false);
+  const { medias } = import_m3u_parser_generator.M3uParser.parse(await hlsRes.body.text());
+  for (const media of medias) {
+    await streamThrough(new URL(media.location), output, false);
   }
   return output.end();
 }

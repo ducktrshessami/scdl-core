@@ -19,7 +19,7 @@
     "types": "./dist/index.d.ts"
   },
   "dependencies": {
-    "parse-hls": "^1.0.7",
+    "m3u-parser-generator": "ducktrshessami/m3u-parser-generator#dist",
     "undici": "^5.22.0"
   },
   "devDependencies": {
