@@ -651,10 +651,9 @@ log-symbols@4.1.0:
     chalk "^4.1.0"
     is-unicode-supported "^0.1.0"
 
-m3u-parser-generator@^1.2.0:
+m3u-parser-generator@ducktrshessami/m3u-parser-generator#dist:
   version "1.2.0"
-  resolved "https://registry.yarnpkg.com/m3u-parser-generator/-/m3u-parser-generator-1.2.0.tgz#238d4473b8bf8d355493f78dca48ae0598962b46"
-  integrity sha512-OyE/U0Irwgt4PLdOpktDuodCNEjehAVSasrczVtkf353Rxqq14KhR/HlId4564jplVXAr9qLv3tCQ9l/DTQxsg==
+  resolved "https://codeload.github.com/ducktrshessami/m3u-parser-generator/tar.gz/82d9291d42005951573f0e2df7dc1ba41e777f4e"
 
 merge-stream@^2.0.0:
   version "2.0.0"
