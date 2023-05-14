@@ -1,8 +1,8 @@
-const assert = require("assert");
-const scdl = require("../dist");
-const { TRACK_URL, PLAYLIST_URL } = require("./urls");
+import assert from "assert";
+import * as scdl from "../dist/index.mjs";
+import { TRACK_URL, PLAYLIST_URL } from "./urls.js";
 
-describe("CJS", function () {
+describe("ESM", function () {
     describe("track", function () {
         const URL = process.env.TRACK_URL || TRACK_URL;
         if (!URL) {

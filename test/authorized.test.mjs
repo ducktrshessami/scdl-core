@@ -1,7 +1,7 @@
-const assert = require("assert");
-const { fetchKey } = require("soundcloud-key-fetch");
-const scdl = require("../dist");
-const { TRACK_URL, PLAYLIST_URL } = require("./urls");
+import assert from "assert";
+import { fetchKey } from "soundcloud-key-fetch";
+import * as scdl from "../dist/index.mjs";
+import { TRACK_URL, PLAYLIST_URL } from "./urls.js";
 
 function playlistTrackEmitRace(emitter, event) {
     return new Promise(resolve => {
@@ -17,7 +17,7 @@ function playlistTrackEmitRace(emitter, event) {
     });
 }
 
-describe("CJS", function () {
+describe("ESM", function () {
     before("fetching clientID", async function () {
         this.timeout(5000);
         scdl.setClientID(await fetchKey());
