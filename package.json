@@ -23,10 +23,10 @@
     "undici": "^5.22.1"
   },
   "devDependencies": {
-    "@types/node": "^20.1.4",
+    "@types/node": "^20.3.1",
     "mocha": "^10.2.0",
     "soundcloud-key-fetch": "^1.0.13",
-    "tsup": "^6.7.0",
-    "typescript": "^5.0.4"
+    "tsup": "^7.0.0",
+    "typescript": "^5.1.3"
   }
 }
