@@ -2,10 +2,8 @@ export * from "./api";
 export * from "./auth";
 export {
     getAgent,
-    getRequestQueueLimit,
     getRequestTimeout,
     setAgent,
-    setRequestQueueLimit,
     setRequestTimeout
 } from "./dispatch";
 export {
@@ -24,6 +22,7 @@ export {
     Visual,
     Visuals
 } from "./info";
+export { getRequestQueueLimit, setRequestQueueLimit } from "./queue";
 export * from "./stream";
 export * from "./utils/partial";
 export * from "./utils/permalink";
