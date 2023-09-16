@@ -66,10 +66,9 @@ function createRequestOptions(url) {
     path: url.pathname + url.search,
     method: "GET"
   };
-  if (requestTimeout !== null) {
-    options.headersTimeout = requestTimeout;
-    options.bodyTimeout = requestTimeout;
-  }
+  const timeout = getRequestTimeout();
+  options.headersTimeout = timeout;
+  options.bodyTimeout = timeout;
   return options;
 }
 async function enqueueRequest() {
