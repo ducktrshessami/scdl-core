@@ -1,17 +1,13 @@
-import { randomUUID } from "crypto";
 import { PassThrough, Readable } from "stream";
-import { setTimeout } from "timers/promises";
 import { Dispatcher, getGlobalDispatcher } from "undici";
 import { getClientID, getOauthToken } from "./auth";
 import { RequestError, ScdlError } from "./utils/error";
+import { Queue } from "./queue";
 
-const DEFAULT_MAX = 20;
 const DEFAULT_TIMEOUT = 30000;
-
-const queue = new Set<string>();
+const queue = new Queue();
 let dispatcher: Dispatcher | null = null;
 let requestTimeout: number | null = null;
-let queueMax: number | null = null;
 
 /**
  * Set the agent to use for requests
@@ -46,22 +42,6 @@ export function getRequestTimeout(): number {
 }
 
 /**
- * Set the limit for concurrent requests
- * 
- * Defaults to 20
- */
-export function setRequestQueueLimit(limit: number): void {
-    queueMax = limit;
-}
-
-/**
- * Get the limit for concurrent requests
- */
-export function getRequestQueueLimit(): number {
-    return queueMax ?? DEFAULT_MAX;
-}
-
-/**
  * Create GET request options from a URL
  */
 function createRequestOptions(url: URL): Dispatcher.RequestOptions {
@@ -77,23 +57,10 @@ function createRequestOptions(url: URL): Dispatcher.RequestOptions {
 }
 
 /**
- * Wait for the request queue to not be full
- * @returns The queue ID for this request
- */
-async function enqueueRequest(): Promise<string> {
-    while (queue.size >= getRequestQueueLimit()) {
-        await setTimeout(1);
-    };
-    const id = randomUUID();
-    queue.add(id);
-    return id;
-}
-
-/**
  * Perform a GET request
  */
 export async function request(url: URL): Promise<Dispatcher.ResponseData> {
-    const id = await enqueueRequest();
+    await queue.enqueue();
     try {
         const res = await getAgent()
             .request(createRequestOptions(url));
@@ -105,7 +72,7 @@ export async function request(url: URL): Promise<Dispatcher.ResponseData> {
         }
     }
     finally {
-        queue.delete(id);
+        queue.dequeue();
     }
 }
 
@@ -146,13 +113,13 @@ export async function streamThrough(
 ): Promise<Readable> {
     return new Promise(async (resolve, reject) => {
         function cleanup(): void {
-            queue.delete(id);
+            queue.dequeue();
             if (end) {
                 output.end();
             }
         }
 
-        const id = await enqueueRequest();
+        await queue.enqueue();
         getAgent()
             .dispatch(createRequestOptions(url), {
                 onConnect: () => output.emit("connect"),
