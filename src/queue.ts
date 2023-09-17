@@ -34,8 +34,7 @@ export class Queue {
      */
     async enqueue(): Promise<void> {
         if (this.current >= getRequestQueueLimit()) {
-            const promise = new Promise<void>(resolve => this.queue.unshift(resolve));
-            await promise;
+            await new Promise<void>(resolve => this.queue.unshift(resolve));
         }
         this.current++;
     }
@@ -46,6 +45,6 @@ export class Queue {
     dequeue() {
         this.current--;
         const next = this.queue.pop();
-        next?.call(null);
+        next?.();
     }
 }
