@@ -45,16 +45,6 @@ declare function setRequestTimeout(timeout: number): void;
  * Get the timeout for requests in milliseconds
  */
 declare function getRequestTimeout(): number;
-/**
- * Set the limit for concurrent requests
- *
- * Defaults to 20
- */
-declare function setRequestQueueLimit(limit: number): void;
-/**
- * Get the limit for concurrent requests
- */
-declare function getRequestQueueLimit(): number;
 
 /**
  * Checks if all track data in a playlist has been fetched
@@ -397,6 +387,17 @@ type TrackInfoData = {
     user: UserInfo;
 };
 type TrackInfo = DataWrapped<TrackInfoData>;
+
+/**
+ * Set the limit for concurrent requests
+ *
+ * Defaults to 20
+ */
+declare function setRequestQueueLimit(limit: number): void;
+/**
+ * Get the limit for concurrent requests
+ */
+declare function getRequestQueueLimit(): number;
 
 /**
  * Formats a URL as a track's permalink URL

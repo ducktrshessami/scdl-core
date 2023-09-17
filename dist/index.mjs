@@ -1,6 +1,4 @@
 // src/dispatch.ts
-import { randomUUID } from "crypto";
-import { setTimeout } from "timers/promises";
 import { getGlobalDispatcher } from "undici";
 
 // src/auth.ts
@@ -35,13 +33,44 @@ var RequestError = class extends CustomError {
   }
 };
 
-// src/dispatch.ts
+// src/queue.ts
 var DEFAULT_MAX = 20;
+var queueMax = null;
+function setRequestQueueLimit(limit) {
+  queueMax = limit;
+}
+function getRequestQueueLimit() {
+  return queueMax ?? DEFAULT_MAX;
+}
+var Queue = class {
+  constructor() {
+    this.current = 0;
+    this.queue = [];
+  }
+  /**
+   * Wait for this to resolve before executing a queued action
+   */
+  async enqueue() {
+    if (this.current >= getRequestQueueLimit()) {
+      await new Promise((resolve) => this.queue.unshift(resolve));
+    }
+    this.current++;
+  }
+  /**
+   * Call this after a queued action has finished executing
+   */
+  dequeue() {
+    this.current--;
+    const next = this.queue.pop();
+    next?.();
+  }
+};
+
+// src/dispatch.ts
 var DEFAULT_TIMEOUT = 3e4;
-var queue = /* @__PURE__ */ new Set();
+var queue = new Queue();
 var dispatcher = null;
 var requestTimeout = null;
-var queueMax = null;
 function setAgent(agent) {
   dispatcher = agent;
 }
@@ -54,12 +83,6 @@ function setRequestTimeout(timeout) {
 function getRequestTimeout() {
   return requestTimeout ?? DEFAULT_TIMEOUT;
 }
-function setRequestQueueLimit(limit) {
-  queueMax = limit;
-}
-function getRequestQueueLimit() {
-  return queueMax ?? DEFAULT_MAX;
-}
 function createRequestOptions(url) {
   const options = {
     origin: url.origin,
@@ -71,17 +94,8 @@ function createRequestOptions(url) {
   options.bodyTimeout = timeout;
   return options;
 }
-async function enqueueRequest() {
-  while (queue.size >= getRequestQueueLimit()) {
-    await setTimeout(1);
-  }
-  ;
-  const id = randomUUID();
-  queue.add(id);
-  return id;
-}
 async function request(url) {
-  const id = await enqueueRequest();
+  await queue.enqueue();
   try {
     const res = await getAgent().request(createRequestOptions(url));
     if (res.statusCode < 400) {
@@ -90,7 +104,7 @@ async function request(url) {
       throw new RequestError(res.statusCode);
     }
   } finally {
-    queue.delete(id);
+    queue.dequeue();
   }
 }
 async function requestWithAuth(url) {
@@ -112,12 +126,12 @@ async function requestWithAuth(url) {
 async function streamThrough(url, output, end = true) {
   return new Promise(async (resolve, reject) => {
     function cleanup() {
-      queue.delete(id);
+      queue.dequeue();
       if (end) {
         output.end();
       }
     }
-    const id = await enqueueRequest();
+    await queue.enqueue();
     getAgent().dispatch(createRequestOptions(url), {
       onConnect: () => output.emit("connect"),
       onHeaders: (statusCode) => {
