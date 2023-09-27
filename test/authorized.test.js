@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { fetchKey } = require("soundcloud-key-fetch");
+const { fetchClientID } = require("@scdl/fetch-client");
 const scdl = require("../dist");
 const { TRACK_URL, PLAYLIST_URL } = require("./urls");
 
@@ -20,7 +20,7 @@ function playlistTrackEmitRace(emitter, event) {
 describe("CJS", function () {
     before("fetching clientID", async function () {
         this.timeout(5000);
-        scdl.setClientID(await fetchKey());
+        scdl.setClientID(await fetchClientID());
     });
 
     describe("track", function () {

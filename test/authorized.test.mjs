@@ -1,5 +1,5 @@
 import assert from "assert";
-import { fetchKey } from "soundcloud-key-fetch";
+import { fetchClientID } from "@scdl/fetch-client";
 import * as scdl from "../dist/index.mjs";
 import { TRACK_URL, PLAYLIST_URL } from "./urls.js";
 
@@ -20,7 +20,7 @@ function playlistTrackEmitRace(emitter, event) {
 describe("ESM", function () {
     before("fetching clientID", async function () {
         this.timeout(5000);
-        scdl.setClientID(await fetchKey());
+        scdl.setClientID(await fetchClientID());
     });
 
     describe("track", function () {
