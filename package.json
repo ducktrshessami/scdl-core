@@ -20,12 +20,12 @@
   },
   "dependencies": {
     "m3u-parser-generator": "^1.4.0",
-    "undici": "^5.24.0"
+    "undici": "^5.25.2"
   },
   "devDependencies": {
-    "@types/node": "^20.6.2",
+    "@scdl/fetch-client": "ducktrshessami/scdl-fetch-client#v1.0.0",
+    "@types/node": "^20.7.1",
     "mocha": "^10.2.0",
-    "soundcloud-key-fetch": "^1.0.13",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2"
   }
