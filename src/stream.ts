@@ -1,7 +1,6 @@
 import { M3uParser } from "m3u-parser-generator";
 import { PassThrough, Readable } from "stream";
 import {
-    StreamThrough,
     request,
     requestWithAuth,
     streamThrough
@@ -22,7 +21,6 @@ import {
     Quality,
     Transcoding
 } from "./utils/transcoding";
-import { Emitter } from "./utils/emitter";
 
 const DEFAULT_OPTIONS: StreamOptions = {
     strict: false,
@@ -260,10 +258,25 @@ type TranscodingStreamResponse = {
     url: string
 };
 
-interface BaseTranscodingStream extends Emitter<{ transcoding: [Transcoding] }> {
+interface Emitter<EventMap extends Record<string, any[]>> {
+    emit<Event extends keyof EventMap>(event: Event, ...args: EventMap[Event]): boolean;
+    addListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    on<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    once<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    prependListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    prependOnceListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    removeListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+}
+
+type TranscodingStreamEvents = {
+    transcoding: [Transcoding],
+    connect: []
+};
+
+interface BaseTranscodingStream extends Emitter<TranscodingStreamEvents> {
     transcoding?: Transcoding;
 }
 
-type RawTrackStream = BaseTranscodingStream & StreamThrough;
+export type RawTrackStream = BaseTranscodingStream & PassThrough;
 
 export type TrackStream = BaseTranscodingStream & Readable;

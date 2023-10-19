@@ -1,9 +1,9 @@
-import { PassThrough, Readable } from "stream";
+import { Readable } from "stream";
 import { Dispatcher, getGlobalDispatcher } from "undici";
 import { getClientID, getOauthToken } from "./auth";
 import { RequestError, ScdlError } from "./utils/error";
 import { Queue } from "./queue";
-import { Emitter } from "./utils/emitter";
+import { RawTrackStream } from "./stream";
 
 const DEFAULT_TIMEOUT = 30000;
 const queue = new Queue();
@@ -109,7 +109,7 @@ export async function requestWithAuth(url: string | URL): Promise<any> {
  */
 export async function streamThrough(
     url: URL,
-    output: StreamThrough,
+    output: RawTrackStream,
     end: boolean = true
 ): Promise<Readable> {
     return new Promise(async (resolve, reject) => {
@@ -149,5 +149,3 @@ export async function streamThrough(
             });
     });
 }
-
-export type StreamThrough = Emitter<{ connect: [] }> & PassThrough;
