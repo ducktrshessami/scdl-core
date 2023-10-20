@@ -25,158 +25,6 @@ declare function getClientID(): string | null;
  */
 declare function getOauthToken(): string | null;
 
-/**
- * Set the agent to use for requests
- *
- * Defaults to the global dispatcher
- */
-declare function setAgent(agent: Dispatcher): void;
-/**
- * Get the currently set agent
- */
-declare function getAgent(): Dispatcher;
-/**
- * Set the timeout for requests in milliseconds
- *
- * Defaults to 30000 ms
- */
-declare function setRequestTimeout(timeout: number): void;
-/**
- * Get the timeout for requests in milliseconds
- */
-declare function getRequestTimeout(): number;
-
-/**
- * Checks if all track data in a playlist has been fetched
- */
-declare function isPlaylistFetched(info: FetchablePlaylistInfo): info is StreamablePlaylistInfo & FetchablePlaylistInfo;
-/**
- * Fetches any partial track data in a playlist's info object
- *
- * Track info is updated in place
- * @param info Info obtained from `getPlaylistInfo`
- * @returns The updated playlist info object
- */
-declare function fetchPartialPlaylist(info: FetchablePlaylistInfo): Promise<StreamablePlaylistInfo>;
-type MinimalTrackInfo = {
-    id: number;
-};
-type FetchablePlaylistInfoData = {
-    tracks: Array<TrackInfoData | MinimalTrackInfo>;
-};
-type FetchablePlaylistInfo = DataWrapped<FetchablePlaylistInfoData>;
-
-declare enum Preset {
-    MP3 = "mp3_0_1",
-    OPUS = "opus_0_0"
-}
-declare enum Protocol {
-    PROGRESSIVE = "progressive",
-    HLS = "hls"
-}
-declare enum MimeType {
-    MPEG = "audio/mpeg",
-    OPUS = "audio/ogg; codecs=\"opus\""
-}
-declare enum Quality {
-    SQ = "sq",
-    /**
-     * I've only seen `sq`, but I'm assuming something like this exists
-     * for SoundCloud Go+ subscribers
-     */
-    HQ = "hq"
-}
-type Transcoding = {
-    url: string;
-    preset: Preset;
-    duration: number;
-    snipped: boolean;
-    format: {
-        protocol: Protocol;
-        mime_type: MimeType;
-    };
-    quality: Quality;
-};
-
-/**
- * * Stream a track from its info object
- *
- * Used internally by `stream`
- * @param info Info obtained from `getInfo`
- * @param options Transcoding search options
- */
-declare function streamFromInfo(info: StreamableTrackInfo, options?: StreamOptions): Promise<TrackStream>;
-/**
- * Stream a track from its URL
- * @param url A track URL
- * @param options Transcoding search options
- */
-declare function stream(url: string, options?: StreamOptions): Promise<TrackStream>;
-/**
- * Synchronously stream a track from its URL
- * @param url A track URL
- * @param options Transcoding search options
- */
-declare function streamSync(url: string, options?: StreamOptions): TrackStream;
-/**
- * Synchronously stream a track from its info object
- * @param info Info obtained from `getInfo`
- * @param options Transcoding search options
- */
-declare function streamFromInfoSync(info: StreamableTrackInfo, options?: StreamOptions): TrackStream;
-/**
- * Stream tracks from a playlist's info object
- *
- * Fetches partial track data before streaming
- *
- * Used internally by `streamPlaylist` and `PlaylistInfo.stream`
- * @param info Info obtained from `getPlaylistInfo`
- * @param options Transcoding search options
- * @returns A promise that resolves in an array. Each item will be either a readable stream or `null` if streaming errored
- */
-declare function streamPlaylistFromInfo(info: StreamablePlaylistInfo | FetchablePlaylistInfo, options?: StreamOptions): Promise<Array<TrackStream | null>>;
-/**
- * Stream tracks from a playlist's URL
- * @param url A playlist URL
- * @param options Transcoding search options
- * @returns A promise that resolves in an array. Each item will be either a readable stream or `null` if streaming errored
- */
-declare function streamPlaylist(url: string, options?: StreamOptions): Promise<Array<TrackStream | null>>;
-/**
- * Synchronously stream tracks from a playlist's info object
- * @param info Info obtained from `getPlaylistInfo`
- * @param options Transcoding search options
- */
-declare function streamPlaylistFromInfoSync(info: StreamablePlaylistInfo, options?: StreamOptions): Array<TrackStream>;
-type StreamOptions = {
-    /**
-     * If `true`, will only stream if all specified options match a transcoding
-     *
-     * If `false`, will stream most similar transcoding
-     *
-     * Defaults to `false`
-     */
-    strict?: boolean;
-    preset?: Preset;
-    protocol?: Protocol;
-    mimeType?: MimeType;
-    quality?: Quality;
-};
-interface StreamingTranscoding {
-    transcoding?: Transcoding;
-    on(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
-    on(event: "connect", listener: () => void): this;
-    once(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
-    once(event: "connect", listener: () => void): this;
-    addListener(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
-    addListener(event: "connect", listener: () => void): this;
-    prependListener(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
-    prependListener(event: "connect", listener: () => void): this;
-    prependOnceListener(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
-    prependOnceListener(event: "connect", listener: () => void): this;
-}
-type TrackStream = Readable & StreamingTranscoding;
-
 declare class PlaylistInfo<fetched extends boolean = boolean> {
     readonly data: PlaylistInfoData<fetched>;
     constructor(data: PlaylistInfoData<fetched>);
@@ -234,6 +82,38 @@ type StreamablePlaylistInfoData = {
     tracks: Array<StreamableTrackInfoData>;
 };
 type StreamablePlaylistInfo = DataWrapped<StreamablePlaylistInfoData>;
+
+declare enum Preset {
+    MP3 = "mp3_0_1",
+    OPUS = "opus_0_0"
+}
+declare enum Protocol {
+    PROGRESSIVE = "progressive",
+    HLS = "hls"
+}
+declare enum MimeType {
+    MPEG = "audio/mpeg",
+    OPUS = "audio/ogg; codecs=\"opus\""
+}
+declare enum Quality {
+    SQ = "sq",
+    /**
+     * I've only seen `sq`, but I'm assuming something like this exists
+     * for SoundCloud Go+ subscribers
+     */
+    HQ = "hq"
+}
+type Transcoding = {
+    url: string;
+    preset: Preset;
+    duration: number;
+    snipped: boolean;
+    format: {
+        protocol: Protocol;
+        mime_type: MimeType;
+    };
+    quality: Quality;
+};
 
 /**
  * Get a track's info
@@ -387,6 +267,129 @@ type TrackInfoData = {
     user: UserInfo;
 };
 type TrackInfo = DataWrapped<TrackInfoData>;
+
+/**
+ * Checks if all track data in a playlist has been fetched
+ */
+declare function isPlaylistFetched(info: FetchablePlaylistInfo): info is StreamablePlaylistInfo & FetchablePlaylistInfo;
+/**
+ * Fetches any partial track data in a playlist's info object
+ *
+ * Track info is updated in place
+ * @param info Info obtained from `getPlaylistInfo`
+ * @returns The updated playlist info object
+ */
+declare function fetchPartialPlaylist(info: FetchablePlaylistInfo): Promise<StreamablePlaylistInfo>;
+type MinimalTrackInfo = {
+    id: number;
+};
+type FetchablePlaylistInfoData = {
+    tracks: Array<TrackInfoData | MinimalTrackInfo>;
+};
+type FetchablePlaylistInfo = DataWrapped<FetchablePlaylistInfoData>;
+
+/**
+ * * Stream a track from its info object
+ *
+ * Used internally by `stream`
+ * @param info Info obtained from `getInfo`
+ * @param options Transcoding search options
+ */
+declare function streamFromInfo(info: StreamableTrackInfo, options?: StreamOptions): Promise<TrackStream>;
+/**
+ * Stream a track from its URL
+ * @param url A track URL
+ * @param options Transcoding search options
+ */
+declare function stream(url: string, options?: StreamOptions): Promise<TrackStream>;
+/**
+ * Synchronously stream a track from its URL
+ * @param url A track URL
+ * @param options Transcoding search options
+ */
+declare function streamSync(url: string, options?: StreamOptions): TrackStream;
+/**
+ * Synchronously stream a track from its info object
+ * @param info Info obtained from `getInfo`
+ * @param options Transcoding search options
+ */
+declare function streamFromInfoSync(info: StreamableTrackInfo, options?: StreamOptions): TrackStream;
+/**
+ * Stream tracks from a playlist's info object
+ *
+ * Fetches partial track data before streaming
+ *
+ * Used internally by `streamPlaylist` and `PlaylistInfo.stream`
+ * @param info Info obtained from `getPlaylistInfo`
+ * @param options Transcoding search options
+ * @returns A promise that resolves in an array. Each item will be either a readable stream or `null` if streaming errored
+ */
+declare function streamPlaylistFromInfo(info: StreamablePlaylistInfo | FetchablePlaylistInfo, options?: StreamOptions): Promise<Array<TrackStream | null>>;
+/**
+ * Stream tracks from a playlist's URL
+ * @param url A playlist URL
+ * @param options Transcoding search options
+ * @returns A promise that resolves in an array. Each item will be either a readable stream or `null` if streaming errored
+ */
+declare function streamPlaylist(url: string, options?: StreamOptions): Promise<Array<TrackStream | null>>;
+/**
+ * Synchronously stream tracks from a playlist's info object
+ * @param info Info obtained from `getPlaylistInfo`
+ * @param options Transcoding search options
+ */
+declare function streamPlaylistFromInfoSync(info: StreamablePlaylistInfo, options?: StreamOptions): Array<TrackStream>;
+type StreamOptions = {
+    /**
+     * If `true`, will only stream if all specified options match a transcoding
+     *
+     * If `false`, will stream most similar transcoding
+     *
+     * Defaults to `false`
+     */
+    strict?: boolean;
+    preset?: Preset;
+    protocol?: Protocol;
+    mimeType?: MimeType;
+    quality?: Quality;
+};
+interface Emitter<EventMap extends Record<string, any[]>> {
+    emit<Event extends keyof EventMap>(event: Event, ...args: EventMap[Event]): boolean;
+    addListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    on<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    once<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    prependListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    prependOnceListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    removeListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+}
+type TranscodingStreamEvents = {
+    transcoding: [Transcoding];
+    connect: [];
+};
+interface BaseTranscodingStream extends Emitter<TranscodingStreamEvents> {
+    transcoding?: Transcoding;
+}
+type TrackStream = BaseTranscodingStream & Readable;
+
+/**
+ * Set the agent to use for requests
+ *
+ * Defaults to the global dispatcher
+ */
+declare function setAgent(agent: Dispatcher): void;
+/**
+ * Get the currently set agent
+ */
+declare function getAgent(): Dispatcher;
+/**
+ * Set the timeout for requests in milliseconds
+ *
+ * Defaults to 30000 ms
+ */
+declare function setRequestTimeout(timeout: number): void;
+/**
+ * Get the timeout for requests in milliseconds
+ */
+declare function getRequestTimeout(): number;
 
 /**
  * Set the limit for concurrent requests
