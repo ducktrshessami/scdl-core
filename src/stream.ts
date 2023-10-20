@@ -55,12 +55,12 @@ async function streamHls(url: URL, output: PassThrough): Promise<Readable> {
 async function streamTranscoding(transcoding: Transcoding, output?: PassThrough): Promise<TrackStream> {
     const { url: streamUrl }: TranscodingStreamResponse = await requestWithAuth(transcoding.url);
     const url = new URL(streamUrl);
-    const outStream: TrackStream = output ?? new PassThrough();
+    const outStream: RawTrackStream = output ?? new PassThrough();
     outStream.transcoding = transcoding;
     outStream.emit("transcoding", transcoding);
     const streaming = transcoding.format.protocol === Protocol.HLS ?
-        streamHls(url, outStream as PassThrough) :
-        streamThrough(url, outStream as PassThrough);
+        streamHls(url, outStream) :
+        streamThrough(url, outStream);
     if (output) {
         streaming.catch(err => outStream.emit("error", err));
     }
@@ -258,18 +258,25 @@ type TranscodingStreamResponse = {
     url: string
 };
 
-interface StreamingTranscoding {
-    transcoding?: Transcoding;
-    on(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
-    on(event: "connect", listener: () => void): this;
-    once(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
-    once(event: "connect", listener: () => void): this;
-    addListener(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
-    addListener(event: "connect", listener: () => void): this;
-    prependListener(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
-    prependListener(event: "connect", listener: () => void): this;
-    prependOnceListener(event: "transcoding", listener: (transcoding: Transcoding) => void): this;
-    prependOnceListener(event: "connect", listener: () => void): this;
+interface Emitter<EventMap extends Record<string, any[]>> {
+    emit<Event extends keyof EventMap>(event: Event, ...args: EventMap[Event]): boolean;
+    addListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    on<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    once<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    prependListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    prependOnceListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
+    removeListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => void): this;
 }
 
-export type TrackStream = Readable & StreamingTranscoding;
+type TranscodingStreamEvents = {
+    transcoding: [Transcoding],
+    connect: []
+};
+
+interface BaseTranscodingStream extends Emitter<TranscodingStreamEvents> {
+    transcoding?: Transcoding;
+}
+
+export type RawTrackStream = BaseTranscodingStream & PassThrough;
+
+export type TrackStream = BaseTranscodingStream & Readable;

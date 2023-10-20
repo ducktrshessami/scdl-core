@@ -23,7 +23,17 @@ export {
     Visuals
 } from "./info";
 export { getRequestQueueLimit, setRequestQueueLimit } from "./queue";
-export * from "./stream";
+export {
+    StreamOptions,
+    TrackStream,
+    stream,
+    streamFromInfo,
+    streamFromInfoSync,
+    streamPlaylist,
+    streamPlaylistFromInfo,
+    streamPlaylistFromInfoSync,
+    streamSync
+} from "./stream";
 export * from "./utils/partial";
 export * from "./utils/permalink";
 export type {
