@@ -338,7 +338,13 @@ declare function streamPlaylist(url: string, options?: StreamOptions): Promise<A
  * @param options Transcoding search options
  */
 declare function streamPlaylistFromInfoSync(info: StreamablePlaylistInfo, options?: StreamOptions): Array<TrackStream>;
-type StreamOptions = {
+type TranscodingOptions = {
+    preset: Preset;
+    protocol: Protocol;
+    mimeType: MimeType;
+    quality: Quality;
+};
+type StreamOptions = Partial<TranscodingOptions> & {
     /**
      * If `true`, will only stream if all specified options match a transcoding
      *
@@ -347,10 +353,6 @@ type StreamOptions = {
      * Defaults to `false`
      */
     strict?: boolean;
-    preset?: Preset;
-    protocol?: Protocol;
-    mimeType?: MimeType;
-    quality?: Quality;
 };
 interface Emitter<EventMap extends Record<string, any[]>> {
     emit<Event extends keyof EventMap>(event: Event, ...args: EventMap[Event]): boolean;

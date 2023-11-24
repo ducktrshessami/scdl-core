@@ -259,22 +259,21 @@ function findTranscoding(transcodings, options) {
     ) ?? null;
   } else {
     const { transcoding: best } = transcodings.reduce((currentBest, transcoding) => {
+      const data = {
+        preset: transcoding.preset,
+        protocol: transcoding.format.protocol,
+        mimeType: transcoding.format.mime_type,
+        quality: transcoding.quality
+      };
       const current = {
         transcoding,
-        score: 0
+        score: Object.keys(OPTION_WEIGHT).reduce((score, key) => {
+          if (data[key] === options[key]) {
+            score += OPTION_WEIGHT[key];
+          }
+          return score;
+        }, 0)
       };
-      if (transcoding.preset === options.preset) {
-        current.score += OPTION_WEIGHT.preset;
-      }
-      if (transcoding.format.protocol === options.protocol) {
-        current.score += OPTION_WEIGHT.protocol;
-      }
-      if (transcoding.format.mime_type === options.mimeType) {
-        current.score += OPTION_WEIGHT.mimeType;
-      }
-      if (transcoding.quality === options.quality) {
-        current.score += OPTION_WEIGHT.quality;
-      }
       return current.score > currentBest.score ? current : currentBest;
     }, {
       transcoding: null,
