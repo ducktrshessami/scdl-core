@@ -78,7 +78,7 @@ export type Visuals = {
     /**
      * I have personally only seen this as `null`
      */
-    tracking?: any
+    tracking?: unknown
 };
 
 export type UserBadges = {
