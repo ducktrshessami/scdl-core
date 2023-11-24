@@ -30,7 +30,7 @@ const DEFAULT_OPTIONS: StreamOptions = {
     quality: Quality.SQ
 };
 
-const OPTION_WEIGHT = {
+const OPTION_WEIGHT: Record<keyof TranscodingOptions, number> = {
     mimeType: 1,
     preset: 1.1,
     protocol: 1.2,
@@ -89,22 +89,23 @@ function findTranscoding(transcodings: Array<Transcoding>, options: StreamOption
     }
     else {
         const { transcoding: best } = transcodings.reduce((currentBest: ScoredTranscoding, transcoding) => {
+            const data: TranscodingOptions = {
+                preset: transcoding.preset,
+                protocol: transcoding.format.protocol,
+                mimeType: transcoding.format.mime_type,
+                quality: transcoding.quality
+            };
             const current: ScoredTranscoding = {
                 transcoding,
-                score: 0
+                score: Object
+                    .keys(OPTION_WEIGHT)
+                    .reduce((score, key) => {
+                        if (data[<keyof TranscodingOptions>key] === options[<keyof TranscodingOptions>key]) {
+                            score += OPTION_WEIGHT[<keyof TranscodingOptions>key];
+                        }
+                        return score;
+                    }, 0)
             };
-            if (transcoding.preset === options.preset) {
-                current.score += OPTION_WEIGHT.preset;
-            }
-            if (transcoding.format.protocol === options.protocol) {
-                current.score += OPTION_WEIGHT.protocol;
-            }
-            if (transcoding.format.mime_type === options.mimeType) {
-                current.score += OPTION_WEIGHT.mimeType;
-            }
-            if (transcoding.quality === options.quality) {
-                current.score += OPTION_WEIGHT.quality;
-            }
             return current.score > currentBest.score ? current : currentBest;
         }, {
             transcoding: null,
@@ -234,7 +235,14 @@ export function streamPlaylistFromInfoSync(info: StreamablePlaylistInfo, options
     });
 }
 
-export type StreamOptions = {
+type TranscodingOptions = {
+    preset: Preset,
+    protocol: Protocol,
+    mimeType: MimeType,
+    quality: Quality
+};
+
+export type StreamOptions = Partial<TranscodingOptions> & {
     /**
      * If `true`, will only stream if all specified options match a transcoding
      * 
@@ -242,11 +250,7 @@ export type StreamOptions = {
      * 
      * Defaults to `false`
      */
-    strict?: boolean,
-    preset?: Preset,
-    protocol?: Protocol,
-    mimeType?: MimeType,
-    quality?: Quality
+    strict?: boolean
 };
 
 type ScoredTranscoding = {
