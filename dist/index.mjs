@@ -210,7 +210,6 @@ var MimeType = /* @__PURE__ */ ((MimeType2) => {
 })(MimeType || {});
 var Quality = /* @__PURE__ */ ((Quality2) => {
   Quality2["SQ"] = "sq";
-  Quality2["HQ"] = "hq";
   return Quality2;
 })(Quality || {});
 

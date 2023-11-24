@@ -95,13 +95,12 @@ declare enum MimeType {
     MPEG = "audio/mpeg",
     OPUS = "audio/ogg; codecs=\"opus\""
 }
+/**
+ * I've only seen `sq`, but I'm assuming there's a higher quality
+ * for SoundCloud Go+ subscribers
+ */
 declare enum Quality {
-    SQ = "sq",
-    /**
-     * I've only seen `sq`, but I'm assuming something like this exists
-     * for SoundCloud Go+ subscribers
-     */
-    HQ = "hq"
+    SQ = "sq"
 }
 type Transcoding = {
     url: string;
@@ -165,7 +164,7 @@ type Visuals = {
     /**
      * I have personally only seen this as `null`
      */
-    tracking?: any;
+    tracking?: unknown;
 };
 type UserBadges = {
     pro: boolean;
