@@ -17,22 +17,6 @@ function getOauthToken() {
   return oauthToken;
 }
 
-// src/utils/error.ts
-import { STATUS_CODES } from "http";
-var CustomError = class extends Error {
-  constructor(message) {
-    super(message);
-    this.name = this.constructor.name;
-  }
-};
-var ScdlError = class extends CustomError {
-};
-var RequestError = class extends CustomError {
-  constructor(statusCode) {
-    super(`${statusCode} ${STATUS_CODES[statusCode]}`);
-  }
-};
-
 // src/queue.ts
 var DEFAULT_MAX = 20;
 var queueMax = null;
@@ -63,6 +47,22 @@ var Queue = class {
     this.current--;
     const next = this.queue.pop();
     next?.();
+  }
+};
+
+// src/utils/error.ts
+import { STATUS_CODES } from "http";
+var CustomError = class extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+};
+var ScdlError = class extends CustomError {
+};
+var RequestError = class extends CustomError {
+  constructor(statusCode) {
+    super(`${statusCode} ${STATUS_CODES[statusCode]}`);
   }
 };
 
