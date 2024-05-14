@@ -1,6 +1,6 @@
 import assert from "assert";
 import * as scdl from "../dist/index.mjs";
-import { TRACK_URL, PLAYLIST_URL } from "./urls.js";
+import { PLAYLIST_URL, TRACK_URL } from "./urls.js";
 
 describe("ESM", function () {
     describe("track", function () {

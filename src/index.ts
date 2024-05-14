@@ -8,8 +8,6 @@ export {
 } from "./dispatch";
 export {
     CreatorSubscription,
-    getInfo,
-    getPlaylistInfo,
     PartialTrackInfo,
     PublisherMetadata,
     StreamableTrackInfo,
@@ -20,7 +18,9 @@ export {
     UserBadges,
     UserInfo,
     Visual,
-    Visuals
+    Visuals,
+    getInfo,
+    getPlaylistInfo
 } from "./info";
 export { getRequestQueueLimit, setRequestQueueLimit } from "./queue";
 export {

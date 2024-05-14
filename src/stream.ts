@@ -6,10 +6,10 @@ import {
     streamThrough
 } from "./dispatch";
 import {
-    getInfo,
-    getPlaylistInfo,
     StreamableTrackInfo,
-    StreamableTrackInfoData
+    StreamableTrackInfoData,
+    getInfo,
+    getPlaylistInfo
 } from "./info";
 import { ScdlError } from "./utils/error";
 import { FetchablePlaylistInfo, fetchPartialPlaylist } from "./utils/partial";

@@ -1,9 +1,9 @@
 import { Readable } from "stream";
 import { Dispatcher, getGlobalDispatcher } from "undici";
 import { getClientID, getOauthToken } from "./auth";
-import { RequestError, ScdlError } from "./utils/error";
 import { Queue } from "./queue";
 import { RawTrackStream } from "./stream";
+import { RequestError, ScdlError } from "./utils/error";
 
 const DEFAULT_TIMEOUT = 30000;
 const queue = new Queue();

@@ -1,6 +1,6 @@
 const assert = require("assert");
 const scdl = require("../dist");
-const { TRACK_URL, PLAYLIST_URL } = require("./urls");
+const { PLAYLIST_URL, TRACK_URL } = require("./urls");
 
 describe("CJS", function () {
     describe("track", function () {

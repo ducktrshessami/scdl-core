@@ -40,11 +40,11 @@ export async function fetchPartialPlaylist(info: FetchablePlaylistInfo): Promise
 }
 
 export type MinimalTrackInfo = {
-    id: number
+    id: number;
 };
 
 export type FetchablePlaylistInfoData = {
-    tracks: Array<TrackInfoData | MinimalTrackInfo>
+    tracks: Array<TrackInfoData | MinimalTrackInfo>;
 };
 
 export type FetchablePlaylistInfo = DataWrapped<FetchablePlaylistInfoData>;

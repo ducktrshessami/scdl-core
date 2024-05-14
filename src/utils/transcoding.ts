@@ -22,13 +22,13 @@ export enum Quality {
 }
 
 export type Transcoding = {
-    url: string
-    preset: Preset
-    duration: number
-    snipped: boolean
+    url: string;
+    preset: Preset;
+    duration: number;
+    snipped: boolean;
     format: {
-        protocol: Protocol
-        mime_type: MimeType
-    }
-    quality: Quality
+        protocol: Protocol;
+        mime_type: MimeType;
+    };
+    quality: Quality;
 };

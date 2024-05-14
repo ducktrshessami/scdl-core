@@ -1,7 +1,7 @@
-const assert = require("assert");
 const { fetchClientID } = require("@scdl/fetch-client");
+const assert = require("assert");
 const scdl = require("../dist");
-const { TRACK_URL, PLAYLIST_URL } = require("./urls");
+const { PLAYLIST_URL, TRACK_URL } = require("./urls");
 
 function playlistTrackEmitRace(emitter, event) {
     return new Promise(resolve => {
