@@ -3,32 +3,32 @@ name: Publish
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: lts/*
-    - name: configure
-      run: |
-        git config user.name "$GITHUB_ACTOR"
-        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-    - name: install
-      run: yarn --immutable
-    - name: build
-      run: yarn build
-    - name: branch
-      run: |
-        git fetch origin
-        git symbolic-ref HEAD refs/heads/dist
-        git ls-remote --exit-code -q -h origin dist && git reset origin/dist || git reset
-    - name: commit
-      run: |
-        git add -f dist/ LICENSE README.md package.json
-        git diff --quiet && git diff --staged --quiet || git commit -m "Build $GITHUB_SHA"
-    - name: push
-      run: git push origin dist
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: configure
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: install
+        run: yarn --immutable
+      - name: build
+        run: yarn build
+      - name: branch
+        run: |
+          git fetch origin
+          git symbolic-ref HEAD refs/heads/dist
+          git ls-remote --exit-code -q -h origin dist && git reset origin/dist || git reset
+      - name: commit
+        run: |
+          git add -f dist/ LICENSE README.md package.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Build $GITHUB_SHA"
+      - name: push
+        run: git push origin dist
