@@ -17,7 +17,7 @@ function playlistTrackEmitRace(emitter, event) {
     });
 }
 
-describe("ESM", function () {
+describe("authorized [ESM]", function () {
     before("fetching clientID", async function () {
         this.timeout(5000);
         scdl.setClientID(await fetchClientID());

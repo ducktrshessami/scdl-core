@@ -2,7 +2,7 @@ const assert = require("assert");
 const scdl = require("../dist");
 const { PLAYLIST_URL, TRACK_URL } = require("./urls");
 
-describe("CJS", function () {
+describe("utils [CJS]", function () {
     describe("track", function () {
         const URL = process.env.TRACK_URL || TRACK_URL;
         if (!URL) {

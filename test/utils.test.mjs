@@ -2,7 +2,7 @@ import assert from "assert";
 import * as scdl from "../dist/index.mjs";
 import { PLAYLIST_URL, TRACK_URL } from "./urls.js";
 
-describe("ESM", function () {
+describe("utils [ESM]", function () {
     describe("track", function () {
         const URL = process.env.TRACK_URL || TRACK_URL;
         if (!URL) {
