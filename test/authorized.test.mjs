@@ -1,7 +1,11 @@
 import { fetchClientID } from "@scdl/fetch-client";
 import assert from "assert";
-import * as scdl from "../dist/index.mjs";
-import { PLAYLIST_URL, TRACK_URL } from "./urls.js";
+import { beforeAll, describe, test } from "vitest";
+import * as scdl from "../dist";
+import { PLAYLIST_URL, TRACK_URL } from "./urls.mjs";
+
+const trackURL = process.env.TRACK_URL || TRACK_URL;
+const playlistURL = process.env.PLAYLIST_URL || PLAYLIST_URL;
 
 function playlistTrackEmitRace(emitter, event) {
     return new Promise(resolve => {
@@ -17,87 +21,73 @@ function playlistTrackEmitRace(emitter, event) {
     });
 }
 
-describe("authorized [ESM]", function () {
-    before("fetching clientID", async function () {
-        this.timeout(5000);
+describe("authorized", function () {
+    beforeAll(async function () {
         scdl.setClientID(await fetchClientID());
-    });
+    }, 5000);
 
-    describe("track", function () {
-        const URL = process.env.TRACK_URL || TRACK_URL;
-        if (!URL) {
-            console.warn("TRACK_URL not found. Skipping track tests.");
-            return;
-        }
-        it("stream readable has transcoding property", async function () {
-            this.timeout(5000);
-            const output = await scdl.stream(URL);
+    describe.skipIf(!trackURL)("track", function () {
+        test("stream readable has transcoding property", { timeout: 5000 }, async function () {
+            const output = await scdl.stream(trackURL);
             assert.strictEqual(typeof output.transcoding, "object");
         });
-        it("streamSync emits transcoding", function (done) {
-            this.timeout(5000);
-            const output = scdl.streamSync(URL);
-            output.once("transcoding", () => done());
+        test("streamSync emits transcoding", { timeout: 5000 }, function () {
+            return new Promise(resolve => {
+                const output = scdl.streamSync(trackURL);
+                output.once("transcoding", () => resolve());
+            });
         });
-        it("streamSync populates with data", function (done) {
-            this.timeout(5000);
-            const output = scdl.streamSync(URL);
-            output.once("data", () => done());
+        test("streamSync populates with data", { timeout: 5000 }, function () {
+            return new Promise(resolve => {
+                const output = scdl.streamSync(trackURL);
+                output.once("data", () => resolve());
+            });
         });
         describe("from info", function () {
             let info;
-            before("fetching info", async function () {
-                this.timeout(5000);
-                info = await scdl.getInfo(URL);
+            beforeAll(async function () {
+                info = await scdl.getInfo(trackURL);
+            }, 5000);
+            test.each([
+                scdl.Protocol.PROGRESSIVE,
+                scdl.Protocol.HLS
+            ])("can stream %s", { timeout: 5000 }, async function (protocol) {
+                await scdl.streamFromInfo(info, { protocol });
             });
-            it("can stream both progressive and hls", async function () {
-                this.timeout(5000);
-                await Promise.all([
-                    scdl.streamFromInfo(info, { protocol: scdl.Protocol.PROGRESSIVE }),
-                    scdl.streamFromInfo(info, { protocol: scdl.Protocol.HLS })
-                ]);
-            });
-            it("info is wrapped in data object for symmetry", function () {
+            test("info is wrapped in data object for symmetry", function () {
                 assert(info.data);
                 assert(info.data.id);
             });
-            it("streamFromInfo readable has transcoding property", async function () {
-                this.timeout(5000);
+            test("streamFromInfo readable has transcoding property", { timeout: 5000 }, async function () {
                 const output = await scdl.streamFromInfo(info);
                 assert.strictEqual(typeof output.transcoding, "object");
             });
-            it("streamFromInfoSync stream emits transcoding", function (done) {
-                this.timeout(5000);
-                const output = scdl.streamFromInfoSync(info);
-                output.once("transcoding", () => done());
+            test("streamFromInfoSync stream emits transcoding", { timeout: 5000 }, function () {
+                return new Promise(resolve => {
+                    const output = scdl.streamFromInfoSync(info);
+                    output.once("transcoding", () => resolve());
+                });
             });
-            it("streamFromInfoSync stream populates with data", function (done) {
-                this.timeout(5000);
-                const output = scdl.streamFromInfoSync(info);
-                output.once("data", () => done());
+            test("streamFromInfoSync stream populates with data", { timeout: 5000 }, function () {
+                return new Promise(resolve => {
+                    const output = scdl.streamFromInfoSync(info);
+                    output.once("data", () => resolve());
+                });
             });
         });
     });
 
-    describe("playlist", function () {
-        const URL = process.env.PLAYLIST_URL || PLAYLIST_URL;
-        if (!URL) {
-            console.warn("PLAYLIST_URL not found. Skipping playlist tests.");
-            return;
-        }
-        it("streamPlaylist readables have transcoding property", async function () {
-            this.timeout(60000);
-            const result = await scdl.streamPlaylist(URL);
+    describe.skipIf(!playlistURL)("playlist", function () {
+        test("streamPlaylist readables have transcoding property", { timeout: 60000 }, async function () {
+            const result = await scdl.streamPlaylist(playlistURL);
             assert.strictEqual(result.every(item => item === null || typeof item.transcoding === "object"), true);
         });
         describe("from info", function () {
             let info;
-            before("fetching info", async function () {
-                this.timeout(5000);
-                info = await scdl.getPlaylistInfo(URL);
-            });
-            it("fetchPartialPlaylist works as intended", async function () {
-                this.timeout(60000);
+            beforeAll(async function () {
+                info = await scdl.getPlaylistInfo(playlistURL);
+            }, 5000);
+            test("fetchPartialPlaylist works as intended", { timeout: 60000 }, async function () {
                 if (scdl.isPlaylistFetched(info)) {
                     console.warn("All track data already present. Skipping fetchPartialPlaylist test.");
                     return;
@@ -105,20 +95,17 @@ describe("authorized [ESM]", function () {
                 await scdl.fetchPartialPlaylist(info);
                 assert.strictEqual(scdl.isPlaylistFetched(info), true);
             });
-            it("streamPlaylistFromInfo readables have transcoding property", async function () {
-                this.timeout(60000);
+            test("streamPlaylistFromInfo readables have transcoding property", { timeout: 60000 }, async function () {
                 const result = await scdl.streamPlaylistFromInfo(info);
                 assert.strictEqual(result.every(item => item === null || typeof item.transcoding === "object"), true);
             });
-            it("streamPlaylistFromInfoSync streams emit transcoding", async function () {
-                this.timeout(60000);
+            test("streamPlaylistFromInfoSync streams emit transcoding", { timeout: 60000 }, async function () {
                 const output = scdl.streamPlaylistFromInfoSync(info);
                 await Promise.all(
                     output.map(stream => playlistTrackEmitRace(stream, "transcoding"))
                 );
             });
-            it("streamPlaylistFromInfoSync streams populate with data", async function () {
-                this.timeout(60000);
+            test("streamPlaylistFromInfoSync streams populate with data", { timeout: 60000 }, async function () {
                 const output = scdl.streamPlaylistFromInfoSync(info);
                 await Promise.all(
                     output.map(stream => playlistTrackEmitRace(stream, "data"))
