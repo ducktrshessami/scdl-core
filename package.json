@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsup",
     "pretest": "yarn build",
-    "test": "mocha"
+    "test": "vitest"
   },
   "exports": {
     "types": "./dist/index.d.ts",
@@ -25,8 +25,8 @@
   "devDependencies": {
     "@scdl/fetch-client": "ducktrshessami/scdl-fetch-client#v1.0.2",
     "@types/node": "^22.15.20",
-    "mocha": "^11.4.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.0.4"
   }
 }
