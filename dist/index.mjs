@@ -229,7 +229,8 @@ var OPTION_WEIGHT = {
 };
 async function streamHls(url, output) {
   const hlsRes = await request(url);
-  const { medias } = M3uParser.parse(await hlsRes.body.text());
+  const parser = new M3uParser();
+  const { medias } = parser.parse(await hlsRes.body.text());
   for (const media of medias) {
     await streamThrough(new URL(media.location), output, false);
   }

@@ -18,8 +18,8 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/index.ts
-var src_exports = {};
-__export(src_exports, {
+var index_exports = {};
+__export(index_exports, {
   MimeType: () => MimeType,
   PlaylistURLPattern: () => PlaylistURLPattern,
   Preset: () => Preset,
@@ -53,7 +53,7 @@ __export(src_exports, {
   validatePlaylistURL: () => validatePlaylistURL,
   validateURL: () => validateURL
 });
-module.exports = __toCommonJS(src_exports);
+module.exports = __toCommonJS(index_exports);
 
 // src/dispatch.ts
 var import_undici = require("undici");
@@ -286,7 +286,8 @@ var OPTION_WEIGHT = {
 };
 async function streamHls(url, output) {
   const hlsRes = await request(url);
-  const { medias } = import_m3u_parser_generator.M3uParser.parse(await hlsRes.body.text());
+  const parser = new import_m3u_parser_generator.M3uParser();
+  const { medias } = parser.parse(await hlsRes.body.text());
   for (const media of medias) {
     await streamThrough(new URL(media.location), output, false);
   }

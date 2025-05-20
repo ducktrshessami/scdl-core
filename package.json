@@ -19,14 +19,14 @@
     "import": "./dist/index.mjs"
   },
   "dependencies": {
-    "m3u-parser-generator": "^3.0.0",
-    "undici": "^7.2.3"
+    "m3u-parser-generator": "^5.0.1",
+    "undici": "^7.10.0"
   },
   "devDependencies": {
     "@scdl/fetch-client": "ducktrshessami/scdl-fetch-client#v1.0.2",
-    "@types/node": "^22.10.7",
-    "mocha": "^11.0.1",
-    "tsup": "^8.3.5",
-    "typescript": "^5.7.3"
+    "@types/node": "^22.15.20",
+    "mocha": "^11.4.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
   }
 }
