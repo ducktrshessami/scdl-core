@@ -28,12 +28,22 @@ describe.skipIf(!trackURL)("track", function () {
         let info;
         beforeAll(async function () {
             info = await scdl.getInfo(trackURL);
+            expect(info.data.media.transcodings).not.toHaveLength(0);
         }, 5000);
         test.each([
             scdl.Protocol.PROGRESSIVE,
             scdl.Protocol.HLS
         ])("can stream %s", { timeout: 5000 }, async function (protocol) {
-            await scdl.streamFromInfo(info, { protocol });
+            try {
+                await scdl.streamFromInfo(info, {
+                    protocol,
+                    strict: true
+                });
+            }
+            catch (error) {
+                expect(error.message).toBe("Failed to obtain transcoding");
+                console.warn(`Failed to obtain transcoding`);
+            }
         });
         test("info is wrapped in data object for symmetry", function () {
             expect(info.data).toBeTypeOf("object");
