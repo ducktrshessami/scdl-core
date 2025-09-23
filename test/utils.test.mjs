@@ -1,49 +1,41 @@
-import assert from "assert";
+import { describe, expect, test } from "vitest";
 import * as scdl from "../dist/index.mjs";
-import { PLAYLIST_URL, TRACK_URL } from "./urls.js";
+import { PLAYLIST_URL, TRACK_URL } from "./urls.mjs";
 
-describe("utils [ESM]", function () {
-    describe("track", function () {
-        const URL = process.env.TRACK_URL || TRACK_URL;
-        if (!URL) {
-            console.warn("TRACK_URL not found. Skipping track tests.");
-            return;
-        }
-        it("TrackURLPattern matches groups properly", function () {
-            const result = URL.match(scdl.TrackURLPattern);
-            assert(result);
-            assert.strictEqual(typeof result.groups?.user, "string");
-            assert.strictEqual(typeof result.groups?.title, "string");
-        });
-        it("validateURL sync checks format", function () {
-            assert.strictEqual(scdl.validateURL(URL), true);
-            assert.strictEqual(scdl.validateURL("https://soundcloud.com/"), false);
-        });
-        it("getPermalinkURL always string", function () {
-            assert.strictEqual(typeof scdl.getPermalinkURL(URL), "string");
-            assert.strictEqual(typeof scdl.getPermalinkURL("foobar"), "string");
-        });
+const trackURL = process.env.TRACK_URL || TRACK_URL;
+const playlistURL = process.env.PLAYLIST_URL || PLAYLIST_URL;
+
+describe.skipIf(!trackURL)("track", function () {
+    test("TrackURLPattern matches groups properly", function () {
+        const result = trackURL.match(scdl.TrackURLPattern);
+        expect(result).not.toBeNull();
+        expect(result.groups?.user).toBeTypeOf("string");
+        expect(result.groups?.title).toBeTypeOf("string");
     });
+    test("validateURL sync checks format", function () {
+        expect(scdl.validateURL(trackURL)).toBe(true);
+        expect(scdl.validateURL(trackURL)).toBe(true);
+        expect(scdl.validateURL("https://soundcloud.com/")).toBe(false);
+    });
+    test("getPermalinkURL always string", function () {
+        expect(scdl.getPermalinkURL(trackURL)).toBeTypeOf("string");
+        expect(scdl.getPermalinkURL("foobar")).toBeTypeOf("string");
+    });
+});
 
-    describe("playlist", function () {
-        const URL = process.env.PLAYLIST_URL || PLAYLIST_URL;
-        if (!URL) {
-            console.warn("PLAYLIST_URL not found. Skipping playlist tests.");
-            return;
-        }
-        it("PlaylistURLPattern matches groups properly", function () {
-            const result = URL.match(scdl.PlaylistURLPattern);
-            assert(result);
-            assert.strictEqual(typeof result.groups?.user, "string");
-            assert.strictEqual(typeof result.groups?.title, "string");
-        });
-        it("validatePlaylistURL sync checks format", function () {
-            assert.strictEqual(scdl.validatePlaylistURL(URL), true);
-            assert.strictEqual(scdl.validatePlaylistURL("https://soundcloud.com/"), false);
-        });
-        it("getPlaylistPermalinkURL always string", function () {
-            assert.strictEqual(typeof scdl.getPlaylistPermalinkURL(URL), "string");
-            assert.strictEqual(typeof scdl.getPlaylistPermalinkURL("foobar"), "string");
-        });
+describe.skipIf(!playlistURL)("playlist", function () {
+    test("PlaylistURLPattern matches groups properly", function () {
+        const result = playlistURL.match(scdl.PlaylistURLPattern);
+        expect(result).not.toBeNull();
+        expect(result.groups?.user).toBeTypeOf("string");
+        expect(result.groups?.title).toBeTypeOf("string");
+    });
+    test("validatePlaylistURL sync checks format", function () {
+        expect(scdl.validatePlaylistURL(playlistURL)).toBe(true);
+        expect(scdl.validatePlaylistURL("https://soundcloud.com/")).toBe(false);
+    });
+    test("getPlaylistPermalinkURL always string", function () {
+        expect(scdl.getPlaylistPermalinkURL(playlistURL)).toBeTypeOf("string");
+        expect(scdl.getPlaylistPermalinkURL("foobar")).toBeTypeOf("string");
     });
 });
