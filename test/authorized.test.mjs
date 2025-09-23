@@ -1,7 +1,7 @@
 import { fetchClientID } from "@scdl/fetch-client";
 import { once } from "events";
 import { beforeAll, describe, expect, test } from "vitest";
-import * as scdl from "../dist";
+import * as scdl from "../dist/index.mjs";
 import { PLAYLIST_URL, TRACK_URL } from "./urls.mjs";
 
 const trackURL = process.env.TRACK_URL || TRACK_URL;
