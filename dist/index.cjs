@@ -1,7 +1,8 @@
-import { getGlobalDispatcher } from "undici";
-import { STATUS_CODES } from "http";
-import { M3uParser } from "m3u-parser-generator";
-import { PassThrough } from "stream";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+let undici = require("undici");
+let http = require("http");
+let m3u_parser_generator = require("m3u-parser-generator");
+let stream = require("stream");
 //#region src/auth.ts
 let clientID = null;
 let oauthToken = null;
@@ -85,7 +86,7 @@ var CustomError = class extends Error {
 var ScdlError = class extends CustomError {};
 var RequestError = class extends CustomError {
 	constructor(statusCode) {
-		super(`${statusCode} ${STATUS_CODES[statusCode]}`);
+		super(`${statusCode} ${http.STATUS_CODES[statusCode]}`);
 	}
 };
 //#endregion
@@ -106,7 +107,7 @@ function setAgent(agent) {
 * Get the currently set agent
 */
 function getAgent() {
-	return dispatcher ?? getGlobalDispatcher();
+	return dispatcher ?? (0, undici.getGlobalDispatcher)();
 }
 /**
 * Set the timeout for requests in milliseconds
@@ -291,7 +292,7 @@ const OPTION_WEIGHT = {
 };
 async function streamHls(url, output) {
 	const hlsRes = await request(url);
-	const { medias } = new M3uParser().parse(await hlsRes.body.text());
+	const { medias } = new m3u_parser_generator.M3uParser().parse(await hlsRes.body.text());
 	for (const media of medias) await streamThrough(new URL(media.location), output, false);
 	return output.end();
 }
@@ -304,7 +305,7 @@ async function streamHls(url, output) {
 async function streamTranscoding(transcoding, output) {
 	const { url: streamUrl } = await requestWithAuth(transcoding.url);
 	const url = new URL(streamUrl);
-	const outStream = output ?? new PassThrough();
+	const outStream = output ?? new stream.PassThrough();
 	outStream.transcoding = transcoding;
 	outStream.emit("transcoding", transcoding);
 	const streaming = transcoding.format.protocol === "hls" ? streamHls(url, outStream) : streamThrough(url, outStream);
@@ -372,7 +373,7 @@ async function streamFromInfo(info, options = DEFAULT_OPTIONS) {
 * @param url A track URL
 * @param options Transcoding search options
 */
-async function stream(url, options = DEFAULT_OPTIONS) {
+async function stream$1(url, options = DEFAULT_OPTIONS) {
 	return streamFromInfo(await getInfo(url), options);
 }
 /**
@@ -381,7 +382,7 @@ async function stream(url, options = DEFAULT_OPTIONS) {
 * @param options Transcoding search options
 */
 function streamSync(url, options = DEFAULT_OPTIONS) {
-	const output = new PassThrough();
+	const output = new stream.PassThrough();
 	getInfo(url).then((info) => streamEngine(info.data, options, output)).catch((err) => output.emit("error", err));
 	return output;
 }
@@ -391,7 +392,7 @@ function streamSync(url, options = DEFAULT_OPTIONS) {
 * @param options Transcoding search options
 */
 function streamFromInfoSync(info, options = DEFAULT_OPTIONS) {
-	const output = new PassThrough();
+	const output = new stream.PassThrough();
 	streamEngine(info.data, options, output).catch((err) => output.emit("error", err));
 	return output;
 }
@@ -431,7 +432,7 @@ async function streamPlaylist(url, options = DEFAULT_OPTIONS) {
 */
 function streamPlaylistFromInfoSync(info, options = DEFAULT_OPTIONS) {
 	return info.data.tracks.map((track) => {
-		const output = new PassThrough();
+		const output = new stream.PassThrough();
 		streamEngine(track, options, output).catch((err) => output.emit("error", err));
 		return output;
 	});
@@ -529,6 +530,37 @@ function getPlaylistPermalinkURL(url) {
 	} else return "";
 }
 //#endregion
-export { MimeType, PlaylistURLPattern, Preset, Protocol, Quality, TrackURLPattern, fetchPartialPlaylist, getAgent, getClientID, getInfo, getOauthToken, getPermalinkURL, getPlaylistInfo, getPlaylistPermalinkURL, getRequestQueueLimit, getRequestTimeout, isPlaylistFetched, rawResolve, setAgent, setClientID, setOauthToken, setRequestQueueLimit, setRequestTimeout, stream, streamFromInfo, streamFromInfoSync, streamPlaylist, streamPlaylistFromInfo, streamPlaylistFromInfoSync, streamSync, validatePlaylistURL, validateURL };
+exports.MimeType = MimeType;
+exports.PlaylistURLPattern = PlaylistURLPattern;
+exports.Preset = Preset;
+exports.Protocol = Protocol;
+exports.Quality = Quality;
+exports.TrackURLPattern = TrackURLPattern;
+exports.fetchPartialPlaylist = fetchPartialPlaylist;
+exports.getAgent = getAgent;
+exports.getClientID = getClientID;
+exports.getInfo = getInfo;
+exports.getOauthToken = getOauthToken;
+exports.getPermalinkURL = getPermalinkURL;
+exports.getPlaylistInfo = getPlaylistInfo;
+exports.getPlaylistPermalinkURL = getPlaylistPermalinkURL;
+exports.getRequestQueueLimit = getRequestQueueLimit;
+exports.getRequestTimeout = getRequestTimeout;
+exports.isPlaylistFetched = isPlaylistFetched;
+exports.rawResolve = rawResolve;
+exports.setAgent = setAgent;
+exports.setClientID = setClientID;
+exports.setOauthToken = setOauthToken;
+exports.setRequestQueueLimit = setRequestQueueLimit;
+exports.setRequestTimeout = setRequestTimeout;
+exports.stream = stream$1;
+exports.streamFromInfo = streamFromInfo;
+exports.streamFromInfoSync = streamFromInfoSync;
+exports.streamPlaylist = streamPlaylist;
+exports.streamPlaylistFromInfo = streamPlaylistFromInfo;
+exports.streamPlaylistFromInfoSync = streamPlaylistFromInfoSync;
+exports.streamSync = streamSync;
+exports.validatePlaylistURL = validatePlaylistURL;
+exports.validateURL = validateURL;
 
-//# sourceMappingURL=index.mjs.map
+//# sourceMappingURL=index.cjs.map

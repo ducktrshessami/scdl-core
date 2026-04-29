@@ -1,5 +1,5 @@
+import { Readable } from "stream";
 import { Dispatcher } from "undici";
-import { PassThrough, Readable } from "stream";
 
 //#region src/api.d.ts
 /**
@@ -446,4 +446,4 @@ declare function validateURL(url: string): boolean;
 declare function validatePlaylistURL(url: string): boolean;
 //#endregion
 export { type CreatorSubscription, FetchablePlaylistInfo, FetchablePlaylistInfoData, MimeType, MinimalTrackInfo, type PartialTrackInfo, type PlaylistInfo, type PlaylistInfoData, PlaylistURLPattern, Preset, Protocol, type PublisherMetadata, Quality, type StreamOptions, type StreamablePlaylistInfo, type StreamableTrackInfo, type StreamableTrackInfoData, type TrackInfo, type TrackInfoData, type TrackMedia, type TrackStream, TrackURLPattern, Transcoding, type UserBadges, type UserInfo, type Visual, type Visuals, fetchPartialPlaylist, getAgent, getClientID, getInfo, getOauthToken, getPermalinkURL, getPlaylistInfo, getPlaylistPermalinkURL, getRequestQueueLimit, getRequestTimeout, isPlaylistFetched, rawResolve, setAgent, setClientID, setOauthToken, setRequestQueueLimit, setRequestTimeout, stream, streamFromInfo, streamFromInfoSync, streamPlaylist, streamPlaylistFromInfo, streamPlaylistFromInfoSync, streamSync, validatePlaylistURL, validateURL };
-//# sourceMappingURL=index.d.mts.map
+//# sourceMappingURL=index.d.cts.map
