@@ -20,13 +20,13 @@
   },
   "dependencies": {
     "m3u-parser-generator": "^5.0.2",
-    "undici": "^7.22.0"
+    "undici": "^8.1.0"
   },
   "devDependencies": {
-    "@scdl/fetch-client": "ducktrshessami/scdl-fetch-client#v1.0.2",
-    "@types/node": "^25.3.3",
+    "@scdl/fetch-client": "ducktrshessami/scdl-fetch-client#v1.0.3",
+    "@types/node": "^25.6.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
   }
 }
