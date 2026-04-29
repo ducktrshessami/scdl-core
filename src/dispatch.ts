@@ -123,9 +123,9 @@ export async function streamThrough(
         await queue.enqueue();
         getAgent()
             .dispatch(createRequestOptions(url), {
-                onConnect: () => output.emit("connect"),
-                onHeaders: statusCode => {
-                    if (statusCode < 400) {
+                onRequestStart: () => output.emit("connect"),
+                onResponseStart: (_, statusCode) => {
+                    if (statusCode >= 200 && statusCode < 300) {
                         return true;
                     }
                     else {
@@ -134,15 +134,15 @@ export async function streamThrough(
                         return false;
                     }
                 },
-                onData: chunk => {
+                onResponseData: (_, chunk) => {
                     output.write(chunk);
                     return true;
                 },
-                onComplete: () => {
+                onResponseEnd: () => {
                     cleanup();
                     resolve(output);
                 },
-                onError: err => {
+                onResponseError: (_, err) => {
                     cleanup();
                     reject(err);
                 }

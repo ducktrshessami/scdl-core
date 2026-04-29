@@ -112,7 +112,7 @@ function findTranscoding(transcodings: Array<Transcoding>, options: StreamOption
             transcoding: null,
             score: 0
         });
-        return best ?? transcodings[0];
+        return best ?? transcodings[0]!;
     }
 }
 

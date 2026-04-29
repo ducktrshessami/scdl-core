@@ -7,6 +7,10 @@ export {
     setRequestTimeout
 } from "./dispatch";
 export {
+    getInfo,
+    getPlaylistInfo
+} from "./info";
+export type {
     CreatorSubscription,
     PartialTrackInfo,
     PublisherMetadata,
@@ -18,14 +22,10 @@ export {
     UserBadges,
     UserInfo,
     Visual,
-    Visuals,
-    getInfo,
-    getPlaylistInfo
+    Visuals
 } from "./info";
 export { getRequestQueueLimit, setRequestQueueLimit } from "./queue";
 export {
-    StreamOptions,
-    TrackStream,
     stream,
     streamFromInfo,
     streamFromInfoSync,
@@ -33,6 +33,10 @@ export {
     streamPlaylistFromInfo,
     streamPlaylistFromInfoSync,
     streamSync
+} from "./stream";
+export type {
+    StreamOptions,
+    TrackStream
 } from "./stream";
 export * from "./utils/partial";
 export * from "./utils/permalink";
