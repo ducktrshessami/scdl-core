@@ -2,9 +2,9 @@
   "name": "scdl-core",
   "version": "5.0.0",
   "description": "A lightweight SoundCloud streaming module",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.cts",
   "repository": "git@github.com:ducktrshessami/scdl-core.git",
   "author": "ducktrshessami",
   "license": "MIT",
@@ -15,8 +15,8 @@
     "test": "vitest"
   },
   "exports": {
-    "types": "./dist/index.d.ts",
-    "require": "./dist/index.js",
+    "types": "./dist/index.d.cts",
+    "require": "./dist/index.cjs",
     "import": "./dist/index.mjs"
   },
   "dependencies": {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import * as scdl from "../dist/index.mjs";
+import * as scdl from "../";
 import { PLAYLIST_URL, TRACK_URL } from "./urls.js";
 
 const trackURL = process.env.TRACK_URL || TRACK_URL;
