@@ -2,7 +2,7 @@ import { fetchClientID } from "@scdl/fetch-client";
 import { once } from "events";
 import { beforeAll, describe, expect, test } from "vitest";
 import * as scdl from "../dist/index.mjs";
-import { PLAYLIST_URL, TRACK_URL } from "./urls.mjs";
+import { PLAYLIST_URL, TRACK_URL } from "./urls.js";
 
 const trackURL = process.env.TRACK_URL || TRACK_URL;
 const playlistURL = process.env.PLAYLIST_URL || PLAYLIST_URL;
@@ -25,7 +25,7 @@ describe.skipIf(!trackURL)("track", function () {
         await once(output, "data");
     });
     describe("from info", function () {
-        let info;
+        let info: scdl.TrackInfo;
         beforeAll(async function () {
             info = await scdl.getInfo(trackURL);
             expect(info.data.media.transcodings).not.toHaveLength(0);
@@ -40,7 +40,7 @@ describe.skipIf(!trackURL)("track", function () {
                     strict: true
                 });
             }
-            catch (error) {
+            catch (error: any) {
                 expect(error.message).toBe("Failed to obtain transcoding");
                 console.warn(`Failed to obtain transcoding`);
             }
@@ -72,7 +72,7 @@ describe.skipIf(!playlistURL)("playlist", function () {
         }
     });
     describe("from info", function () {
-        let info;
+        let info: scdl.PlaylistInfo;
         beforeAll(async function () {
             info = await scdl.getPlaylistInfo(playlistURL);
         }, 5000);
@@ -92,12 +92,18 @@ describe.skipIf(!playlistURL)("playlist", function () {
             }
         });
         test("streamPlaylistFromInfoSync streams emit transcoding", { timeout: 60000 }, async function () {
-            const output = scdl.streamPlaylistFromInfoSync(info);
+            if (!scdl.isPlaylistFetched(info)) {
+                await info.fetchPartialTracks();
+            }
+            const output = scdl.streamPlaylistFromInfoSync(<scdl.PlaylistInfo<true>>info);
             expect(Array.isArray(output)).toBe(true);
             await Promise.allSettled(output.map(stream => once(stream, "transcoding")));
         });
         test("streamPlaylistFromInfoSync streams populate with data", { timeout: 60000 }, async function () {
-            const output = scdl.streamPlaylistFromInfoSync(info);
+            if (!scdl.isPlaylistFetched(info)) {
+                await info.fetchPartialTracks();
+            }
+            const output = scdl.streamPlaylistFromInfoSync(<scdl.PlaylistInfo<true>>info);
             expect(Array.isArray(output)).toBe(true);
             await Promise.allSettled(output.map(stream => once(stream, "data")));
         });
