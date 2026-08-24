@@ -1,7 +1,9 @@
 name: Publish
 
+permissions:
+  contents: write
+
 on:
-  workflow_dispatch:
   push:
     branches: [main]
 
@@ -9,14 +11,14 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/*
       - name: configure
         run: |
           git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.email "$GITHUB_ACTOR_ID+$GITHUB_ACTOR@users.noreply.github.com"
       - name: install
         run: yarn --immutable
       - name: build
