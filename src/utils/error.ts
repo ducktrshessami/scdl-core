@@ -10,7 +10,7 @@ class CustomError extends Error {
 export class ScdlError extends CustomError { }
 
 export class RequestError extends CustomError {
-    constructor(statusCode: number) {
+    constructor(statusCode: number, public readonly url: string) {
         super(`${statusCode} ${STATUS_CODES[statusCode]}`);
     }
 }

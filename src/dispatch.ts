@@ -69,7 +69,7 @@ export async function request(url: URL): Promise<Dispatcher.ResponseData> {
             return res;
         }
         else {
-            throw new RequestError(res.statusCode);
+            throw new RequestError(res.statusCode, url.href);
         }
     }
     finally {
@@ -130,7 +130,7 @@ export async function streamThrough(
                     }
                     else {
                         cleanup();
-                        reject(new RequestError(statusCode));
+                        reject(new RequestError(statusCode, url.href));
                         return false;
                     }
                 },
