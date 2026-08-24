@@ -36,16 +36,16 @@ export class PlaylistInfo<fetched extends boolean = boolean> {
     }
 }
 
-export type PlaylistInfoData<fetched extends boolean = boolean> = {
-    artwork_url?: string;
+export interface PlaylistInfoData<fetched extends boolean = boolean> {
+    artwork_url?: string | null;
     created_at: string;
-    description?: string;
+    description?: string | null;
     duration: number;
     embeddable_by: string;
-    genre?: string;
+    genre?: string | null;
     id: number;
     kind: string;
-    label_name?: string;
+    label_name?: string | null;
     last_modified: string;
     license: string;
     likes_count: number;
@@ -53,27 +53,27 @@ export type PlaylistInfoData<fetched extends boolean = boolean> = {
     permalink: string;
     permalink_url: string;
     public: boolean;
-    purchase_title?: string;
-    purchase_url?: string;
-    release_date?: string;
+    purchase_title?: string | null;
+    purchase_url?: string | null;
+    release_date?: string | null;
     reposts_count: number;
-    secret_token?: string;
+    secret_token?: string | null;
     sharing: string;
-    tag_list?: string;
+    tag_list?: string | null;
     title: string;
     uri: string;
     user_id: number;
-    set_type?: string;
+    set_type?: string | null;
     is_album: boolean;
-    published_at?: string;
+    published_at?: string | null;
     display_date: string;
     user: UserInfo;
-    tracks: fetched extends true ? Array<TrackInfoData> : Array<TrackInfoData | PartialTrackInfo>;
+    tracks: fetched extends true ? TrackInfoData[] : Array<TrackInfoData | PartialTrackInfo>;
     track_count: number;
 };
 
-export type StreamablePlaylistInfoData = {
-    tracks: Array<StreamableTrackInfoData>;
+export interface StreamablePlaylistInfoData {
+    tracks: StreamableTrackInfoData[];
 };
 
-export type StreamablePlaylistInfo = DataWrapped<StreamablePlaylistInfoData>;
+export interface StreamablePlaylistInfo extends DataWrapped<StreamablePlaylistInfoData> { }

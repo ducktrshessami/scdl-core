@@ -15,8 +15,6 @@ import { ScdlError } from "./utils/error";
 import { FetchablePlaylistInfo, fetchPartialPlaylist } from "./utils/partial";
 import { StreamablePlaylistInfo } from "./utils/playlist";
 import {
-    MimeType,
-    Preset,
     Protocol,
     Quality,
     Transcoding
@@ -24,9 +22,7 @@ import {
 
 const DEFAULT_OPTIONS: StreamOptions = {
     strict: false,
-    preset: Preset.MP3,
     protocol: Protocol.PROGRESSIVE,
-    mimeType: MimeType.MPEG,
     quality: Quality.SQ
 };
 
@@ -76,7 +72,7 @@ async function streamTranscoding(transcoding: Transcoding, output?: PassThrough)
  * @param transcodings Transcodings obtained from a track's info
  * @param options Transcoding search options
  */
-function findTranscoding(transcodings: Array<Transcoding>, options: StreamOptions): Transcoding | null {
+function findTranscoding(transcodings: Transcoding[], options: StreamOptions): Transcoding | null {
     if (!transcodings.length) {
         return null;
     }
@@ -227,7 +223,7 @@ export async function streamPlaylist(url: string, options: StreamOptions = DEFAU
  * @param info Info obtained from `getPlaylistInfo`
  * @param options Transcoding search options
  */
-export function streamPlaylistFromInfoSync(info: StreamablePlaylistInfo, options: StreamOptions = DEFAULT_OPTIONS): Array<TrackStream> {
+export function streamPlaylistFromInfoSync(info: StreamablePlaylistInfo, options: StreamOptions = DEFAULT_OPTIONS): TrackStream[] {
     return info.data.tracks.map(track => {
         const output = new PassThrough();
         streamEngine(track, options, output)
@@ -236,12 +232,12 @@ export function streamPlaylistFromInfoSync(info: StreamablePlaylistInfo, options
     });
 }
 
-type TranscodingOptions = {
-    preset: Preset,
-    protocol: Protocol,
-    mimeType: MimeType,
-    quality: Quality
-};
+interface TranscodingOptions {
+    preset: Transcoding["preset"];
+    protocol: Transcoding["format"]["protocol"];
+    mimeType: Transcoding["format"]["mime_type"];
+    quality: Transcoding["quality"];
+}
 
 export type StreamOptions = Partial<TranscodingOptions> & {
     /**
@@ -254,30 +250,32 @@ export type StreamOptions = Partial<TranscodingOptions> & {
     strict?: boolean
 };
 
-type ScoredTranscoding = {
-    transcoding: Transcoding | null,
-    score: number
-};
+interface ScoredTranscoding {
+    transcoding: Transcoding | null;
+    score: number;
+}
 
-type TranscodingStreamResponse = {
-    url: string
-};
+interface TranscodingStreamResponse {
+    url: string;
+}
 
-interface Emitter<EventMap extends Record<string, any[]>> {
-    emit<Event extends keyof EventMap>(event: Event, ...args: EventMap[Event]): boolean;
-    addListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
-    on<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
-    once<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
-    prependListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
-    prependOnceListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
-    removeListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
+type EventListenerArgs<EventMap extends {}, Event extends keyof EventMap> = EventMap[Event] extends any[] ? EventMap[Event] : [EventMap[Event]];
+
+interface Emitter<EventMap extends {}> {
+    emit<Event extends keyof EventMap>(event: Event, ...args: EventListenerArgs<EventMap, Event>): boolean;
+    addListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
+    on<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
+    once<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
+    prependListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
+    prependOnceListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
+    removeListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
     off(event: keyof EventMap, listener: (...args: any[]) => any): this;
 }
 
-type TranscodingStreamEvents = {
-    transcoding: [Transcoding],
-    connect: []
-};
+interface TranscodingStreamEvents {
+    transcoding: [Transcoding];
+    connect: [];
+}
 
 interface BaseTranscodingStream extends Emitter<TranscodingStreamEvents> {
     transcoding?: Transcoding;

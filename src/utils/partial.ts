@@ -39,12 +39,12 @@ export async function fetchPartialPlaylist(info: FetchablePlaylistInfo): Promise
     return info as StreamablePlaylistInfo;
 }
 
-export type MinimalTrackInfo = {
+export interface MinimalTrackInfo {
     id: number;
-};
+}
 
-export type FetchablePlaylistInfoData = {
+export interface FetchablePlaylistInfoData {
     tracks: Array<TrackInfoData | MinimalTrackInfo>;
-};
+}
 
-export type FetchablePlaylistInfo = DataWrapped<FetchablePlaylistInfoData>;
+export interface FetchablePlaylistInfo extends DataWrapped<FetchablePlaylistInfoData> { }

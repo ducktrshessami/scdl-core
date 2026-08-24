@@ -30,150 +30,148 @@ export async function getPlaylistInfo(url: string): Promise<PlaylistInfo> {
     }
 }
 
-export type TrackMedia = {
-    transcodings: Array<Transcoding>;
+export interface TrackMedia {
+    transcodings: Transcoding[];
 };
 
-export type DataWrapped<T> = {
+export interface DataWrapped<T> {
     data: T;
 };
 
-export type StreamableTrackInfoData = {
-    streamable?: boolean;
+export interface StreamableTrackInfoData {
+    streamable?: boolean | null;
     media: TrackMedia;
 };
 
-export type StreamableTrackInfo = DataWrapped<StreamableTrackInfoData>;
+export interface StreamableTrackInfo extends DataWrapped<StreamableTrackInfoData> { }
 
-export type PublisherMetadata = {
+export interface PublisherMetadata {
     id: number;
     urn: string;
-    contains_music?: boolean;
-    artist?: string;
-    isrc?: string;
-    explicit?: boolean;
-    writer_composer?: string;
-    release_title?: string;
-    album_title?: string;
-    upc_or_ean?: string;
-    p_line?: string;
-    p_line_for_display?: string;
-    c_line?: string;
-    c_line_for_display?: string;
-    publisher?: string;
-    iswc?: string;
+    contains_music?: boolean | null;
+    artist?: string | null;
+    isrc?: string | null;
+    explicit?: boolean | null;
+    writer_composer?: string | null;
+    release_title?: string | null;
+    album_title?: string | null;
+    upc_or_ean?: string | null;
+    p_line?: string | null;
+    p_line_for_display?: string | null;
+    c_line?: string | null;
+    c_line_for_display?: string | null;
+    publisher?: string | null;
+    iswc?: string | null;
 };
 
-export type Visual = {
+export interface Visual {
     urn: string;
     entry_time: number;
     visual_url: string;
-    link: string;
+    link?: string | null;
 };
 
-export type Visuals = {
+export interface Visuals {
     urn: string;
     enabled: boolean;
-    visuals: Array<Visual>;
+    visuals: Visual[];
     /**
      * I have personally only seen this as `null`
      */
-    tracking?: unknown;
+    tracking?: unknown | null;
 };
 
-export type UserBadges = {
-    pro: boolean;
-    pro_unlimited: boolean;
-    verified: boolean;
-};
+export type UserBadges = Record<string, boolean>;
 
-export type CreatorSubscription = {
+export interface CreatorSubscription {
     product: {
         id: string;
     };
 };
 
-export type UserInfo = {
+export interface UserInfo {
     avatar_url: string;
-    first_name?: string;
+    date_of_birth?: string | null;
+    first_name?: string | null;
     followers_count: number;
-    full_name?: string;
+    full_name?: string | null;
     id: number;
     kind: string;
     last_modified: string;
-    last_name?: string;
+    last_name?: string | null;
     permalink: string;
+    permalink_url: string;
     uri: string;
     urn: string;
     username: string;
     verified: boolean;
-    city?: string;
-    country_code?: string;
+    city?: string | null;
+    country_code?: string | null;
     badges: UserBadges;
     station_urn: string;
     station_permalink: string;
-    comments_count?: number;
-    created_at?: string;
-    creator_subscriptions?: Array<CreatorSubscription>;
-    creator_subscription?: CreatorSubscription;
-    description?: string;
-    followings_count?: number;
-    groups_count?: number;
-    likes_count?: number;
-    playlist_likes_count?: number;
-    playlist_count?: number;
-    reposts_count?: number;
-    track_count?: number;
-    visuals?: Visuals;
+    comments_count?: number | null;
+    created_at?: string | null;
+    creator_subscriptions?: CreatorSubscription[] | null;
+    creator_subscription?: CreatorSubscription | null;
+    description?: string | null;
+    followings_count?: number | null;
+    groups_count?: number | null;
+    likes_count?: number | null;
+    playlist_likes_count?: number | null;
+    playlist_count?: number | null;
+    reposts_count?: number | null;
+    track_count?: number | null;
+    visuals?: Visuals | null;
 };
 
-export type PartialTrackInfo = {
+export interface PartialTrackInfo {
     id: number;
     kind: string;
     monetization_model: string;
     policy: string;
 };
 
-export type TrackInfoData = {
-    artwork_url?: string;
-    caption?: string;
+export interface TrackInfoData {
+    artwork_url?: string | null;
+    caption?: string | null;
     commentable: boolean;
-    comment_count?: number;
+    comment_count?: number | null;
     created_at: string;
-    description?: string;
+    description?: string | null;
     downloadable: boolean;
-    download_count?: number;
+    download_count?: number | null;
     duration: number;
     full_duration: number;
     embeddable_by: string;
-    genre?: string;
+    genre?: string | null;
     has_downloads_left: boolean;
     id: number;
     kind: string;
-    label_name?: string;
+    label_name?: string | null;
     last_modified: string;
     license: string;
-    likes_count?: number;
+    likes_count?: number | null;
     permalink: string;
     permalink_url: string;
-    playback_count?: number;
+    playback_count?: number | null;
     public: boolean;
-    publisher_metadata?: PublisherMetadata;
-    purchase_title?: string;
-    purchase_url?: string;
-    release_date?: string;
+    publisher_metadata?: PublisherMetadata | null;
+    purchase_title?: string | null;
+    purchase_url?: string | null;
+    release_date?: string | null;
     reposts_count: number;
-    secret_token?: string;
+    secret_token?: string | null;
     sharing: string;
     state: string;
     streamable: boolean;
-    tag_list?: string;
+    tag_list?: string | null;
     title: string;
-    track_format: string;
+    track_format?: string | null;
     uri: string;
     urn: string;
     user_id: number;
-    visuals?: Visuals;
+    visuals?: Visuals | null;
     waveform_url: string;
     display_date: string;
     media: TrackMedia;
@@ -185,4 +183,4 @@ export type TrackInfoData = {
     user: UserInfo;
 };
 
-export type TrackInfo = DataWrapped<TrackInfoData>;
+export interface TrackInfo extends DataWrapped<TrackInfoData> { }
