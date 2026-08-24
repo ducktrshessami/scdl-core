@@ -1,6 +1,5 @@
 import { Dispatcher } from "undici";
 import { PassThrough, Readable } from "stream";
-
 //#region src/api.d.ts
 /**
  * Resolve info from a URL
@@ -46,16 +45,16 @@ declare class PlaylistInfo<fetched extends boolean = boolean> {
    */
   stream(): Promise<Array<TrackStream | null>>;
 }
-type PlaylistInfoData<fetched extends boolean = boolean> = {
-  artwork_url?: string;
+interface PlaylistInfoData<fetched extends boolean = boolean> {
+  artwork_url?: string | null;
   created_at: string;
-  description?: string;
+  description?: string | null;
   duration: number;
   embeddable_by: string;
-  genre?: string;
+  genre?: string | null;
   id: number;
   kind: string;
-  label_name?: string;
+  label_name?: string | null;
   last_modified: string;
   license: string;
   likes_count: number;
@@ -63,60 +62,60 @@ type PlaylistInfoData<fetched extends boolean = boolean> = {
   permalink: string;
   permalink_url: string;
   public: boolean;
-  purchase_title?: string;
-  purchase_url?: string;
-  release_date?: string;
+  purchase_title?: string | null;
+  purchase_url?: string | null;
+  release_date?: string | null;
   reposts_count: number;
-  secret_token?: string;
+  secret_token?: string | null;
   sharing: string;
-  tag_list?: string;
+  tag_list?: string | null;
   title: string;
   uri: string;
   user_id: number;
-  set_type?: string;
+  set_type?: string | null;
   is_album: boolean;
-  published_at?: string;
+  published_at?: string | null;
   display_date: string;
   user: UserInfo;
-  tracks: fetched extends true ? Array<TrackInfoData> : Array<TrackInfoData | PartialTrackInfo>;
+  tracks: fetched extends true ? TrackInfoData[] : Array<TrackInfoData | PartialTrackInfo>;
   track_count: number;
-};
-type StreamablePlaylistInfoData = {
-  tracks: Array<StreamableTrackInfoData>;
-};
-type StreamablePlaylistInfo = DataWrapped<StreamablePlaylistInfoData>;
+}
+interface StreamablePlaylistInfoData {
+  tracks: StreamableTrackInfoData[];
+}
+interface StreamablePlaylistInfo extends DataWrapped<StreamablePlaylistInfoData> {}
 //#endregion
 //#region src/utils/transcoding.d.ts
-declare enum Preset {
-  MP3 = "mp3_0_1",
-  OPUS = "opus_0_0"
-}
+/**
+ * DISCLAIMER: This should not be considered comprehensive.
+ * These are simply common values.
+ */
 declare enum Protocol {
   PROGRESSIVE = "progressive",
   HLS = "hls"
 }
-declare enum MimeType {
-  MPEG = "audio/mpeg",
-  OPUS = "audio/ogg; codecs=\"opus\""
-}
 /**
- * I've only seen `sq`, but I'm assuming there's a higher quality
+ * I've only seen `sq` and `lq`, but I'm assuming there's a higher quality
  * for SoundCloud Go+ subscribers
  */
 declare enum Quality {
-  SQ = "sq"
+  SQ = "sq",
+  LQ = "lq"
 }
-type Transcoding = {
+type Preset = `${string}_${string}`;
+type MimeType = `audio/${string}`;
+interface Transcoding {
   url: string;
   preset: Preset;
   duration: number;
   snipped: boolean;
   format: {
-    protocol: Protocol;
+    protocol: string;
     mime_type: MimeType;
   };
-  quality: Quality;
-};
+  quality: string;
+  is_legacy_transcoding: boolean;
+}
 //#endregion
 //#region src/info.d.ts
 /**
@@ -127,139 +126,137 @@ declare function getInfo(url: string): Promise<TrackInfo>;
  * Get a playlist's info
  */
 declare function getPlaylistInfo(url: string): Promise<PlaylistInfo>;
-type TrackMedia = {
-  transcodings: Array<Transcoding>;
-};
-type DataWrapped<T> = {
+interface TrackMedia {
+  transcodings: Transcoding[];
+}
+interface DataWrapped<T> {
   data: T;
-};
-type StreamableTrackInfoData = {
-  streamable?: boolean;
+}
+interface StreamableTrackInfoData {
+  streamable?: boolean | null;
   media: TrackMedia;
-};
-type StreamableTrackInfo = DataWrapped<StreamableTrackInfoData>;
-type PublisherMetadata = {
+}
+interface StreamableTrackInfo extends DataWrapped<StreamableTrackInfoData> {}
+interface PublisherMetadata {
   id: number;
   urn: string;
-  contains_music?: boolean;
-  artist?: string;
-  isrc?: string;
-  explicit?: boolean;
-  writer_composer?: string;
-  release_title?: string;
-  album_title?: string;
-  upc_or_ean?: string;
-  p_line?: string;
-  p_line_for_display?: string;
-  c_line?: string;
-  c_line_for_display?: string;
-  publisher?: string;
-  iswc?: string;
-};
-type Visual = {
+  contains_music?: boolean | null;
+  artist?: string | null;
+  isrc?: string | null;
+  explicit?: boolean | null;
+  writer_composer?: string | null;
+  release_title?: string | null;
+  album_title?: string | null;
+  upc_or_ean?: string | null;
+  p_line?: string | null;
+  p_line_for_display?: string | null;
+  c_line?: string | null;
+  c_line_for_display?: string | null;
+  publisher?: string | null;
+  iswc?: string | null;
+}
+interface Visual {
   urn: string;
   entry_time: number;
   visual_url: string;
-  link: string;
-};
-type Visuals = {
+  link?: string | null;
+}
+interface Visuals {
   urn: string;
   enabled: boolean;
-  visuals: Array<Visual>;
+  visuals: Visual[];
   /**
    * I have personally only seen this as `null`
    */
-  tracking?: unknown;
-};
-type UserBadges = {
-  pro: boolean;
-  pro_unlimited: boolean;
-  verified: boolean;
-};
-type CreatorSubscription = {
+  tracking?: unknown | null;
+}
+type UserBadges = Record<string, boolean>;
+interface CreatorSubscription {
   product: {
     id: string;
   };
-};
-type UserInfo = {
+}
+interface UserInfo {
   avatar_url: string;
-  first_name?: string;
+  date_of_birth?: string | null;
+  first_name?: string | null;
   followers_count: number;
-  full_name?: string;
+  full_name?: string | null;
   id: number;
   kind: string;
   last_modified: string;
-  last_name?: string;
+  last_name?: string | null;
   permalink: string;
+  permalink_url: string;
   uri: string;
   urn: string;
   username: string;
   verified: boolean;
-  city?: string;
-  country_code?: string;
+  city?: string | null;
+  country_code?: string | null;
   badges: UserBadges;
   station_urn: string;
   station_permalink: string;
-  comments_count?: number;
-  created_at?: string;
-  creator_subscriptions?: Array<CreatorSubscription>;
-  creator_subscription?: CreatorSubscription;
-  description?: string;
-  followings_count?: number;
-  groups_count?: number;
-  likes_count?: number;
-  playlist_likes_count?: number;
-  playlist_count?: number;
-  reposts_count?: number;
-  track_count?: number;
-  visuals?: Visuals;
-};
-type PartialTrackInfo = {
+  comments_count?: number | null;
+  created_at?: string | null;
+  creator_subscriptions?: CreatorSubscription[] | null;
+  creator_subscription?: CreatorSubscription | null;
+  description?: string | null;
+  followings_count?: number | null;
+  groups_count?: number | null;
+  likes_count?: number | null;
+  playlist_likes_count?: number | null;
+  playlist_count?: number | null;
+  reposts_count?: number | null;
+  track_count?: number | null;
+  visuals?: Visuals | null;
+}
+interface PartialTrackInfo {
   id: number;
   kind: string;
   monetization_model: string;
   policy: string;
-};
-type TrackInfoData = {
-  artwork_url?: string;
-  caption?: string;
+}
+interface TrackInfoData {
+  artwork_url?: string | null;
+  caption?: string | null;
   commentable: boolean;
-  comment_count?: number;
+  comment_count?: number | null;
   created_at: string;
-  description?: string;
+  description?: string | null;
   downloadable: boolean;
-  download_count?: number;
+  download_count?: number | null;
   duration: number;
   full_duration: number;
   embeddable_by: string;
-  genre?: string;
+  genre?: string | null;
   has_downloads_left: boolean;
   id: number;
   kind: string;
-  label_name?: string;
+  label_name?: string | null;
   last_modified: string;
   license: string;
-  likes_count?: number;
+  likes_count?: number | null;
   permalink: string;
   permalink_url: string;
-  playback_count?: number;
+  playback_count?: number | null;
   public: boolean;
-  publisher_metadata?: PublisherMetadata;
-  purchase_title?: string;
-  purchase_url?: string;
-  release_date?: string;
+  publisher_metadata?: PublisherMetadata | null;
+  purchase_title?: string | null;
+  purchase_url?: string | null;
+  release_date?: string | null;
   reposts_count: number;
-  secret_token?: string;
+  secret_token?: string | null;
   sharing: string;
   state: string;
   streamable: boolean;
-  tag_list?: string;
+  tag_list?: string | null;
   title: string;
-  track_format: string;
+  track_format?: string | null;
   uri: string;
   urn: string;
   user_id: number;
-  visuals?: Visuals;
+  visuals?: Visuals | null;
   waveform_url: string;
   display_date: string;
   media: TrackMedia;
@@ -269,8 +266,8 @@ type TrackInfoData = {
   monetization_model: string;
   policy: string;
   user: UserInfo;
-};
-type TrackInfo = DataWrapped<TrackInfoData>;
+}
+interface TrackInfo extends DataWrapped<TrackInfoData> {}
 //#endregion
 //#region src/utils/partial.d.ts
 /**
@@ -285,13 +282,13 @@ declare function isPlaylistFetched(info: FetchablePlaylistInfo): info is Streama
  * @returns The updated playlist info object
  */
 declare function fetchPartialPlaylist(info: FetchablePlaylistInfo): Promise<StreamablePlaylistInfo>;
-type MinimalTrackInfo = {
+interface MinimalTrackInfo {
   id: number;
-};
-type FetchablePlaylistInfoData = {
+}
+interface FetchablePlaylistInfoData {
   tracks: Array<TrackInfoData | MinimalTrackInfo>;
-};
-type FetchablePlaylistInfo = DataWrapped<FetchablePlaylistInfoData>;
+}
+interface FetchablePlaylistInfo extends DataWrapped<FetchablePlaylistInfoData> {}
 //#endregion
 //#region src/stream.d.ts
 /**
@@ -343,13 +340,13 @@ declare function streamPlaylist(url: string, options?: StreamOptions): Promise<A
  * @param info Info obtained from `getPlaylistInfo`
  * @param options Transcoding search options
  */
-declare function streamPlaylistFromInfoSync(info: StreamablePlaylistInfo, options?: StreamOptions): Array<TrackStream>;
-type TranscodingOptions = {
-  preset: Preset;
-  protocol: Protocol;
-  mimeType: MimeType;
-  quality: Quality;
-};
+declare function streamPlaylistFromInfoSync(info: StreamablePlaylistInfo, options?: StreamOptions): TrackStream[];
+interface TranscodingOptions {
+  preset: Transcoding["preset"];
+  protocol: Transcoding["format"]["protocol"];
+  mimeType: Transcoding["format"]["mime_type"];
+  quality: Transcoding["quality"];
+}
 type StreamOptions = Partial<TranscodingOptions> & {
   /**
    * If `true`, will only stream if all specified options match a transcoding
@@ -360,20 +357,21 @@ type StreamOptions = Partial<TranscodingOptions> & {
    */
   strict?: boolean;
 };
-interface Emitter<EventMap extends Record<string, any[]>> {
-  emit<Event extends keyof EventMap>(event: Event, ...args: EventMap[Event]): boolean;
-  addListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
-  on<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
-  once<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
-  prependListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
-  prependOnceListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
-  removeListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventMap[Event]) => any): this;
+type EventListenerArgs<EventMap extends {}, Event extends keyof EventMap> = EventMap[Event] extends any[] ? EventMap[Event] : [EventMap[Event]];
+interface Emitter<EventMap extends {}> {
+  emit<Event extends keyof EventMap>(event: Event, ...args: EventListenerArgs<EventMap, Event>): boolean;
+  addListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
+  on<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
+  once<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
+  prependListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
+  prependOnceListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
+  removeListener<Event extends keyof EventMap>(event: Event, listener: (...args: EventListenerArgs<EventMap, Event>) => any): this;
   off(event: keyof EventMap, listener: (...args: any[]) => any): this;
 }
-type TranscodingStreamEvents = {
+interface TranscodingStreamEvents {
   transcoding: [Transcoding];
   connect: [];
-};
+}
 interface BaseTranscodingStream extends Emitter<TranscodingStreamEvents> {
   transcoding?: Transcoding;
 }

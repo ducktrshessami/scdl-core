@@ -84,8 +84,10 @@ var CustomError = class extends Error {
 };
 var ScdlError = class extends CustomError {};
 var RequestError = class extends CustomError {
-	constructor(statusCode) {
+	url;
+	constructor(statusCode, url) {
 		super(`${statusCode} ${STATUS_CODES[statusCode]}`);
+		this.url = url;
 	}
 };
 //#endregion
@@ -144,7 +146,7 @@ async function request(url) {
 	try {
 		const res = await getAgent().request(createRequestOptions(url));
 		if (res.statusCode < 400) return res;
-		else throw new RequestError(res.statusCode);
+		else throw new RequestError(res.statusCode, url.href);
 	} finally {
 		queue.dequeue();
 	}
@@ -190,7 +192,7 @@ async function streamThrough(url, output, end = true) {
 				if (statusCode >= 200 && statusCode < 300) return true;
 				else {
 					cleanup();
-					reject(new RequestError(statusCode));
+					reject(new RequestError(statusCode, url.href));
 					return false;
 				}
 			},
@@ -251,36 +253,29 @@ async function fetchPartialPlaylist(info) {
 }
 //#endregion
 //#region src/utils/transcoding.ts
-let Preset = /* @__PURE__ */ function(Preset) {
-	Preset["MP3"] = "mp3_0_1";
-	Preset["OPUS"] = "opus_0_0";
-	return Preset;
-}({});
+/**
+* DISCLAIMER: This should not be considered comprehensive.
+* These are simply common values.
+*/
 let Protocol = /* @__PURE__ */ function(Protocol) {
 	Protocol["PROGRESSIVE"] = "progressive";
 	Protocol["HLS"] = "hls";
 	return Protocol;
 }({});
-let MimeType = /* @__PURE__ */ function(MimeType) {
-	MimeType["MPEG"] = "audio/mpeg";
-	MimeType["OPUS"] = "audio/ogg; codecs=\"opus\"";
-	return MimeType;
-}({});
 /**
-* I've only seen `sq`, but I'm assuming there's a higher quality
+* I've only seen `sq` and `lq`, but I'm assuming there's a higher quality
 * for SoundCloud Go+ subscribers
 */
 let Quality = /* @__PURE__ */ function(Quality) {
 	Quality["SQ"] = "sq";
+	Quality["LQ"] = "lq";
 	return Quality;
 }({});
 //#endregion
 //#region src/stream.ts
 const DEFAULT_OPTIONS = {
 	strict: false,
-	preset: "mp3_0_1",
 	protocol: "progressive",
-	mimeType: "audio/mpeg",
 	quality: "sq"
 };
 const OPTION_WEIGHT = {
@@ -439,6 +434,7 @@ function streamPlaylistFromInfoSync(info, options = DEFAULT_OPTIONS) {
 //#endregion
 //#region src/utils/playlist.ts
 var PlaylistInfo = class {
+	data;
 	constructor(data) {
 		this.data = data;
 	}
@@ -529,6 +525,6 @@ function getPlaylistPermalinkURL(url) {
 	} else return "";
 }
 //#endregion
-export { MimeType, PlaylistURLPattern, Preset, Protocol, Quality, TrackURLPattern, fetchPartialPlaylist, getAgent, getClientID, getInfo, getOauthToken, getPermalinkURL, getPlaylistInfo, getPlaylistPermalinkURL, getRequestQueueLimit, getRequestTimeout, isPlaylistFetched, rawResolve, setAgent, setClientID, setOauthToken, setRequestQueueLimit, setRequestTimeout, stream, streamFromInfo, streamFromInfoSync, streamPlaylist, streamPlaylistFromInfo, streamPlaylistFromInfoSync, streamSync, validatePlaylistURL, validateURL };
+export { PlaylistURLPattern, Protocol, Quality, TrackURLPattern, fetchPartialPlaylist, getAgent, getClientID, getInfo, getOauthToken, getPermalinkURL, getPlaylistInfo, getPlaylistPermalinkURL, getRequestQueueLimit, getRequestTimeout, isPlaylistFetched, rawResolve, setAgent, setClientID, setOauthToken, setRequestQueueLimit, setRequestTimeout, stream, streamFromInfo, streamFromInfoSync, streamPlaylist, streamPlaylistFromInfo, streamPlaylistFromInfoSync, streamSync, validatePlaylistURL, validateURL };
 
 //# sourceMappingURL=index.mjs.map
