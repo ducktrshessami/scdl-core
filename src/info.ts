@@ -32,16 +32,16 @@ export async function getPlaylistInfo(url: string): Promise<PlaylistInfo> {
 
 export interface TrackMedia {
     transcodings: Transcoding[];
-};
+}
 
 export interface DataWrapped<T> {
     data: T;
-};
+}
 
 export interface StreamableTrackInfoData {
     streamable?: boolean | null;
     media: TrackMedia;
-};
+}
 
 export interface StreamableTrackInfo extends DataWrapped<StreamableTrackInfoData> { }
 
@@ -62,14 +62,14 @@ export interface PublisherMetadata {
     c_line_for_display?: string | null;
     publisher?: string | null;
     iswc?: string | null;
-};
+}
 
 export interface Visual {
     urn: string;
     entry_time: number;
     visual_url: string;
     link?: string | null;
-};
+}
 
 export interface Visuals {
     urn: string;
@@ -79,7 +79,7 @@ export interface Visuals {
      * I have personally only seen this as `null`
      */
     tracking?: unknown | null;
-};
+}
 
 export type UserBadges = Record<string, boolean>;
 
@@ -87,7 +87,7 @@ export interface CreatorSubscription {
     product: {
         id: string;
     };
-};
+}
 
 export interface UserInfo {
     avatar_url: string;
@@ -123,14 +123,14 @@ export interface UserInfo {
     reposts_count?: number | null;
     track_count?: number | null;
     visuals?: Visuals | null;
-};
+}
 
 export interface PartialTrackInfo {
     id: number;
     kind: string;
     monetization_model: string;
     policy: string;
-};
+}
 
 export interface TrackInfoData {
     artwork_url?: string | null;
@@ -181,6 +181,6 @@ export interface TrackInfoData {
     monetization_model: string;
     policy: string;
     user: UserInfo;
-};
+}
 
 export interface TrackInfo extends DataWrapped<TrackInfoData> { }

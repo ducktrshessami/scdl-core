@@ -31,4 +31,4 @@ export interface Transcoding {
     };
     quality: string;
     is_legacy_transcoding: boolean;
-};
+}

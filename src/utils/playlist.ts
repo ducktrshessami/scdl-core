@@ -70,10 +70,10 @@ export interface PlaylistInfoData<fetched extends boolean = boolean> {
     user: UserInfo;
     tracks: fetched extends true ? TrackInfoData[] : Array<TrackInfoData | PartialTrackInfo>;
     track_count: number;
-};
+}
 
 export interface StreamablePlaylistInfoData {
     tracks: StreamableTrackInfoData[];
-};
+}
 
 export interface StreamablePlaylistInfo extends DataWrapped<StreamablePlaylistInfoData> { }
